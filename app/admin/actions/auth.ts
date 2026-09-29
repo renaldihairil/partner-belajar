@@ -49,6 +49,7 @@ export async function loginAction(_prev: ActionState, formData: FormData): Promi
         id: crypto.randomUUID(),
         email,
         name: "Admin",
+        role: "owner",
         passwordHash: await hashPassword(password),
       });
     }

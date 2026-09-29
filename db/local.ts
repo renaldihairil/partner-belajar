@@ -1,4 +1,4 @@
-import { mkdirSync } from "node:fs";
+import { existsSync, mkdirSync, renameSync } from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { PGlite } from "@electric-sql/pglite";
@@ -15,6 +15,20 @@ import { seedIfEmpty } from "./seed";
  */
 export async function createLocalDb(): Promise<Db> {
   const dir = process.env.PGLITE_DIR || path.join(os.homedir(), ".partner-belajar", "pglite");
+  try {
+    return await openLocalDb(dir);
+  } catch (error) {
+    // Data lokal bisa rusak bila server dev dimatikan paksa. Simpan folder lama sebagai cadangan,
+    // lalu buat ulang dari data awal (hanya development; database online tidak tersentuh).
+    if (!existsSync(dir)) throw error;
+    const backup = `${dir}-rusak-${Date.now()}`;
+    renameSync(dir, backup);
+    console.warn(`[db] Database lokal gagal dibuka, dipindahkan ke ${backup} dan dibuat ulang.`, error);
+    return openLocalDb(dir);
+  }
+}
+
+async function openLocalDb(dir: string): Promise<Db> {
   mkdirSync(dir, { recursive: true });
   const client = new PGlite(dir);
   const db = drizzle(client, { schema }) as unknown as Db;

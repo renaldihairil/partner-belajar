@@ -8,7 +8,7 @@ import { requireDb, schema } from "@/db";
 import { checkbox, formToObject, newId, optionalText, requiredText, zodErrors, type ActionState } from "@/lib/admin/form";
 import { moveRow, nextSortOrder } from "@/lib/admin/reorder";
 import { revalidateSite } from "@/lib/admin/revalidate";
-import { requireAdmin } from "@/lib/auth/session";
+import { requirePermission } from "@/lib/auth/session";
 
 const TONES = ["teal", "yellow", "blue", "green", "purple"] as const;
 
@@ -30,7 +30,7 @@ const testimonialSchema = z.object({
 });
 
 export async function saveTestimonialAction(_prev: ActionState, formData: FormData): Promise<ActionState> {
-  await requireAdmin();
+  await requirePermission("testimoni");
   const parsed = testimonialSchema.safeParse(formToObject(formData));
   if (!parsed.success) return { message: "Periksa kembali isian yang ditandai.", errors: zodErrors(parsed.error) };
   const { id, rating, ...data } = parsed.data;
@@ -51,7 +51,7 @@ export async function saveTestimonialAction(_prev: ActionState, formData: FormDa
 }
 
 export async function deleteTestimonialAction(formData: FormData) {
-  await requireAdmin();
+  await requirePermission("testimoni");
   const db = await requireDb();
   await db.delete(schema.testimonials).where(eq(schema.testimonials.id, String(formData.get("id"))));
   revalidateSite();
@@ -59,7 +59,7 @@ export async function deleteTestimonialAction(formData: FormData) {
 }
 
 export async function toggleTestimonialAction(formData: FormData) {
-  await requireAdmin();
+  await requirePermission("testimoni");
   const db = await requireDb();
   await db
     .update(schema.testimonials)
@@ -70,7 +70,7 @@ export async function toggleTestimonialAction(formData: FormData) {
 }
 
 export async function moveTestimonialAction(formData: FormData) {
-  await requireAdmin();
+  await requirePermission("testimoni");
   const db = await requireDb();
   await moveRow(db, schema.testimonials, String(formData.get("id")), formData.get("direction") === "up" ? "up" : "down");
   revalidateSite();

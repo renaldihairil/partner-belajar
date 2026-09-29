@@ -1,10 +1,11 @@
 import { count } from "drizzle-orm";
+import { articles as articleData } from "@/data/articles";
 import { programClasses as classData } from "@/data/program-classes";
 import { programs as programData } from "@/data/programs";
 import { teachers as teacherData } from "@/data/teachers";
 import { testimonials as testimonialData } from "@/data/testimonials";
 import type { Db } from "./index";
-import { programClasses, programs, teachers, testimonials } from "./schema";
+import { articles, programClasses, programs, teachers, testimonials } from "./schema";
 
 /**
  * Mengisi database kosong dengan konten awal dari folder data/ (program, jadwal,
@@ -70,6 +71,28 @@ export async function seedIfEmpty(db: Db): Promise<string[]> {
       })),
     );
     done.push("testimonials");
+  }
+
+  const [{ value: articleCount }] = await db.select({ value: count() }).from(articles);
+  if (articleCount === 0 && articleData.length) {
+    await db.insert(articles).values(
+      articleData.map((a) => ({
+        id: a.id,
+        slug: a.slug,
+        title: a.title,
+        date: a.date,
+        image: a.image,
+        imageAlt: a.imageAlt,
+        excerpt: a.excerpt,
+        category: a.category,
+        tags: a.tags,
+        authorName: a.author.name,
+        authorRole: a.author.role,
+        content: a.content,
+        featured: a.featured ?? false,
+      })),
+    );
+    done.push("articles");
   }
 
   return done;

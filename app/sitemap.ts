@@ -1,12 +1,12 @@
 import type { MetadataRoute } from "next";
 import { navigation } from "@/components/navigation/navigation-config";
-import { articles } from "@/data/articles";
+import { getArticles } from "@/lib/articles-service";
 import { getProgramsWithClasses } from "@/lib/programs-service";
 import { absoluteUrl } from "@/lib/site-config";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const lastModified = new Date();
-  const programs = await getProgramsWithClasses();
+  const [programs, articles] = await Promise.all([getProgramsWithClasses(), getArticles()]);
   const pages: MetadataRoute.Sitemap = navigation.map(({ href }) => ({
     url: absoluteUrl(href),
     lastModified,

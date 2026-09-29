@@ -1,14 +1,25 @@
 # Admin panel Partner Belajar
 
 Admin panel ada di **`/admin`** (mis. `https://partnerbelajar.vercel.app/admin`).
-Yang bisa dikelola (Fase 1):
+Yang bisa dikelola:
 
 | Menu | Isi |
 | --- | --- |
 | Program & Jadwal | Info program, gambar, kurikulum, hasil belajar, "cocok untuk", paket harga, jadwal kelas (tanggal, hari, jam, mode, kuota, jumlah terdaftar, tutup manual) |
 | Pengajar | Profil, foto, program yang diajar, keunggulan, tampil/sembunyi, urutan |
 | Testimoni | Isi, rating, program, kota, tanggal, tampil/sembunyi, urutan |
-| Akun Admin | Ganti password, tambah/hapus admin |
+| Artikel | Judul, ringkasan, isi (blok paragraf/subjudul/daftar/tips), gambar sampul, kategori, tag, penulis, tanggal terbit, draf/terbit, artikel pilihan |
+| Akun Admin | Ganti password; (Pemilik) tambah/ubah/hapus admin, atur peran & menu yang boleh diakses |
+
+## Peran & hak akses
+
+| Peran | Akses |
+| --- | --- |
+| **Pemilik** | Semua menu + mengelola akun admin lain. Akun admin yang sudah ada otomatis menjadi Pemilik. |
+| **Editor** | Hanya menu yang dicentang: Program & Jadwal, Pengajar, Testimoni, Artikel. Menu lain tidak tampil dan alamatnya dialihkan ke dashboard. |
+
+Aturan: harus ada minimal satu Pemilik; peran akun sendiri tidak bisa diubah; perubahan hak akses berlaku segera.
+Pengecekan dilakukan di server (halaman dan aksi simpan/hapus/unggah), bukan hanya menyembunyikan menu.
 
 Setiap perubahan yang disimpan **langsung tampil di situs** (halaman publik diperbarui otomatis).
 

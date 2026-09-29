@@ -1,5 +1,7 @@
 import { boolean, index, integer, jsonb, pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
 import type {
+  ArticleBlock,
+  ArticleCategory,
   AudienceItem,
   ClassMode,
   CurriculumModule,
@@ -8,6 +10,7 @@ import type {
   Teacher,
   Testimonial,
 } from "@/types";
+import type { AdminRole, PermissionKey } from "@/lib/auth/permissions";
 
 /**
  * Skema database Partner Belajar.
@@ -99,11 +102,37 @@ export const testimonials = pgTable("testimonials", {
   ...timestamps,
 });
 
+export const articles = pgTable(
+  "articles",
+  {
+    id: text("id").primaryKey(),
+    slug: text("slug").notNull().unique(),
+    title: text("title").notNull(),
+    /** Tanggal terbit "YYYY-MM-DD" (WIB). */
+    date: text("date").notNull(),
+    image: text("image").notNull(),
+    imageAlt: text("image_alt").notNull(),
+    excerpt: text("excerpt").notNull(),
+    category: text("category").$type<ArticleCategory>().notNull(),
+    tags: jsonb("tags").$type<string[]>().notNull().default([]),
+    authorName: text("author_name").notNull(),
+    authorRole: text("author_role").notNull(),
+    content: jsonb("content").$type<ArticleBlock[]>().notNull().default([]),
+    featured: boolean("featured").notNull().default(false),
+    published: boolean("published").notNull().default(true),
+    ...timestamps,
+  },
+  (t) => [index("articles_date_idx").on(t.date)],
+);
+
 export const adminUsers = pgTable("admin_users", {
   id: text("id").primaryKey(),
   email: text("email").notNull().unique(),
   name: text("name").notNull(),
   passwordHash: text("password_hash").notNull(),
+  /** "owner" (semua akses) atau "editor" (sesuai `permissions`). Akun lama otomatis menjadi owner. */
+  role: text("role").$type<AdminRole>().notNull().default("owner"),
+  permissions: jsonb("permissions").$type<PermissionKey[]>().notNull().default([]),
   lastLoginAt: timestamp("last_login_at", { withTimezone: true }),
   ...timestamps,
 });
@@ -122,5 +151,6 @@ export const loginAttempts = pgTable(
 export type ProgramRow = typeof programs.$inferSelect;
 export type ProgramClassRow = typeof programClasses.$inferSelect;
 export type TeacherRow = typeof teachers.$inferSelect;
+export type ArticleRow = typeof articles.$inferSelect;
 export type TestimonialRow = typeof testimonials.$inferSelect;
 export type AdminUserRow = typeof adminUsers.$inferSelect;

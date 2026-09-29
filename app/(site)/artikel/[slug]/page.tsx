@@ -9,31 +9,28 @@ import { ArticleToc } from "@/components/artikel/ArticleToc";
 import { ReadingProgress } from "@/components/artikel/ReadingProgress";
 import { ShareBar } from "@/components/artikel/ShareButton";
 import { Reveal } from "@/components/ui/Reveal";
-import { articles } from "@/data/articles";
 import {
   articleHref,
   authorInitials,
   categoryStyles,
-  getArticle,
-  getRelatedArticles,
   headingId,
   readingMinutes,
 } from "@/lib/articles";
+import { getArticleBySlug, getArticles, pickRelatedArticles } from "@/lib/articles-service";
 import { formatDateLongId } from "@/lib/format";
 import { pageMetadata } from "@/lib/metadata";
 import { absoluteUrl, siteConfig } from "@/lib/site-config";
 
 type PageProps = { params: Promise<{ slug: string }> };
 
-export const dynamicParams = false;
-
-export function generateStaticParams() {
-  return articles.map((article) => ({ slug: article.slug }));
+/** Artikel baru dari admin dibuat saat pertama dibuka; slug yang tidak ada → 404. */
+export async function generateStaticParams() {
+  return (await getArticles()).map((article) => ({ slug: article.slug }));
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
-  const article = getArticle(slug);
+  const article = await getArticleBySlug(slug);
   if (!article) return {};
   return pageMetadata({
     title: `${article.title} — Artikel Partner Belajar`,
@@ -46,7 +43,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function ArticleDetailPage({ params }: PageProps) {
   const { slug } = await params;
-  const article = getArticle(slug);
+  const article = await getArticleBySlug(slug);
   if (!article) notFound();
 
   const href = articleHref(article);
@@ -55,7 +52,7 @@ export default async function ArticleDetailPage({ params }: PageProps) {
   const toc = article.content
     .filter((block) => block.type === "h2")
     .map((block) => ({ id: headingId(block.text), text: block.text }));
-  const related = getRelatedArticles(article);
+  const related = pickRelatedArticles(await getArticles(), article);
 
   const jsonLd = {
     "@context": "https://schema.org",

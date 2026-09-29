@@ -5,7 +5,8 @@ import { ArticleExplorer } from "@/components/artikel/ArticleExplorer";
 import { FeaturedArticle } from "@/components/artikel/FeaturedArticle";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { Reveal } from "@/components/ui/Reveal";
-import { articleCategories, getSortedArticles } from "@/lib/articles";
+import { articleCategories } from "@/lib/articles";
+import { getArticles } from "@/lib/articles-service";
 import { pageMetadata } from "@/lib/metadata";
 import { siteConfig } from "@/lib/site-config";
 
@@ -17,8 +18,8 @@ export const metadata = pageMetadata({
   path: "/artikel",
 });
 
-export default function ArtikelPage() {
-  const sorted = getSortedArticles();
+export default async function ArtikelPage() {
+  const sorted = await getArticles();
   const featured = sorted.find((article) => article.featured) ?? sorted[0];
 
   if (sorted.length === 0) {

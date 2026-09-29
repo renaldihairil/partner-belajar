@@ -6,7 +6,7 @@ export default async function AdminPanelLayout({ children }: Readonly<{ children
   const admin = await requireAdmin();
   return (
     <>
-      <AdminChrome admin={{ name: admin.name, email: admin.email }}>{children}</AdminChrome>
+      <AdminChrome admin={{ name: admin.name, email: admin.email, role: admin.role, permissions: admin.permissions }}>{children}</AdminChrome>
       <Toaster />
     </>
   );

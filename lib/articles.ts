@@ -1,4 +1,3 @@
-import { articles } from "@/data/articles";
 import type { Article, ArticleBlock, ArticleCategory } from "@/types";
 
 export const articleCategories: ArticleCategory[] = ["Tips Belajar", "Parenting", "Bahasa", "Islami"];
@@ -33,22 +32,6 @@ export function headingId(text: string): string {
 
 export function articleHref(article: Pick<Article, "slug">): string {
   return `/artikel/${article.slug}`;
-}
-
-export function getSortedArticles(): Article[] {
-  return [...articles].sort((a, b) => b.date.localeCompare(a.date));
-}
-
-export function getArticle(slug: string): Article | undefined {
-  return articles.find((article) => article.slug === slug);
-}
-
-/** Artikel terkait: kategori sama dulu, lalu yang terbaru. */
-export function getRelatedArticles(article: Article, limit = 3): Article[] {
-  const others = getSortedArticles().filter((a) => a.id !== article.id);
-  const same = others.filter((a) => a.category === article.category);
-  const rest = others.filter((a) => a.category !== article.category);
-  return [...same, ...rest].slice(0, limit);
 }
 
 /** Inisial untuk avatar penulis: "Kak Nadia Putri" → "NP". */

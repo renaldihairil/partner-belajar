@@ -137,4 +137,5 @@ export const noticeMessages: Record<string, string> = {
   tersimpan: "Perubahan berhasil disimpan.",
   dibuat: "Data baru berhasil dibuat.",
   dihapus: "Data berhasil dihapus.",
+  "tanpa-akses": "Akun Anda tidak punya akses ke menu tersebut.",
 };

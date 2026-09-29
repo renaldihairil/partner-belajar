@@ -8,7 +8,7 @@ import { requireDb, schema } from "@/db";
 import { checkbox, formToObject, intField, newId, optionalText, requiredText, zodErrors, type ActionState } from "@/lib/admin/form";
 import { moveRow, nextSortOrder } from "@/lib/admin/reorder";
 import { revalidateSite } from "@/lib/admin/revalidate";
-import { requireAdmin } from "@/lib/auth/session";
+import { requirePermission } from "@/lib/auth/session";
 import { deleteImage } from "@/lib/storage";
 
 const teacherSchema = z.object({
@@ -26,7 +26,7 @@ const teacherSchema = z.object({
 });
 
 export async function saveTeacherAction(_prev: ActionState, formData: FormData): Promise<ActionState> {
-  await requireAdmin();
+  await requirePermission("pengajar");
   const parsed = teacherSchema.safeParse(formToObject(formData));
   if (!parsed.success) return { message: "Periksa kembali isian yang ditandai.", errors: zodErrors(parsed.error) };
   const { id, ...values } = parsed.data;
@@ -44,7 +44,7 @@ export async function saveTeacherAction(_prev: ActionState, formData: FormData):
 }
 
 export async function deleteTeacherAction(formData: FormData) {
-  await requireAdmin();
+  await requirePermission("pengajar");
   const db = await requireDb();
   const id = String(formData.get("id"));
   const [row] = await db.delete(schema.teachers).where(eq(schema.teachers.id, id)).returning({ photo: schema.teachers.photo });
@@ -54,7 +54,7 @@ export async function deleteTeacherAction(formData: FormData) {
 }
 
 export async function toggleTeacherAction(formData: FormData) {
-  await requireAdmin();
+  await requirePermission("pengajar");
   const db = await requireDb();
   await db
     .update(schema.teachers)
@@ -65,7 +65,7 @@ export async function toggleTeacherAction(formData: FormData) {
 }
 
 export async function moveTeacherAction(formData: FormData) {
-  await requireAdmin();
+  await requirePermission("pengajar");
   const db = await requireDb();
   await moveRow(db, schema.teachers, String(formData.get("id")), formData.get("direction") === "up" ? "up" : "down");
   revalidateSite();

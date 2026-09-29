@@ -8,7 +8,7 @@ import { requireDb, schema } from "@/db";
 import { checkbox, formToObject, intField, newId, requiredText, slugify, zodErrors, type ActionState } from "@/lib/admin/form";
 import { moveRow, nextSortOrder } from "@/lib/admin/reorder";
 import { revalidateSite } from "@/lib/admin/revalidate";
-import { requireAdmin } from "@/lib/auth/session";
+import { requirePermission } from "@/lib/auth/session";
 import { deleteImage } from "@/lib/storage";
 
 const text = (label: string, max = 200) => z.string({ error: `${label} wajib diisi.` }).trim().min(1, `${label} wajib diisi.`).max(max);
@@ -70,7 +70,7 @@ const programSchema = z.object({
 });
 
 export async function saveProgramAction(_prev: ActionState, formData: FormData): Promise<ActionState> {
-  await requireAdmin();
+  await requirePermission("program");
   const parsed = programSchema.safeParse(formToObject(formData));
   if (!parsed.success) return { message: "Periksa kembali isian yang ditandai.", errors: zodErrors(parsed.error) };
   const { id, slug: rawSlug, ...data } = parsed.data;
@@ -108,7 +108,7 @@ export async function saveProgramAction(_prev: ActionState, formData: FormData):
 }
 
 export async function deleteProgramAction(formData: FormData) {
-  await requireAdmin();
+  await requirePermission("program");
   const db = await requireDb();
   const [row] = await db
     .delete(schema.programs)
@@ -120,7 +120,7 @@ export async function deleteProgramAction(formData: FormData) {
 }
 
 export async function toggleProgramAction(formData: FormData) {
-  await requireAdmin();
+  await requirePermission("program");
   const db = await requireDb();
   await db
     .update(schema.programs)
@@ -131,7 +131,7 @@ export async function toggleProgramAction(formData: FormData) {
 }
 
 export async function moveProgramAction(formData: FormData) {
-  await requireAdmin();
+  await requirePermission("program");
   const db = await requireDb();
   await moveRow(db, schema.programs, String(formData.get("id")), formData.get("direction") === "up" ? "up" : "down");
   revalidateSite();
@@ -177,7 +177,7 @@ const classSchema = z
   });
 
 export async function saveClassAction(_prev: ActionState, formData: FormData): Promise<ActionState> {
-  await requireAdmin();
+  await requirePermission("program");
   const parsed = classSchema.safeParse(formToObject(formData));
   if (!parsed.success) return { message: "Periksa kembali isian yang ditandai.", errors: zodErrors(parsed.error) };
   const { id, ...values } = parsed.data;
@@ -194,7 +194,7 @@ export async function saveClassAction(_prev: ActionState, formData: FormData): P
 }
 
 export async function deleteClassAction(formData: FormData) {
-  await requireAdmin();
+  await requirePermission("program");
   const db = await requireDb();
   const [row] = await db
     .delete(schema.programClasses)

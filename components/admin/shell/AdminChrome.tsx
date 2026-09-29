@@ -7,9 +7,9 @@ import { useEffect, useState, type ReactNode } from "react";
 import { ChevronRight, ExternalLink, LogOut, Menu, X } from "lucide-react";
 import { logoutAction } from "@/app/admin/actions/auth";
 import { ThemeToggle } from "@/components/theme/ThemeToggle";
-import { adminNavGroups, breadcrumbsFor, isAdminNavActive } from "./nav";
+import { breadcrumbsFor, isAdminNavActive, visibleNavGroups } from "./nav";
 
-type Admin = { name: string; email: string };
+type Admin = { name: string; email: string; role: string; permissions: string[] };
 
 function initials(name: string) {
   return name
@@ -31,10 +31,10 @@ function Brand() {
   );
 }
 
-function NavLinks({ pathname, onNavigate }: { pathname: string; onNavigate?: () => void }) {
+function NavLinks({ admin, pathname, onNavigate }: { admin: Admin; pathname: string; onNavigate?: () => void }) {
   return (
     <nav aria-label="Menu admin" className="flex flex-col gap-5">
-      {adminNavGroups.map((group) => (
+      {visibleNavGroups(admin).map((group) => (
         <div key={group.label}>
           <p className="mb-1 px-3 text-[11px] font-semibold tracking-wider text-ink-soft/80 uppercase">{group.label}</p>
           <ul className="flex flex-col gap-0.5">
@@ -72,7 +72,7 @@ function UserCard({ admin }: { admin: Admin }) {
       </span>
       <span className="min-w-0 flex-1 leading-tight">
         <span className="block truncate text-sm font-medium text-ink">{admin.name}</span>
-        <span className="block truncate text-xs text-ink-soft">{admin.email}</span>
+        <span className="block truncate text-xs text-ink-soft">{admin.role === "owner" ? "Pemilik" : "Editor"} · {admin.email}</span>
       </span>
       <form action={logoutAction}>
         <button
@@ -94,7 +94,7 @@ function SidebarContent({ admin, pathname, onNavigate }: { admin: Admin; pathnam
       <Brand />
       <div className="min-h-0 flex-1 overflow-y-auto pl-3">
         <div className="-ml-3">
-          <NavLinks pathname={pathname} onNavigate={onNavigate} />
+          <NavLinks admin={admin} pathname={pathname} onNavigate={onNavigate} />
         </div>
       </div>
       <UserCard admin={admin} />

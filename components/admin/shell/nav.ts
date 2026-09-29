@@ -1,6 +1,8 @@
-import { BookOpen, GraduationCap, LayoutDashboard, MessageSquareQuote, UserCog, type LucideIcon } from "lucide-react";
+import { BookOpen, Newspaper, GraduationCap, LayoutDashboard, MessageSquareQuote, UserCog, type LucideIcon } from "lucide-react";
 
-export type AdminNavItem = { href: string; label: string; icon: LucideIcon };
+import type { PermissionKey } from "@/lib/auth/permissions";
+
+export type AdminNavItem = { href: string; label: string; icon: LucideIcon; permission?: PermissionKey; ownerOnly?: boolean };
 
 /** Menu admin, dikelompokkan. Fase berikutnya cukup menambah item di sini. */
 export const adminNavGroups: { label: string; items: AdminNavItem[] }[] = [
@@ -8,13 +10,24 @@ export const adminNavGroups: { label: string; items: AdminNavItem[] }[] = [
   {
     label: "Konten",
     items: [
-      { href: "/admin/program", label: "Program & Jadwal", icon: BookOpen },
-      { href: "/admin/pengajar", label: "Pengajar", icon: GraduationCap },
-      { href: "/admin/testimoni", label: "Testimoni", icon: MessageSquareQuote },
+      { href: "/admin/program", label: "Program & Jadwal", icon: BookOpen, permission: "program" },
+      { href: "/admin/pengajar", label: "Pengajar", icon: GraduationCap, permission: "pengajar" },
+      { href: "/admin/testimoni", label: "Testimoni", icon: MessageSquareQuote, permission: "testimoni" },
+      { href: "/admin/artikel", label: "Artikel", icon: Newspaper, permission: "artikel" },
     ],
   },
   { label: "Pengaturan", items: [{ href: "/admin/akun", label: "Akun Admin", icon: UserCog }] },
 ];
+
+/** Menu yang boleh dilihat pengguna ini (menu tanpa "permission" terbuka untuk semua admin). */
+export function visibleNavGroups(access: { role: string; permissions: string[] }) {
+  return adminNavGroups
+    .map((group) => ({
+      ...group,
+      items: group.items.filter((item) => !item.permission || access.role === "owner" || access.permissions.includes(item.permission)),
+    }))
+    .filter((group) => group.items.length > 0);
+}
 
 export function isAdminNavActive(pathname: string, href: string) {
   return href === "/admin" ? pathname === "/admin" : pathname === href || pathname.startsWith(`${href}/`);
@@ -25,6 +38,7 @@ const segmentLabels: Record<string, string> = {
   program: "Program & Jadwal",
   pengajar: "Pengajar",
   testimoni: "Testimoni",
+  artikel: "Artikel",
   akun: "Akun Admin",
   kelas: "Jadwal kelas",
   baru: "Tambah baru",
