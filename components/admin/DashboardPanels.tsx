@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, CheckCircle2, CircleAlert, Database, ImageIcon, Plus } from "lucide-react";
+import { ArrowRight, CheckCircle2, CircleAlert, Database, ImageIcon } from "lucide-react";
 import type { ProgramClassRow } from "@/db/schema";
 import { statusLabel } from "@/lib/class-status";
 import { formatDateId } from "@/lib/format";
@@ -74,24 +74,6 @@ export function DashboardUpcoming({ items }: { items: Upcoming[] }) {
           </ul>
         )}
       </Panel>
-      <div className="mt-6 grid gap-3 sm:grid-cols-3">
-        {[
-          { href: "/admin/program", label: "Atur jadwal kelas" },
-          { href: "/admin/pengajar/baru", label: "Tambah pengajar" },
-          { href: "/admin/testimoni/baru", label: "Tambah testimoni" },
-        ].map((l) => (
-          <Link
-            key={l.href}
-            href={l.href}
-            className="flex items-center gap-2.5 rounded-2xl border border-dashed border-line bg-surface px-4 py-3 text-sm font-medium text-ink transition-colors hover:border-brand-teal/50 hover:bg-brand-teal-soft/40"
-          >
-            <span className="grid size-7 place-items-center rounded-md bg-brand-teal-soft text-brand-teal-dark">
-              <Plus aria-hidden className="size-4" />
-            </span>
-            {l.label}
-          </Link>
-        ))}
-      </div>
     </div>
   );
 }

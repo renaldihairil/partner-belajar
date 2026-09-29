@@ -95,12 +95,11 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
 
       <StatCards items={stats.map((stat, i) => ({ ...stat, value: stat.value, tone: (["teal", "blue", "purple", "yellow", "green"] as const)[i % 5] }))} />
 
-      <div className="grid gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
-        {can.program ? <DashboardUpcoming items={upcoming} /> : <div />}
-        <div className="grid min-w-0 content-start gap-6">
-          <DashboardSystem storage={isStorageConfigured()} />
-          <DashboardActivity items={activity} />
-        </div>
+      {can.program && <DashboardUpcoming items={upcoming} />}
+
+      <div className="grid items-start gap-6 lg:grid-cols-2">
+        <DashboardSystem storage={isStorageConfigured()} />
+        <DashboardActivity items={activity} />
       </div>
     </div>
   );
