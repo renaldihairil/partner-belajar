@@ -1,4 +1,4 @@
-import { BookOpen, Newspaper, GraduationCap, LayoutDashboard, MessageSquareQuote, UserCog, type LucideIcon } from "lucide-react";
+import { BookOpen, Newspaper, GraduationCap, LayoutDashboard, MessageSquareQuote, UserCog, Users, type LucideIcon } from "lucide-react";
 
 import type { PermissionKey } from "@/lib/auth/permissions";
 
@@ -16,7 +16,13 @@ export const adminNavGroups: { label: string; items: AdminNavItem[] }[] = [
       { href: "/admin/artikel", label: "Artikel", icon: Newspaper, permission: "artikel" },
     ],
   },
-  { label: "Pengaturan", items: [{ href: "/admin/akun", label: "Akun Admin", icon: UserCog }] },
+  {
+    label: "Pengaturan",
+    items: [
+      { href: "/admin/akun", label: "Akun Saya", icon: UserCog },
+      { href: "/admin/pengguna", label: "Kelola Admin", icon: Users, ownerOnly: true },
+    ],
+  },
 ];
 
 /** Menu yang boleh dilihat pengguna ini (menu tanpa "permission" terbuka untuk semua admin). */
@@ -24,7 +30,11 @@ export function visibleNavGroups(access: { role: string; permissions: string[] }
   return adminNavGroups
     .map((group) => ({
       ...group,
-      items: group.items.filter((item) => !item.permission || access.role === "owner" || access.permissions.includes(item.permission)),
+      items: group.items.filter(
+        (item) =>
+          (!item.ownerOnly || access.role === "owner") &&
+          (!item.permission || access.role === "owner" || access.permissions.includes(item.permission)),
+      ),
     }))
     .filter((group) => group.items.length > 0);
 }
@@ -39,7 +49,8 @@ const segmentLabels: Record<string, string> = {
   pengajar: "Pengajar",
   testimoni: "Testimoni",
   artikel: "Artikel",
-  akun: "Akun Admin",
+  akun: "Akun Saya",
+  pengguna: "Kelola Admin",
   kelas: "Jadwal kelas",
   baru: "Tambah baru",
 };

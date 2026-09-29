@@ -79,7 +79,7 @@ export async function createAdminAction(_prev: ActionState, formData: FormData):
     permissions: parsed.data.role === "owner" ? [] : (parsed.data.permissions as PermissionKey[]),
   });
   revalidateTag(ADMIN_USERS_TAG);
-  redirect("/admin/akun?pesan=dibuat");
+  redirect("/admin/pengguna?pesan=dibuat");
 }
 
 const editAdminSchema = z.object({
@@ -121,22 +121,22 @@ export async function updateAdminAction(_prev: ActionState, formData: FormData):
     })
     .where(eq(schema.adminUsers.id, id));
   revalidateTag(ADMIN_USERS_TAG);
-  redirect("/admin/akun?pesan=tersimpan");
+  redirect("/admin/pengguna?pesan=tersimpan");
 }
 
 export async function deleteAdminAction(formData: FormData) {
   const admin = await requireOwner();
   const id = String(formData.get("id"));
-  if (id === admin.id) redirect("/admin/akun?pesan=diri-sendiri");
+  if (id === admin.id) redirect("/admin/pengguna?pesan=diri-sendiri");
   const db = await requireDb();
   const [target] = await db
     .select({ role: schema.adminUsers.role })
     .from(schema.adminUsers)
     .where(eq(schema.adminUsers.id, id))
     .limit(1);
-  if (!target) redirect("/admin/akun");
-  if (target.role === "owner" && (await ownerCount(db)) <= 1) redirect("/admin/akun?pesan=pemilik-terakhir");
+  if (!target) redirect("/admin/pengguna");
+  if (target.role === "owner" && (await ownerCount(db)) <= 1) redirect("/admin/pengguna?pesan=pemilik-terakhir");
   await db.delete(schema.adminUsers).where(eq(schema.adminUsers.id, id));
   revalidateTag(ADMIN_USERS_TAG);
-  redirect("/admin/akun?pesan=dihapus");
+  redirect("/admin/pengguna?pesan=dihapus");
 }

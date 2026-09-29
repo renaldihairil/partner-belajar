@@ -9,7 +9,8 @@ Yang bisa dikelola:
 | Pengajar | Profil, foto, program yang diajar, keunggulan, tampil/sembunyi, urutan |
 | Testimoni | Isi, rating, program, kota, tanggal, tampil/sembunyi, urutan |
 | Artikel | Judul, ringkasan, isi (blok paragraf/subjudul/daftar/tips), gambar sampul, kategori, tag, penulis, tanggal terbit, draf/terbit, artikel pilihan |
-| Akun Admin | Ganti password; (Pemilik) tambah/ubah/hapus admin, atur peran & menu yang boleh diakses |
+| Akun Saya | Profil sendiri dan ganti password (semua admin) |
+| Kelola Admin | Khusus Pemilik: tambah/ubah/hapus admin, atur peran & menu yang boleh diakses |
 
 ## Peran & hak akses
 
@@ -48,7 +49,7 @@ Setiap perubahan yang disimpan **langsung tampil di situs** (halaman publik dipe
 4. **Deployments → ⋯ → Redeploy.** Saat build, tabel database dibuat otomatis dan diisi
    konten awal (program, jadwal, pengajar, testimoni yang sekarang tampil di situs).
 5. Buka `/admin`, login dengan `ADMIN_EMAIL` & `ADMIN_PASSWORD`. Akun admin pertama dibuat
-   otomatis saat login pertama. Setelah itu, **ganti password** di menu Akun Admin.
+   otomatis saat login pertama. Setelah itu, **ganti password** di menu Akun Saya.
    `ADMIN_PASSWORD` di Vercel hanya dipakai jika belum ada admin sama sekali.
 
 ## Cara kerja singkat

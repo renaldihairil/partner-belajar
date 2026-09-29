@@ -115,7 +115,7 @@ export function EditAdminForm({
       action={updateAdminAction}
       submitLabel="Simpan perubahan"
       footer={
-        <Link href="/admin/akun" className="text-sm font-medium text-ink-soft hover:text-ink">
+        <Link href="/admin/pengguna" className="text-sm font-medium text-ink-soft hover:text-ink">
           Batal
         </Link>
       }

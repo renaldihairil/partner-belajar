@@ -17,7 +17,7 @@ export default async function EditAdminPage({ params }: { params: Promise<{ id: 
   if (!admin) notFound();
   return (
     <>
-      <AdminPageHeader title={`Ubah admin ${admin.name}`} back={{ href: "/admin/akun", label: "Akun admin" }} />
+      <AdminPageHeader title={`Ubah admin ${admin.name}`} back={{ href: "/admin/pengguna", label: "Kelola admin" }} />
       <EditAdminForm
         isSelf={admin.id === me.id}
         admin={{ id: admin.id, name: admin.name, email: admin.email, role: admin.role === "editor" ? "editor" : "owner", permissions: cleanPermissions(admin.permissions) }}
