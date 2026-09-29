@@ -13,12 +13,12 @@ type Option = { value: string; label: string };
 function ProgramCheckboxes({ programs, selected }: { programs: Option[]; selected: string[] }) {
   return (
     <fieldset>
-      <legend className="mb-1.5 text-sm font-semibold text-ink">Program yang diajar</legend>
+      <legend className="mb-1.5 text-[13px] font-medium text-ink">Program yang diajar</legend>
       <div className="flex flex-wrap gap-2">
         {programs.map((p) => (
           <label
             key={p.value}
-            className="inline-flex min-h-10 cursor-pointer items-center gap-2 rounded-full border border-line bg-surface px-3.5 text-sm font-medium text-ink has-[:checked]:border-brand-teal has-[:checked]:bg-brand-teal-soft has-[:checked]:text-brand-teal-dark"
+            className="inline-flex h-9 cursor-pointer items-center gap-2 rounded-lg border border-line bg-surface px-3 text-sm font-medium shadow-soft text-ink has-[:checked]:border-brand-teal has-[:checked]:bg-brand-teal-soft has-[:checked]:text-brand-teal-dark"
           >
             <input type="checkbox" name="programIds[]" value={p.value} defaultChecked={selected.includes(p.value)} className="size-4 accent-[var(--brand-teal)]" />
             {p.label}
@@ -77,7 +77,9 @@ function Fields({ item, programs }: { item?: TeacherRow; programs: Option[] }) {
         />
       </FormSection>
 
-      <SwitchField name="published" label="Tampilkan di halaman Pengajar" defaultChecked={item?.published ?? true} />
+      <FormSection title="Visibilitas" description="Pengajar yang disembunyikan tetap tersimpan dan bisa ditampilkan lagi kapan saja.">
+        <SwitchField name="published" label="Tampilkan di halaman Pengajar" defaultChecked={item?.published ?? true} />
+      </FormSection>
     </>
   );
 }
@@ -88,7 +90,7 @@ export function TeacherForm({ item, programs }: { item?: TeacherRow; programs: O
       action={saveTeacherAction}
       submitLabel={item ? "Simpan perubahan" : "Tambah pengajar"}
       footer={
-        <Link href="/admin/pengajar" className="text-sm font-semibold text-ink-soft hover:text-ink">
+        <Link href="/admin/pengajar" className="text-sm font-medium text-ink-soft hover:text-ink">
           Batal
         </Link>
       }

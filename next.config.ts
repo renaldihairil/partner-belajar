@@ -11,6 +11,9 @@ const nextConfig: NextConfig = {
   serverExternalPackages: ["@electric-sql/pglite"],
   experimental: {
     serverActions: { bodySizeLimit: "4mb" },
+    // Halaman dinamis (admin) disimpan sebentar di browser: bolak-balik antarmenu terasa instan.
+    // Setelah admin menyimpan, cache ini dibersihkan otomatis oleh revalidatePath.
+    staleTimes: { dynamic: 30 },
   },
 };
 

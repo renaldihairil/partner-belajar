@@ -67,13 +67,13 @@ export function ImageUpload({ name, label, defaultValue = "", folder, hint, erro
 
   return (
     <div>
-      <p className="mb-1.5 text-sm font-semibold text-ink">
+      <p className="mb-1.5 text-[13px] font-medium text-ink">
         {label}
         {required && <span className="text-red-500"> *</span>}
       </p>
       <input type="hidden" name={name} value={url} />
       <div className="flex flex-wrap items-end gap-4">
-        <div className={`relative grid place-items-center overflow-clip rounded-2xl border border-dashed border-line bg-background ${box}`}>
+        <div className={`relative grid place-items-center overflow-clip rounded-xl border border-dashed border-line bg-[var(--adm-hover)]/50 ${box}`}>
           {url ? (
             // eslint-disable-next-line @next/next/no-img-element -- pratinjau dari domain mana pun (lokal / Blob)
             <img src={url} alt={`Pratinjau ${label}`} className="size-full object-contain" />
@@ -98,7 +98,7 @@ export function ImageUpload({ name, label, defaultValue = "", folder, hint, erro
           />
           <label
             htmlFor={inputId}
-            className="inline-flex min-h-10 cursor-pointer items-center gap-2 rounded-full bg-brand-teal-soft px-4 text-sm font-semibold text-brand-teal-dark transition-colors hover:bg-brand-teal hover:text-white"
+            className="inline-flex h-9 cursor-pointer items-center gap-2 rounded-lg border border-line bg-surface px-3.5 text-sm font-medium text-ink shadow-soft transition-colors hover:bg-[var(--adm-hover)]"
           >
             <Upload aria-hidden className="size-4" />
             {url ? "Ganti foto" : "Pilih foto"}
@@ -107,7 +107,7 @@ export function ImageUpload({ name, label, defaultValue = "", folder, hint, erro
             <button
               type="button"
               onClick={() => setUrl("")}
-              className="inline-flex min-h-10 items-center gap-2 rounded-full px-4 text-sm font-semibold text-red-600 transition-colors hover:bg-red-50"
+              className="inline-flex h-9 items-center gap-2 rounded-lg px-3.5 text-sm font-medium text-red-600 transition-colors hover:bg-red-50 dark:hover:bg-red-950/40"
             >
               <Trash2 aria-hidden className="size-4" />
               Hapus foto

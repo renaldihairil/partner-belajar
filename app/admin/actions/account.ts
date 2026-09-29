@@ -1,12 +1,13 @@
 "use server";
 
 import { count, eq } from "drizzle-orm";
+import { revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { requireDb, schema } from "@/db";
 import { formToObject, requiredText, zodErrors, type ActionState } from "@/lib/admin/form";
 import { hashPassword, verifyPassword } from "@/lib/auth/password";
-import { requireAdmin } from "@/lib/auth/session";
+import { ADMIN_USERS_TAG, requireAdmin } from "@/lib/auth/session";
 
 const password = z.string().min(10, "Password minimal 10 karakter.").max(200);
 
@@ -53,6 +54,7 @@ export async function createAdminAction(_prev: ActionState, formData: FormData):
     email: parsed.data.email,
     passwordHash: await hashPassword(parsed.data.password),
   });
+  revalidateTag(ADMIN_USERS_TAG);
   redirect("/admin/akun?pesan=dibuat");
 }
 
@@ -64,5 +66,6 @@ export async function deleteAdminAction(formData: FormData) {
   const [{ value }] = await db.select({ value: count() }).from(schema.adminUsers);
   if (value <= 1) redirect("/admin/akun");
   await db.delete(schema.adminUsers).where(eq(schema.adminUsers.id, id));
+  revalidateTag(ADMIN_USERS_TAG);
   redirect("/admin/akun?pesan=dihapus");
 }

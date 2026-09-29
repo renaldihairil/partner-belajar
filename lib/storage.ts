@@ -2,7 +2,6 @@ import "server-only";
 import { randomUUID } from "node:crypto";
 import { mkdir, unlink, writeFile } from "node:fs/promises";
 import path from "node:path";
-import sharp from "sharp";
 
 /**
  * Penyimpanan foto yang diunggah admin.
@@ -33,6 +32,8 @@ export async function saveImage(file: File, folder: string): Promise<StoredImage
   if (!ACCEPTED.includes(file.type)) throw new Error("Format tidak didukung. Gunakan JPG, PNG, atau WebP.");
   if (file.size > MAX_UPLOAD_BYTES) throw new Error("Ukuran foto maksimal 4 MB.");
 
+  // Dimuat saat dibutuhkan saja, agar halaman admin lain tetap ringan.
+  const { default: sharp } = await import("sharp");
   const input = Buffer.from(await file.arrayBuffer());
   const { data, info } = await sharp(input)
     .rotate()

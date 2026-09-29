@@ -15,7 +15,7 @@ function move<T>(items: T[], from: number, to: number): T[] {
 type RowToolsProps = { index: number; total: number; onMove: (to: number) => void; onRemove: () => void; label: string };
 
 function RowTools({ index, total, onMove, onRemove, label }: RowToolsProps) {
-  const btn = "grid size-8 place-items-center rounded-lg text-ink-soft transition-colors hover:bg-background hover:text-ink disabled:opacity-30";
+  const btn = "grid size-7 place-items-center rounded-md text-ink-soft transition-colors hover:bg-[var(--adm-hover)] hover:text-ink disabled:opacity-30";
   return (
     <div className="flex shrink-0 items-center gap-0.5">
       <button type="button" className={btn} disabled={index === 0} onClick={() => onMove(index - 1)} aria-label={`Naikkan ${label}`}>
@@ -36,7 +36,7 @@ function AddButton({ onClick, children }: { onClick: () => void; children: strin
     <button
       type="button"
       onClick={onClick}
-      className="inline-flex min-h-10 items-center gap-1.5 self-start rounded-full border border-dashed border-brand-teal/50 px-4 text-sm font-semibold text-brand-teal-dark transition-colors hover:bg-brand-teal-soft"
+      className="inline-flex h-9 items-center gap-1.5 self-start rounded-lg border border-dashed border-line px-3 text-sm font-medium text-ink-soft transition-colors hover:border-brand-teal/50 hover:bg-brand-teal-soft/50 hover:text-brand-teal-dark"
     >
       <Plus aria-hidden className="size-4" />
       {children}
@@ -59,7 +59,7 @@ export function StringListField({ name, label, hint, error, defaultValue = [], p
   const [items, setItems] = useState<string[]>(defaultValue);
   return (
     <fieldset>
-      <legend className="mb-1.5 text-sm font-semibold text-ink">{label}</legend>
+      <legend className="mb-1.5 text-[13px] font-medium text-ink">{label}</legend>
       {hint && <p className="-mt-1 mb-2 text-xs text-ink-soft">{hint}</p>}
       <input type="hidden" name={`${name}_json`} value={JSON.stringify(items.map((s) => s.trim()).filter(Boolean))} />
       <div className="flex flex-col gap-2">
@@ -132,15 +132,15 @@ export function RepeaterField({ name, label, hint, error, fields, defaultValue =
 
   return (
     <fieldset>
-      <legend className="mb-1.5 text-sm font-semibold text-ink">{label}</legend>
+      <legend className="mb-1.5 text-[13px] font-medium text-ink">{label}</legend>
       {hint && <p className="-mt-1 mb-2 text-xs text-ink-soft">{hint}</p>}
       <input type="hidden" name={`${name}_json`} value={JSON.stringify(serialized)} />
       <div className="flex flex-col gap-3">
         {items.map((item, index) => (
-          <div key={index} className="rounded-2xl border border-line bg-background/60 p-3.5">
+          <div key={index} className="rounded-lg border border-line bg-[var(--adm-hover)]/40 p-3.5">
             <div className="mb-3 flex items-center justify-between gap-2">
-              <p className="min-w-0 truncate text-sm font-bold text-ink">
-                <span className="mr-2 inline-grid size-6 place-items-center rounded-full bg-brand-teal-soft text-xs text-brand-teal-dark">
+              <p className="min-w-0 truncate text-sm font-medium text-ink">
+                <span className="mr-2 inline-grid size-5 place-items-center rounded-md bg-surface text-[11px] font-semibold text-ink-soft ring-1 ring-line">
                   {index + 1}
                 </span>
                 {itemLabel(item, index)}
@@ -220,7 +220,7 @@ function RepeaterInput({ def: f, id, value, onChange }: RepeaterInputProps) {
   }
   return (
     <div className={span}>
-      <label htmlFor={id} className="mb-1 block text-xs font-semibold text-ink-soft">
+      <label htmlFor={id} className="mb-1 block text-xs font-medium text-ink-soft">
         {f.label}
       </label>
       {control}

@@ -71,7 +71,7 @@ export function TestimonialForm({ item, programs }: { item?: TestimonialRow; pro
       action={saveTestimonialAction}
       submitLabel={item ? "Simpan perubahan" : "Tambah testimoni"}
       footer={
-        <Link href="/admin/testimoni" className="text-sm font-semibold text-ink-soft hover:text-ink">
+        <Link href="/admin/testimoni" className="text-sm font-medium text-ink-soft hover:text-ink">
           Batal
         </Link>
       }

@@ -36,16 +36,19 @@ export default async function AccountPage({ searchParams }: { searchParams: Prom
     <>
       <AdminPageHeader title="Akun admin" description="Kelola password Anda dan siapa saja yang bisa masuk ke admin panel." />
       <Notice message={pesan ? messages[pesan] : undefined} />
-      <div className="grid gap-8">
+      <div className="adm-fade-in grid gap-8">
         <ChangePasswordForm />
 
-        <section className="rounded-[22px] border border-line bg-surface p-5 shadow-soft md:p-6">
-          <h2 className="text-base font-bold text-ink">Daftar admin</h2>
-          <ul className="mt-3 divide-y divide-line">
+        <section className="grid gap-4 border-b border-line pb-8 lg:grid-cols-[240px_minmax(0,1fr)] lg:gap-10">
+          <div>
+            <h2 className="text-[15px] font-semibold text-ink">Daftar admin</h2>
+            <p className="mt-1 text-[13px] leading-relaxed text-ink-soft">Semua akun yang bisa masuk ke admin panel.</p>
+          </div>
+          <ul className="divide-y divide-line overflow-clip rounded-xl border border-line bg-surface shadow-soft">
             {admins.map((a) => (
-              <li key={a.id} className="flex items-center justify-between gap-3 py-3">
+              <li key={a.id} className="flex items-center justify-between gap-3 px-4 py-3">
                 <div className="min-w-0">
-                  <p className="flex flex-wrap items-center gap-2 font-semibold text-ink">
+                  <p className="flex flex-wrap items-center gap-2 text-sm font-medium text-ink">
                     {a.name} {a.id === me.id && <Badge tone="success">Anda</Badge>}
                   </p>
                   <p className="truncate text-sm text-ink-soft">{a.email}</p>
@@ -56,7 +59,7 @@ export default async function AccountPage({ searchParams }: { searchParams: Prom
                     <input type="hidden" name="id" value={a.id} />
                     <button
                       type="submit"
-                      className="grid size-9 place-items-center rounded-full text-ink-soft transition-colors hover:bg-red-50 hover:text-red-600"
+                      className="grid size-8 place-items-center rounded-md text-ink-soft transition-colors hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-950/40"
                       aria-label={`Hapus admin ${a.name}`}
                     >
                       <Trash2 aria-hidden className="size-4" />

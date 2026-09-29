@@ -6,7 +6,7 @@ import { useFormStatus } from "react-dom";
 import { ArrowDown, ArrowUp, Eye, EyeOff, Loader2, Pencil, Trash2 } from "lucide-react";
 
 const iconBtn =
-  "grid size-9 place-items-center rounded-full text-ink-soft transition-colors hover:bg-background hover:text-ink disabled:opacity-30";
+  "grid size-8 place-items-center rounded-md text-ink-soft transition-colors hover:bg-[var(--adm-hover)] hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-teal/40 disabled:pointer-events-none disabled:opacity-30";
 
 function PendingIcon({ children }: { children: ReactNode }) {
   const { pending } = useFormStatus();
@@ -40,7 +40,7 @@ export function RowActions({
   deleteMessage,
 }: RowActionsProps) {
   return (
-    <div className="flex shrink-0 flex-wrap items-center justify-end gap-0.5">
+    <div className="flex shrink-0 items-center gap-0.5 rounded-lg border border-line bg-surface p-0.5 shadow-soft">
       {moveAction && (
         <>
           <form action={moveAction}>
@@ -80,6 +80,7 @@ export function RowActions({
       <Link href={editHref} className={iconBtn} aria-label={`Edit ${label}`} title="Edit">
         <Pencil aria-hidden className="size-4" />
       </Link>
+      <span aria-hidden className="mx-0.5 h-4 w-px bg-line" />
       <form
         action={deleteAction}
         onSubmit={(event) => {
@@ -87,7 +88,7 @@ export function RowActions({
         }}
       >
         <input type="hidden" name="id" value={id} />
-        <button type="submit" className={`${iconBtn} hover:bg-red-50 hover:text-red-600`} aria-label={`Hapus ${label}`} title="Hapus">
+        <button type="submit" className={`${iconBtn} hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-950/40`} aria-label={`Hapus ${label}`} title="Hapus">
           <PendingIcon>
             <Trash2 aria-hidden className="size-4" />
           </PendingIcon>

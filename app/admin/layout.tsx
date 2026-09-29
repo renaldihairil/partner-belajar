@@ -9,5 +9,5 @@ export const metadata: Metadata = {
 export const dynamic = "force-dynamic";
 
 export default function AdminRootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <div className="min-h-dvh bg-background">{children}</div>;
+  return <div className="admin-root min-h-dvh bg-background text-ink">{children}</div>;
 }

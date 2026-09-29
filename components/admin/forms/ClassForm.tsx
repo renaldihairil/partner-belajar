@@ -11,14 +11,14 @@ const DAYS = ["Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu", "Ahad"];
 function DayPicker({ selected, error }: { selected: string[]; error?: string }) {
   return (
     <fieldset>
-      <legend className="mb-1.5 text-sm font-semibold text-ink">
+      <legend className="mb-1.5 text-[13px] font-medium text-ink">
         Hari belajar <span className="text-red-500">*</span>
       </legend>
       <div className="flex flex-wrap gap-2">
         {DAYS.map((day) => (
           <label
             key={day}
-            className="inline-flex min-h-10 cursor-pointer items-center gap-2 rounded-full border border-line bg-surface px-3.5 text-sm font-medium text-ink has-[:checked]:border-brand-teal has-[:checked]:bg-brand-teal-soft has-[:checked]:text-brand-teal-dark"
+            className="inline-flex h-9 cursor-pointer items-center gap-2 rounded-lg border border-line bg-surface px-3 text-sm font-medium shadow-soft text-ink has-[:checked]:border-brand-teal has-[:checked]:bg-brand-teal-soft has-[:checked]:text-brand-teal-dark"
           >
             <input type="checkbox" name="days[]" value={day} defaultChecked={selected.includes(day)} className="size-4 accent-[var(--brand-teal)]" />
             {day}
@@ -97,7 +97,7 @@ export function ClassForm({ programId, item }: { programId: string; item?: Progr
       action={saveClassAction}
       submitLabel={item ? "Simpan perubahan" : "Tambah kelas"}
       footer={
-        <Link href={`/admin/program/${programId}/kelas`} className="text-sm font-semibold text-ink-soft hover:text-ink">
+        <Link href={`/admin/program/${programId}/kelas`} className="text-sm font-medium text-ink-soft hover:text-ink">
           Batal
         </Link>
       }

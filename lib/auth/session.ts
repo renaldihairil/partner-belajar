@@ -1,5 +1,6 @@
 import "server-only";
 import { eq } from "drizzle-orm";
+import { unstable_cache } from "next/cache";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { cache } from "react";
@@ -21,18 +22,35 @@ export async function destroySession() {
   (await cookies()).delete(SESSION_COOKIE);
 }
 
-/** Admin yang sedang login (dicek juga ke database, agar akun yang dihapus langsung keluar). */
+/** Tag cache akun admin — panggil revalidateTag(ADMIN_USERS_TAG) setelah akun ditambah/dihapus/diubah. */
+export const ADMIN_USERS_TAG = "admin-users";
+
+/**
+ * Data akun disimpan di cache server agar pindah halaman admin tidak selalu menunggu database.
+ * Cache dibersihkan setiap kali akun admin berubah, jadi akun yang dihapus tetap langsung keluar.
+ */
+function loadAdmin(id: string) {
+  return unstable_cache(
+    async () => {
+      const db = await getDb();
+      if (!db) return null;
+      const [user] = await db
+        .select({ id: schema.adminUsers.id, email: schema.adminUsers.email, name: schema.adminUsers.name })
+        .from(schema.adminUsers)
+        .where(eq(schema.adminUsers.id, id))
+        .limit(1);
+      return user ?? null;
+    },
+    ["admin-user", id],
+    { tags: [ADMIN_USERS_TAG], revalidate: 3600 },
+  )();
+}
+
+/** Admin yang sedang login: sesi ditandatangani (cookie) + akun masih ada di database. */
 export const getCurrentAdmin = cache(async () => {
   const session = await verifySession((await cookies()).get(SESSION_COOKIE)?.value);
   if (!session) return null;
-  const db = await getDb();
-  if (!db) return null;
-  const [user] = await db
-    .select({ id: schema.adminUsers.id, email: schema.adminUsers.email, name: schema.adminUsers.name })
-    .from(schema.adminUsers)
-    .where(eq(schema.adminUsers.id, session.sub))
-    .limit(1);
-  return user ?? null;
+  return loadAdmin(session.sub);
 });
 
 /** Wajib dipanggil di setiap halaman & server action admin. */

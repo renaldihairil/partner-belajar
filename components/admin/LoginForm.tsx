@@ -4,6 +4,7 @@ import { startTransition, useActionState } from "react";
 import { Loader2, LogIn } from "lucide-react";
 import { loginAction } from "@/app/admin/actions/auth";
 import { FormMessage, TextField } from "./fields";
+import { buttonPrimary } from "./ui";
 
 export function LoginForm({ next }: { next?: string }) {
   const [state, action, pending] = useActionState(loginAction, {});
@@ -24,7 +25,7 @@ export function LoginForm({ next }: { next?: string }) {
       <button
         type="submit"
         disabled={pending}
-        className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-full bg-brand-teal-strong px-6 text-sm font-semibold text-white transition-all hover:brightness-110 disabled:cursor-wait disabled:opacity-70"
+        className={`${buttonPrimary} h-10 w-full`}
       >
         {pending ? <Loader2 aria-hidden className="size-4 animate-spin" /> : <LogIn aria-hidden className="size-4" />}
         {pending ? "Memeriksa…" : "Masuk"}

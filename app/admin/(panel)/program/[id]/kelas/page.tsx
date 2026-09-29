@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import { asc, eq } from "drizzle-orm";
-import { CalendarDays, Clock, MapPin, Users } from "lucide-react";
+import Link from "next/link";
+import { CalendarDays, Clock, MapPin } from "lucide-react";
 import { deleteClassAction } from "@/app/admin/actions/programs";
 import { RowActions } from "@/components/admin/RowActions";
-import { AddLink, Badge, EmptyState, Notice, noticeMessages } from "@/components/admin/ui";
+import { AddLink, Badge, EmptyState, ListCard, ListRow, Notice, noticeMessages } from "@/components/admin/ui";
 import { requireDb, schema } from "@/db";
 import { getClassStatus, modeLabel, seatsLeft, statusLabel } from "@/lib/class-status";
 import { formatDateId, formatDays } from "@/lib/format";
@@ -30,67 +31,68 @@ export default async function ProgramClassesPage({ params, searchParams }: PageP
     .where(eq(schema.programClasses.programId, id))
     .orderBy(asc(schema.programClasses.classStarts));
   const now = Date.now();
+  const addLink = <AddLink href={`/admin/program/${id}/kelas/baru`}>Tambah kelas</AddLink>;
 
   return (
     <>
       <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
         <p className="max-w-xl text-sm text-ink-soft">
-          Status dihitung otomatis dari tanggal & kuota. Perbarui jumlah <strong>sudah terdaftar</strong> setiap ada siswa baru.
+          Status dihitung otomatis dari tanggal & kuota. Perbarui jumlah <span className="font-medium text-ink">sudah terdaftar</span> setiap ada
+          siswa baru.
         </p>
-        <AddLink href={`/admin/program/${id}/kelas/baru`}>Tambah kelas</AddLink>
+        {addLink}
       </div>
       <Notice message={pesan ? noticeMessages[pesan] : undefined} />
       {rows.length === 0 ? (
-        <EmptyState>Belum ada jadwal kelas. Di situs, program ini akan menampilkan tombol untuk bertanya jadwal berikutnya.</EmptyState>
+        <EmptyState action={addLink}>Belum ada jadwal kelas. Di situs, program ini menampilkan tombol untuk menanyakan jadwal berikutnya.</EmptyState>
       ) : (
-        <ul className="grid gap-3">
+        <ListCard title="Jadwal kelas" count={rows.length}>
           {rows.map((row) => {
             const item = toProgramClass(row);
             const status = getClassStatus(item, now);
+            const fill = Math.min(100, Math.round((row.enrolled / row.quota) * 100));
             return (
-              <li key={row.id} className="rounded-[20px] border border-line bg-surface p-4 shadow-soft">
-                <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-                  <div className="min-w-0">
-                    <div className="flex flex-wrap items-center gap-2">
-                      <p className="font-bold text-ink">{row.name}</p>
-                      <Badge tone={statusTone[status]}>{statusLabel[status]}</Badge>
-                      {row.manuallyClosed && <Badge tone="danger">Ditutup manual</Badge>}
-                    </div>
-                    <ul className="mt-2 grid gap-1 text-sm text-ink-soft sm:grid-cols-2">
-                      <li className="flex items-center gap-1.5">
-                        <CalendarDays aria-hidden className="size-4 shrink-0" />
-                        Daftar {formatDateId(row.registrationOpens)} sampai {formatDateId(row.registrationCloses)}
-                      </li>
-                      <li className="flex items-center gap-1.5">
-                        <CalendarDays aria-hidden className="size-4 shrink-0" />
-                        Mulai {formatDateId(row.classStarts)}
-                      </li>
-                      <li className="flex items-center gap-1.5">
-                        <Clock aria-hidden className="size-4 shrink-0" />
-                        {formatDays(row.days)}, {row.time}
-                      </li>
-                      <li className="flex items-center gap-1.5">
-                        <MapPin aria-hidden className="size-4 shrink-0" />
-                        {modeLabel[row.mode]}
-                        {row.location ? `, ${row.location}` : ""}
-                      </li>
-                      <li className="flex items-center gap-1.5">
-                        <Users aria-hidden className="size-4 shrink-0" />
-                        {row.enrolled}/{row.quota} terdaftar, sisa {seatsLeft(item)} kursi
-                      </li>
-                    </ul>
+              <ListRow key={row.id}>
+                <Link href={`/admin/program/${id}/kelas/${row.id}`} className="row-main group min-w-0 flex-1">
+                  <span className="flex flex-wrap items-center gap-2">
+                    <span className="text-sm font-semibold text-ink group-hover:text-brand-teal-dark">{row.name}</span>
+                    <Badge tone={statusTone[status]} dot>
+                      {statusLabel[status]}
+                    </Badge>
+                    {row.manuallyClosed && <Badge tone="danger">Ditutup manual</Badge>}
+                  </span>
+                  <span className="mt-1.5 flex flex-wrap gap-x-4 gap-y-1 text-[13px] text-ink-soft">
+                    <span className="inline-flex items-center gap-1.5">
+                      <CalendarDays aria-hidden className="size-3.5" />
+                      Daftar {formatDateId(row.registrationOpens)} s.d. {formatDateId(row.registrationCloses)} · mulai {formatDateId(row.classStarts)}
+                    </span>
+                    <span className="inline-flex items-center gap-1.5">
+                      <Clock aria-hidden className="size-3.5" />
+                      {formatDays(row.days)}, {row.time}
+                    </span>
+                    <span className="inline-flex items-center gap-1.5">
+                      <MapPin aria-hidden className="size-3.5" />
+                      {modeLabel[row.mode]}
+                      {row.location ? `, ${row.location}` : ""}
+                    </span>
+                  </span>
+                </Link>
+                <div className="md:w-44">
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="font-medium text-ink">
+                      {row.enrolled}/{row.quota} terdaftar
+                    </span>
+                    <span className="text-ink-soft">sisa {seatsLeft(item)}</span>
                   </div>
-                  <RowActions
-                    id={row.id}
-                    label={row.name}
-                    editHref={`/admin/program/${id}/kelas/${row.id}`}
-                    deleteAction={deleteClassAction}
-                  />
+                  <div className="mt-1.5 h-1.5 overflow-clip rounded-full bg-[var(--adm-hover)]">
+                    <div className={`h-full rounded-full ${fill >= 100 ? "bg-amber-500" : "bg-brand-teal"}`} style={{ width: `${fill}%` }} />
+                  </div>
                 </div>
-              </li>
+                <RowActions id={row.id} label={row.name} editHref={`/admin/program/${id}/kelas/${row.id}`} deleteAction={deleteClassAction} />
+              </ListRow>
             );
           })}
-        </ul>
+        </ListCard>
       )}
     </>
   );

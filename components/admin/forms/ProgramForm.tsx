@@ -175,7 +175,7 @@ export function ProgramForm({ item }: { item?: ProgramRow }) {
       action={saveProgramAction}
       submitLabel={item ? "Simpan perubahan" : "Buat program"}
       footer={
-        <Link href="/admin/program" className="text-sm font-semibold text-ink-soft hover:text-ink">
+        <Link href="/admin/program" className="text-sm font-medium text-ink-soft hover:text-ink">
           Kembali
         </Link>
       }
