@@ -3,10 +3,11 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { CalendarDays, ChevronLeft, ChevronRight, Expand, X } from "lucide-react";
+import { CalendarDays, ChevronLeft, ChevronRight, Play, X } from "lucide-react";
 import { FilterChips } from "@/components/ui/FilterChips";
 import { Reveal } from "@/components/ui/Reveal";
 import { formatDateId, formatDateLongId } from "@/lib/format";
+import { youtubeEmbedUrl, youtubeThumbnail, youtubeWatchUrl } from "@/lib/youtube";
 import type { DocumentationCategory, DocumentationItem, Program } from "@/types";
 
 const categories: DocumentationCategory[] = ["Kelas Online", "Tatap Muka", "Kegiatan Spesial"];
@@ -16,11 +17,11 @@ type GalleryExplorerProps = {
   programs: Program[];
 };
 
+/** Galeri video dokumentasi: grid 3 kolom berukuran sama (16:9); klik untuk menonton di jendela pemutar. */
 export function GalleryExplorer({ items, programs }: GalleryExplorerProps) {
   const [filter, setFilter] = useState("all");
   const [index, setIndex] = useState<number | null>(null);
   const dialogRef = useRef<HTMLDialogElement>(null);
-  const touchX = useRef<number | null>(null);
 
   const visible = filter === "all" ? items : items.filter((item) => item.category === filter);
   const current = index !== null ? visible[index] : null;
@@ -65,52 +66,55 @@ export function GalleryExplorer({ items, programs }: GalleryExplorerProps) {
         }}
       />
       <p aria-live="polite" className="sr-only">
-        Menampilkan {visible.length} dokumentasi
+        Menampilkan {visible.length} video dokumentasi
       </p>
 
-      {/* Masonry sederhana dengan CSS columns */}
-      <ul className="columns-1 gap-4 sm:columns-2 xl:columns-3 [&>li]:mb-4">
-        {visible.map((item, i) => (
-          <Reveal as="li" key={item.id} delay={(i % 3) * 70} className="break-inside-avoid">
-            <button
-              type="button"
-              onClick={() => setIndex(i)}
-              aria-haspopup="dialog"
-              className="gallery-card group relative block w-full overflow-clip rounded-[24px] text-left shadow-soft ring-1 ring-line"
-            >
-              <Image
-                src={item.image}
-                alt={item.title}
-                width={item.width}
-                height={item.height}
-                sizes="(min-width: 1280px) 30vw, (min-width: 640px) 45vw, 92vw"
-                className="h-auto w-full transition-transform duration-700 group-hover:scale-[1.04]"
-              />
-              <span className="absolute top-3 left-3 rounded-full bg-panel px-2.5 py-1 text-[11.5px] font-semibold text-ink backdrop-blur">
-                {item.category}
-              </span>
-              <span
-                aria-hidden
-                className="absolute top-3 right-3 grid size-9 place-items-center rounded-full bg-panel text-ink opacity-0 backdrop-blur transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100"
+      {visible.length === 0 ? (
+        <p className="rounded-[var(--radius-card)] bg-background p-6 text-ink-soft">Belum ada video di kategori ini.</p>
+      ) : (
+        <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:gap-5">
+          {visible.map((item, i) => (
+            <Reveal as="li" key={item.id} delay={(i % 3) * 70}>
+              <button
+                type="button"
+                onClick={() => setIndex(i)}
+                aria-haspopup="dialog"
+                aria-label={`Putar video: ${item.title}`}
+                className="gallery-card group relative block aspect-video w-full overflow-clip rounded-[24px] bg-ink/10 text-left shadow-soft ring-1 ring-line"
               >
-                <Expand className="size-4" />
-              </span>
-              <span className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 via-black/35 to-transparent p-4 pt-12 text-white">
-                <span className="block text-[15px] leading-snug font-bold">{item.title}</span>
-                <span className="mt-0.5 inline-flex items-center gap-1 text-xs text-white/85">
-                  <CalendarDays aria-hidden className="size-3.5" />
-                  {formatDateId(item.date)}
+                <Image
+                  src={youtubeThumbnail(item.youtubeId)}
+                  alt=""
+                  fill
+                  sizes="(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 92vw"
+                  className="object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+                />
+                <span className="absolute top-3 left-3 rounded-full bg-panel px-2.5 py-1 text-[11.5px] font-semibold text-ink backdrop-blur">
+                  {item.category}
                 </span>
-              </span>
-            </button>
-          </Reveal>
-        ))}
-      </ul>
+                <span
+                  aria-hidden
+                  className="absolute top-1/2 left-1/2 grid size-14 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-white/90 text-brand-teal-dark shadow-lift transition-transform duration-300 group-hover:scale-110"
+                >
+                  <Play className="ml-0.5 size-6" fill="currentColor" />
+                </span>
+                <span className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/75 via-black/40 to-transparent p-4 pt-12 text-white">
+                  <span className="line-clamp-2 block text-[15px] leading-snug font-bold">{item.title}</span>
+                  <span className="mt-0.5 inline-flex items-center gap-1 text-xs text-white/85">
+                    <CalendarDays aria-hidden className="size-3.5" />
+                    {formatDateId(item.date)}
+                  </span>
+                </span>
+              </button>
+            </Reveal>
+          ))}
+        </ul>
+      )}
 
-      {/* Lightbox */}
+      {/* Jendela pemutar video */}
       <dialog
         ref={dialogRef}
-        aria-label={current ? `Dokumentasi: ${current.title}` : "Dokumentasi"}
+        aria-label={current ? `Video dokumentasi: ${current.title}` : "Video dokumentasi"}
         className="lightbox"
         onClose={() => setIndex(null)}
         onClick={(event) => {
@@ -118,17 +122,8 @@ export function GalleryExplorer({ items, programs }: GalleryExplorerProps) {
         }}
       >
         {current && (
-          <div
-            className="flex h-full flex-col items-center justify-center gap-4 p-4 md:p-8"
-            onTouchStart={(e) => (touchX.current = e.touches[0].clientX)}
-            onTouchEnd={(e) => {
-              if (touchX.current === null) return;
-              const dx = e.changedTouches[0].clientX - touchX.current;
-              if (Math.abs(dx) > 50) go(dx < 0 ? 1 : -1);
-              touchX.current = null;
-            }}
-          >
-            <div className="flex w-full max-w-5xl items-center justify-between text-white">
+          <div className="flex h-full flex-col items-center justify-center gap-4 p-4 md:p-8">
+            <div className="flex w-full max-w-4xl items-center justify-between text-white">
               <span className="text-sm font-medium text-white/80">
                 {index! + 1} / {visible.length}
               </span>
@@ -142,31 +137,33 @@ export function GalleryExplorer({ items, programs }: GalleryExplorerProps) {
               </button>
             </div>
 
-            <div className="relative flex w-full max-w-5xl flex-1 items-center justify-center">
-              <Image
-                key={current.id}
-                src={current.image}
-                alt={current.title}
-                width={current.width}
-                height={current.height}
-                sizes="(min-width: 1024px) 70vw, 95vw"
-                className="lightbox-image max-h-[62dvh] w-auto rounded-[20px] object-contain md:max-h-[68dvh]"
-              />
+            <div className="relative flex w-full max-w-4xl items-center justify-center">
+              <div className="aspect-video w-full overflow-clip rounded-[20px] bg-black shadow-lift">
+                <iframe
+                  key={current.id}
+                  src={youtubeEmbedUrl(current.youtubeId, true)}
+                  title={current.title}
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
+                  allowFullScreen
+                  referrerPolicy="strict-origin-when-cross-origin"
+                  className="size-full border-0"
+                />
+              </div>
               {visible.length > 1 && (
                 <>
                   <button
                     type="button"
                     onClick={() => go(-1)}
-                    aria-label="Sebelumnya"
-                    className="absolute left-0 grid size-12 place-items-center rounded-full bg-white/15 text-white backdrop-blur transition-colors hover:bg-white/25 md:-left-4"
+                    aria-label="Video sebelumnya"
+                    className="absolute left-2 grid size-12 place-items-center rounded-full bg-black/45 text-white backdrop-blur transition-colors hover:bg-black/65 lg:-left-16 lg:bg-white/15 lg:hover:bg-white/25"
                   >
                     <ChevronLeft aria-hidden className="size-6" />
                   </button>
                   <button
                     type="button"
                     onClick={() => go(1)}
-                    aria-label="Berikutnya"
-                    className="absolute right-0 grid size-12 place-items-center rounded-full bg-white/15 text-white backdrop-blur transition-colors hover:bg-white/25 md:-right-4"
+                    aria-label="Video berikutnya"
+                    className="absolute right-2 grid size-12 place-items-center rounded-full bg-black/45 text-white backdrop-blur transition-colors hover:bg-black/65 lg:-right-16 lg:bg-white/15 lg:hover:bg-white/25"
                   >
                     <ChevronRight aria-hidden className="size-6" />
                   </button>
@@ -189,6 +186,10 @@ export function GalleryExplorer({ items, programs }: GalleryExplorerProps) {
                     </Link>
                   </>
                 )}
+                <span aria-hidden>·</span>
+                <a href={youtubeWatchUrl(current.youtubeId)} target="_blank" rel="noopener noreferrer" className="underline-offset-4 hover:underline">
+                  Buka di YouTube
+                </a>
               </p>
             </div>
           </div>

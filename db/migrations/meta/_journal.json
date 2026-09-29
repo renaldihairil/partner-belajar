@@ -15,6 +15,13 @@
       "when": 1790678611278,
       "tag": "0001_chemical_rick_jones",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1790683961556,
+      "tag": "0002_striped_puff_adder",
+      "breakpoints": true
     }
   ]
 }

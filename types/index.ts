@@ -194,9 +194,8 @@ export type DocumentationItem = {
   date: string;
   category: DocumentationCategory;
   programId?: string;
-  image: string;
-  width: number;
-  height: number;
+  /** ID video YouTube (11 karakter). */
+  youtubeId: string;
 };
 
 export type Reason = {

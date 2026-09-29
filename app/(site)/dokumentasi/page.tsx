@@ -1,12 +1,14 @@
 import { Camera, MessageCircle } from "lucide-react";
 import { GalleryExplorer } from "@/components/documentation/GalleryExplorer";
 import { PageHeader } from "@/components/ui/PageHeader";
-import { documentation } from "@/data/documentation";
+import { getDocumentation } from "@/lib/documentation-service";
+import { youtubeEmbedUrl, youtubeThumbnail } from "@/lib/youtube";
+import { absoluteUrl } from "@/lib/site-config";
 import { pageMetadata } from "@/lib/metadata";
 import { getProgramsWithClasses } from "@/lib/programs-service";
 import { whatsappUrl } from "@/lib/whatsapp";
 
-const description = "Momen belajar para siswa Partner Belajar — di kelas online, tatap muka, dan kegiatan spesial.";
+const description = "Video momen belajar para siswa Partner Belajar — di kelas online, tatap muka, dan kegiatan spesial.";
 
 export const metadata = pageMetadata({
   title: "Dokumentasi Belajar — Partner Belajar",
@@ -15,8 +17,21 @@ export const metadata = pageMetadata({
 });
 
 export default async function DokumentasiPage() {
-  const programs = await getProgramsWithClasses();
-  const sorted = [...documentation].sort((a, b) => b.date.localeCompare(a.date));
+  const [programs, sorted] = await Promise.all([getProgramsWithClasses(), getDocumentation()]);
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@graph": sorted.map((item) => ({
+      "@type": "VideoObject",
+      name: item.title,
+      description: item.caption,
+      thumbnailUrl: youtubeThumbnail(item.youtubeId),
+      uploadDate: item.date,
+      embedUrl: youtubeEmbedUrl(item.youtubeId),
+      contentUrl: `https://youtu.be/${item.youtubeId}`,
+      inLanguage: "id-ID",
+      isPartOf: { "@type": "WebPage", "@id": absoluteUrl("/dokumentasi") },
+    })),
+  };
 
   return (
     <>
@@ -32,20 +47,21 @@ export default async function DokumentasiPage() {
           <div>
             <p className="font-bold text-ink">Punya momen belajar anak bersama kami?</p>
             <p className="text-sm text-ink-soft">
-              Kirimkan fotonya via WhatsApp. Kami hanya menampilkan foto dengan izin orang tua.
+              Kirimkan videonya via WhatsApp. Kami hanya menampilkan video dengan izin orang tua.
             </p>
           </div>
         </div>
         <a
-          href={whatsappUrl("Assalamu'alaikum Admin Partner Belajar, saya ingin berbagi foto momen belajar anak saya.")}
+          href={whatsappUrl("Assalamu'alaikum Admin Partner Belajar, saya ingin berbagi video momen belajar anak saya.")}
           target="_blank"
           rel="noopener noreferrer"
           className="inline-flex min-h-11 shrink-0 items-center gap-2 rounded-full bg-[#1faf55] px-5 text-sm font-semibold text-white transition-all hover:-translate-y-0.5"
         >
           <MessageCircle aria-hidden className="size-4" />
-          Kirim Foto
+          Kirim Video
         </a>
       </aside>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }} />
     </>
   );
 }

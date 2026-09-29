@@ -5,6 +5,7 @@ import type {
   AudienceItem,
   ClassMode,
   CurriculumModule,
+  DocumentationCategory,
   PricePlan,
   ProgramTheme,
   Teacher,
@@ -125,6 +126,19 @@ export const articles = pgTable(
   (t) => [index("articles_date_idx").on(t.date)],
 );
 
+export const documentation = pgTable("documentation", {
+  id: text("id").primaryKey(),
+  title: text("title").notNull(),
+  caption: text("caption").notNull(),
+  /** Tanggal kegiatan "YYYY-MM-DD". */
+  date: text("date").notNull(),
+  category: text("category").$type<DocumentationCategory>().notNull(),
+  programId: text("program_id").references(() => programs.id, { onDelete: "set null" }),
+  youtubeId: text("youtube_id").notNull(),
+  published: boolean("published").notNull().default(true),
+  ...timestamps,
+});
+
 export const adminUsers = pgTable("admin_users", {
   id: text("id").primaryKey(),
   email: text("email").notNull().unique(),
@@ -152,5 +166,6 @@ export type ProgramRow = typeof programs.$inferSelect;
 export type ProgramClassRow = typeof programClasses.$inferSelect;
 export type TeacherRow = typeof teachers.$inferSelect;
 export type ArticleRow = typeof articles.$inferSelect;
+export type DocumentationRow = typeof documentation.$inferSelect;
 export type TestimonialRow = typeof testimonials.$inferSelect;
 export type AdminUserRow = typeof adminUsers.$inferSelect;

@@ -4,7 +4,11 @@ const nextConfig: NextConfig = {
   images: {
     formats: ["image/avif", "image/webp"],
     // Foto yang diunggah lewat admin (Vercel Blob).
-    remotePatterns: [{ protocol: "https", hostname: "*.public.blob.vercel-storage.com" }],
+    remotePatterns: [
+      { protocol: "https", hostname: "*.public.blob.vercel-storage.com" },
+      // Gambar mini video dokumentasi (YouTube).
+      { protocol: "https", hostname: "i.ytimg.com" },
+    ],
   },
   poweredByHeader: false,
   // Database lokal (development) memakai WebAssembly — dimuat langsung dari node_modules.

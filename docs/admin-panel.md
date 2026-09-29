@@ -9,6 +9,7 @@ Yang bisa dikelola:
 | Pengajar | Profil, foto, program yang diajar, keunggulan, tampil/sembunyi, urutan |
 | Testimoni | Isi, rating, program, kota, tanggal, tampil/sembunyi, urutan |
 | Artikel | Judul, ringkasan, isi (blok paragraf/subjudul/daftar/tips), gambar sampul, kategori, tag, penulis, tanggal terbit, draf/terbit, artikel pilihan |
+| Dokumentasi | Video dokumentasi dari YouTube (tempel tautan): judul, keterangan, kategori, tanggal, program terkait, tampil/sembunyi. Ditampilkan sebagai grid 3 kolom; klik untuk memutar |
 | Akun Saya | Profil sendiri dan ganti password (semua admin) |
 | Kelola Admin | Khusus Pemilik: tambah/ubah/hapus admin, atur peran & menu yang boleh diakses |
 
@@ -17,7 +18,7 @@ Yang bisa dikelola:
 | Peran | Akses |
 | --- | --- |
 | **Pemilik** | Semua menu + mengelola akun admin lain. Akun admin yang sudah ada otomatis menjadi Pemilik. |
-| **Editor** | Hanya menu yang dicentang: Program & Jadwal, Pengajar, Testimoni, Artikel. Menu lain tidak tampil dan alamatnya dialihkan ke dashboard. |
+| **Editor** | Hanya menu yang dicentang: Program & Jadwal, Pengajar, Testimoni, Artikel, Dokumentasi. Menu lain tidak tampil dan alamatnya dialihkan ke dashboard. |
 
 Aturan: harus ada minimal satu Pemilik; peran akun sendiri tidak bisa diubah; perubahan hak akses berlaku segera.
 Pengecekan dilakukan di server (halaman dan aksi simpan/hapus/unggah), bukan hanya menyembunyikan menu.
