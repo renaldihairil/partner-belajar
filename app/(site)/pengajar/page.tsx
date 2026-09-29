@@ -2,9 +2,8 @@ import { ClipboardCheck, HeartHandshake, MessageCircle, ShieldCheck, Sparkles, t
 import { TeacherExplorer } from "@/components/teachers/TeacherExplorer";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { Reveal } from "@/components/ui/Reveal";
-import { teachers } from "@/data/teachers";
 import { pageMetadata } from "@/lib/metadata";
-import { getProgramsWithClasses } from "@/lib/programs-service";
+import { getProgramsWithClasses, getTeachers } from "@/lib/programs-service";
 import { whatsappUrl } from "@/lib/whatsapp";
 
 const description = "Kenali para pengajar yang sabar, terlatih, dan siap mendampingi anak belajar dengan penuh kasih.";
@@ -23,7 +22,7 @@ const standards: { icon: LucideIcon; title: string; text: string }[] = [
 ];
 
 export default async function PengajarPage() {
-  const programs = await getProgramsWithClasses();
+  const [programs, teachers] = await Promise.all([getProgramsWithClasses(), getTeachers()]);
 
   return (
     <>

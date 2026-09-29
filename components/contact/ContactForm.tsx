@@ -3,7 +3,6 @@
 import { useState, type FormEvent } from "react";
 import { useSearchParams } from "next/navigation";
 import { CheckCircle2, MessageCircle, ShieldCheck } from "lucide-react";
-import { programs } from "@/data/programs";
 import { siteConfig } from "@/lib/site-config";
 import { createRef, deviceType, getAttribution, sendLead } from "@/lib/tracking";
 import { buildWhatsappMessage, whatsappUrl } from "@/lib/whatsapp";
@@ -31,7 +30,9 @@ const inputClass =
  * Pertanyaan umum → WhatsApp admin. Data juga dicatat ke /api/leads (jenis "tanya")
  * sehingga admin bisa mencocokkan pesan lewat kode di akhir pesan.
  */
-export function ContactForm() {
+type ProgramOption = { slug: string; code: string; title: string };
+
+export function ContactForm({ programs }: { programs: ProgramOption[] }) {
   const searchParams = useSearchParams();
   const initialProgram = programs.find((p) => p.slug === searchParams.get("program"))?.slug ?? "";
 

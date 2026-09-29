@@ -1,8 +1,9 @@
 import type { ProgramClass } from "@/types";
 
 /**
- * MOCK jadwal kelas & pendaftaran (Phase 1, frontend saja).
- * Nanti diganti oleh data dari API/admin panel — lihat lib/programs-service.ts.
+ * Jadwal kelas awal.
+ * Sekarang hanya ISI AWAL database (db/seed.ts) & cadangan bila database belum terhubung.
+ * Data yang tampil di situs dikelola lewat /admin.
  * Status (dibuka / segera / penuh / ditutup) TIDAK disimpan di sini: dihitung otomatis
  * dari tanggal + kuota oleh lib/class-status.ts, jadi cukup ubah tanggalnya.
  */

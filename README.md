@@ -1,6 +1,6 @@
 # Partner Belajar
 
-Website edukasi responsif Partner Belajar: Home, Program, Artikel, dan Contact.
+Website edukasi responsif Partner Belajar: Home, Program, Artikel, Pengajar, Dokumentasi, Testimoni, Contact, dan admin panel.
 Dibangun dengan Next.js (App Router), React, TypeScript, Tailwind CSS v4, dan Lucide React.
 
 - **Desktop (≥ 768px):** sidebar kiri berisi 7 menu (Home, Program, Artikel, Pengajar, Dokumentasi, Testimoni, Contact)
@@ -9,6 +9,9 @@ Dibangun dengan Next.js (App Router), React, TypeScript, Tailwind CSS v4, dan Lu
   Home · Program · Artikel · **Lainnya** (panel berisi Pengajar, Dokumentasi, Testimoni, Contact).
 - **Mode gelap:** tombol tema di header; pilihan disimpan di browser (`localStorage: pb-theme`), default terang.
   Semua warna berasal dari token di `app/globals.css` (`:root` & `:root[data-theme="dark"]`).
+
+**Admin panel** di `/admin` untuk mengelola Program & Jadwal, Pengajar, dan Testimoni (database Neon + foto di Vercel Blob).
+Panduan setup & cara kerja: **[docs/admin-panel.md](docs/admin-panel.md)**.
 
 Menu diatur di satu tempat: `components/navigation/navigation-config.ts`
 (`mobile: "primary" | "more"` menentukan posisi di mobile; sitemap ikut otomatis).
@@ -31,6 +34,8 @@ Buka http://localhost:3000.
 | `npm run lint`   | ESLint                             |
 | `npm run build`  | Build produksi (termasuk cek tipe) |
 | `npm start`      | Menjalankan hasil build            |
+| `npm run db:generate` | Membuat migrasi setelah mengubah `db/schema.ts` |
+| `npm run db:setup` | Migrasi + isi data awal ke database `DATABASE_URL` (otomatis saat build) |
 
 ## Struktur
 
@@ -77,17 +82,18 @@ Jika rasio gambar baru berbeda, sesuaikan `width`/`height` di komponen terkait
 
 ## Konten
 
-- Pengajar: `data/teachers.ts` — **contoh**; tanpa `photo` memakai avatar ilustrasi faceless (berpeci/berhijab)
+- **Program & jadwal kelas, Pengajar, Testimoni: dikelola di `/admin`** (database). File `data/programs.ts`,
+  `data/program-classes.ts`, `data/teachers.ts`, `data/testimonials.ts` hanya dipakai sebagai **isi awal** database
+  dan cadangan bila database belum terhubung. Pengajar tanpa foto memakai avatar ilustrasi faceless (berpeci/berhijab).
 - Dokumentasi: `data/documentation.ts` + `public/images/dokumentasi/` — **gambar masih ilustrasi placeholder**,
   ganti dengan foto kegiatan asli (wajib izin orang tua)
 - Alasan memilih: `data/reasons.ts`
 - Statistik (angka berhitung): `data/stats.ts` — **angka masih contoh**, ganti dengan data asli
-- Testimoni: `data/testimonials.ts` — **masih contoh** (dipakai di Home & halaman `/testimoni`; ringkasan rating dihitung otomatis), ganti dengan testimoni asli (dengan izin) sebelum publikasi
-- Program: `data/programs.ts`
+- Pengajar & testimoni awal masih **contoh** — ganti lewat admin dengan data asli (dengan izin) sebelum publikasi.
 - Artikel: `data/articles.ts` — **contoh**; tiap artikel berisi kategori, tag, penulis, ringkasan, dan isi berupa blok (`p`, `h2`, `list`, `tip`). Tanggal format ISO `YYYY-MM-DD`; waktu baca dihitung otomatis. `featured: true` = tampil sebagai Artikel Pilihan. Helper di `lib/articles.ts`.
 - Kontak: `lib/site-config.ts`
 
-## Jadwal kelas & pendaftaran (frontend, siap disambung ke API)
+## Jadwal kelas & pendaftaran
 
 Halaman **Program** menampilkan status pendaftaran tiap program: **Pendaftaran dibuka**, **Segera dibuka**,
 **Kuota penuh**, atau **Pendaftaran ditutup**, lengkap dengan tanggal mulai, jadwal, mode, sisa kursi,
@@ -96,9 +102,9 @@ filter status, dan panel jadwal (dialog) per program.
 | Bagian | File |
 | --- | --- |
 | Tipe data (`ProgramClass`, `ProgramWithClasses`, `RegistrationStatus`) | `types/index.ts` |
-| Mock jadwal kelas | `data/program-classes.ts` |
+| Jadwal kelas | Admin → Program & Jadwal → tab Jadwal kelas |
 | Hitung status dari tanggal (WIB) + kuota | `lib/class-status.ts` |
-| Sumber data (mock ↔ API) | `lib/programs-service.ts` |
+| Sumber data (database ↔ data bawaan) | `lib/programs-service.ts` |
 | Tujuan tombol daftar/ingatkan/daftar tunggu | `components/program/registration.ts` |
 | UI | `components/program/*` |
 
@@ -108,9 +114,8 @@ filter status, dan panel jadwal (dialog) per program.
 - Tautan langsung ke jadwal: `/program#jadwal-<slug>`, mis. `/program#jadwal-quran-partner`.
 - Klik kartu → halaman detail `/program/<slug>` (Hero, Kurikulum, Cocok untuk siapa, Jadwal, Harga, CTA).
 
-**Menyambungkan ke server nanti:** buat endpoint yang mengembalikan `ProgramWithClasses[]` (JSON, bentuk sama
-dengan tipe di atas), lalu isi env `PROGRAMS_API_URL`. Jika API gagal, situs otomatis kembali memakai mock data.
-Konten halaman detail (kurikulum, target peserta, hasil belajar, harga) ada di `data/programs.ts`.
+Konten halaman detail (kurikulum, target peserta, hasil belajar, harga) dikelola di admin (Program → Info & konten).
+Jika database error, situs otomatis kembali memakai data bawaan agar tidak rusak.
 
 ## Pendaftaran via WhatsApp + tracking
 
@@ -158,6 +163,8 @@ git push -u origin main
 
 Lalu di Vercel: **Add New → Project → import repo `partner-belajar`**, framework otomatis Next.js,
 tambahkan environment variable `NEXT_PUBLIC_SITE_URL`, lalu **Deploy**.
+Untuk admin panel, hubungkan Neon & Blob dan isi `AUTH_SECRET`, `ADMIN_EMAIL`, `ADMIN_PASSWORD`
+(langkah lengkap di [docs/admin-panel.md](docs/admin-panel.md)).
 Domain `partnerbelajar.my.id` ditambahkan nanti lewat **Settings → Domains**.
 
 ## Kecepatan pindah halaman

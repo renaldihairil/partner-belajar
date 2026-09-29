@@ -2,11 +2,10 @@ import { BookOpenText, CheckCircle2, HeartHandshake, Sparkles, Star, type Lucide
 import { CharacterIllustration } from "@/components/character/CharacterIllustration";
 import { ButtonLink } from "@/components/ui/Button";
 import { SunRays } from "@/components/ui/Decor";
-import { programs } from "@/data/programs";
 
 const highlights = ["Metode interaktif", "Nilai-nilai Islami", "Laporan untuk orang tua"];
 
-export function HomeHero() {
+export function HomeHero({ programCount }: { programCount: number }) {
   return (
     <section
       aria-labelledby="hero-title"
@@ -103,7 +102,7 @@ export function HomeHero() {
           <FloatingChip
             icon={BookOpenText}
             tone="teal"
-            title={`${programs.length} Program`}
+            title={`${programCount} Program`}
             subtitle="Pilihan belajar"
             className="top-[18%] -left-1 sm:-left-4 lg:top-[22%] lg:-left-10"
             delay="0s"

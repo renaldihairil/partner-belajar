@@ -1,8 +1,5 @@
 import type { Metadata, Viewport } from "next";
 import { Poppins } from "next/font/google";
-import { AppShell } from "@/components/layout/AppShell";
-import { RegistrationProvider } from "@/components/registration/RegistrationProvider";
-import { getProgramsWithClasses } from "@/lib/programs-service";
 import { themeInitScript } from "@/lib/theme";
 import { siteConfig } from "@/lib/site-config";
 import "./globals.css";
@@ -31,8 +28,7 @@ export const viewport: Viewport = {
   viewportFit: "cover",
 };
 
-export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  const programs = await getProgramsWithClasses();
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     // suppressHydrationWarning: atribut data-theme diisi skrip sebelum React hydrate.
     <html lang="id" data-theme="light" suppressHydrationWarning>
@@ -40,9 +36,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
       </head>
       <body className={`${poppins.variable} antialiased`}>
-        <RegistrationProvider programs={programs}>
-          <AppShell>{children}</AppShell>
-        </RegistrationProvider>
+        {children}
       </body>
     </html>
   );

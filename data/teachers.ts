@@ -1,7 +1,9 @@
 import type { Teacher } from "@/types";
 
 /**
- * CONTOH profil pengajar — ganti dengan data asli (nama, latar belakang, dan foto dengan izin).
+ * CONTOH profil pengajar.
+ * Sekarang hanya ISI AWAL database (db/seed.ts) & cadangan bila database belum terhubung.
+ * Data yang tampil di situs dikelola lewat /admin.
  * Tanpa `photo`, kartu memakai avatar ilustrasi faceless sesuai identitas brand.
  */
 export const teachers: Teacher[] = [

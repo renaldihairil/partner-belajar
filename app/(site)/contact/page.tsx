@@ -40,7 +40,7 @@ export default async function ContactPage() {
       <div className="mt-8 grid items-start gap-6 lg:grid-cols-[1.4fr_1fr]">
         <Reveal className="rounded-[var(--radius-card)] border border-line bg-surface p-5 shadow-soft md:p-8">
           <Suspense fallback={null}>
-            <ContactForm />
+            <ContactForm programs={programs.map(({ slug, code, title }) => ({ slug, code, title }))} />
           </Suspense>
         </Reveal>
 

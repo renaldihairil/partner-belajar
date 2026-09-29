@@ -15,7 +15,8 @@ type PageProps = { params: Promise<{ slug: string }> };
 
 // Statis + diperbarui berkala (ISR) agar status jadwal di HTML tetap segar.
 export const revalidate = 3600;
-export const dynamicParams = false;
+// Program baru dari admin langsung bisa dibuka tanpa build ulang.
+export const dynamicParams = true;
 
 export async function generateStaticParams() {
   const programs = await getProgramsWithClasses();

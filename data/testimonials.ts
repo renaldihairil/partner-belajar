@@ -2,6 +2,8 @@ import type { Testimonial } from "@/types";
 
 /**
  * CONTOH testimoni untuk Phase 1 (bukan ulasan asli).
+ * Sekarang hanya ISI AWAL database (db/seed.ts) & cadangan bila database belum terhubung.
+ * Data yang tampil di situs dikelola lewat /admin.
  * Ganti dengan testimoni nyata dari orang tua (dengan izin) sebelum situs dipublikasikan.
  */
 export const testimonials: Testimonial[] = [

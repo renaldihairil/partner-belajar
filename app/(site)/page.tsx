@@ -6,8 +6,8 @@ import { WhyChooseUs } from "@/components/home/WhyChooseUs";
 import { features } from "@/data/features";
 import { reasons } from "@/data/reasons";
 import { stats } from "@/data/stats";
-import { testimonials } from "@/data/testimonials";
 import { pageMetadata } from "@/lib/metadata";
+import { getProgramsWithClasses, getTestimonials } from "@/lib/programs-service";
 import { siteConfig } from "@/lib/site-config";
 
 export const metadata = pageMetadata({
@@ -16,10 +16,11 @@ export const metadata = pageMetadata({
   path: "/",
 });
 
-export default function HomePage() {
+export default async function HomePage() {
+  const [programs, testimonials] = await Promise.all([getProgramsWithClasses(), getTestimonials()]);
   return (
     <>
-      <HomeHero />
+      <HomeHero programCount={programs.length} />
       <section aria-label="Keunggulan Partner Belajar" className="mt-6 md:mt-5">
         <ul className="grid grid-cols-2 gap-3 md:gap-4 lg:grid-cols-4">
           {features.map((feature, index) => (

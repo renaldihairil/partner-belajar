@@ -43,3 +43,6 @@ next-env.d.ts
 
 # pengaturan lokal Claude Code
 /.claude/
+
+# upload foto lokal saat development
+/public/uploads/

@@ -3,9 +3,8 @@ import { RatingSummary } from "@/components/testimonials/RatingSummary";
 import { TestimonialsExplorer } from "@/components/testimonials/TestimonialsExplorer";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { Reveal } from "@/components/ui/Reveal";
-import { testimonials } from "@/data/testimonials";
 import { pageMetadata } from "@/lib/metadata";
-import { getProgramsWithClasses } from "@/lib/programs-service";
+import { getProgramsWithClasses, getTestimonials } from "@/lib/programs-service";
 import { whatsappUrl } from "@/lib/whatsapp";
 
 const description = "Cerita dan pengalaman para orang tua yang anaknya belajar bersama Partner Belajar.";
@@ -17,7 +16,7 @@ export const metadata = pageMetadata({
 });
 
 export default async function TestimoniPage() {
-  const programs = await getProgramsWithClasses();
+  const [programs, testimonials] = await Promise.all([getProgramsWithClasses(), getTestimonials()]);
   const sorted = [...testimonials].sort((a, b) => (b.date ?? "").localeCompare(a.date ?? ""));
 
   return (

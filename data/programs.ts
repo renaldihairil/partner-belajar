@@ -31,6 +31,11 @@ function standardPricing(overrides: Partial<Record<"privat" | "duo" | "trio", nu
   ];
 }
 
+/**
+ * Program awal.
+ * Sekarang hanya ISI AWAL database (db/seed.ts) & cadangan bila database belum terhubung.
+ * Data yang tampil di situs dikelola lewat /admin.
+ */
 export const programs: Program[] = [
   {
     id: "english",
