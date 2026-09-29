@@ -1,9 +1,23 @@
 import type { Metadata } from "next";
 import { asc } from "drizzle-orm";
 import Link from "next/link";
+import { Eye, GraduationCap, Users } from "lucide-react";
 import { deleteTeacherAction, moveTeacherAction, toggleTeacherAction } from "@/app/admin/actions/teachers";
 import { RowActions } from "@/components/admin/RowActions";
-import { AddLink, AdminPageHeader, Badge, EmptyState, ListCard, ListRow, Notice, noticeMessages, StatusBadge } from "@/components/admin/ui";
+import {
+  AddLink,
+  AdminPageHeader,
+  Badge,
+  EmptyState,
+  ListCard,
+  ListRow,
+  Notice,
+  noticeMessages,
+  RowNumber,
+  StatCards,
+  StatusBadge,
+  type StatItem,
+} from "@/components/admin/ui";
 import { TeacherAvatar } from "@/components/teachers/TeacherAvatar";
 import { requireDb, schema } from "@/db";
 import { programOptions } from "@/lib/admin/queries";
@@ -13,28 +27,50 @@ export const metadata: Metadata = { title: "Pengajar" };
 
 type PageProps = { searchParams: Promise<{ pesan?: string }> };
 
+const GRID = "@3xl:grid-cols-[2.5rem_minmax(0,1fr)_minmax(0,14rem)_8rem_13rem]";
+const programTones = ["blue", "yellow", "purple"] as const;
+
 export default async function AdminTeachersPage({ searchParams }: PageProps) {
   const { pesan } = await searchParams;
   const db = await requireDb();
   const [items, programs] = await Promise.all([db.select().from(schema.teachers).orderBy(asc(schema.teachers.sortOrder)), programOptions()]);
   const programName = new Map(programs.map((p) => [p.value, p.label]));
+  const stats: StatItem[] = [
+    { label: "Total pengajar", value: items.length, icon: Users, tone: "teal" },
+    { label: "Tampil di situs", value: items.filter((t) => t.published).length, icon: Eye, tone: "green" },
+    ...programs.slice(0, 2).map((p, i) => ({
+      label: p.label,
+      note: "pengajar",
+      value: items.filter((t) => t.programIds.includes(p.value)).length,
+      icon: GraduationCap,
+      tone: programTones[i],
+    })),
+  ];
 
   return (
     <div className="adm-fade-in">
       <AdminPageHeader
         title="Pengajar"
         description="Profil pengajar yang tampil di halaman Pengajar. Urutan di sini sama dengan urutan tampil."
-        action={<AddLink href="/admin/pengajar/baru">Tambah pengajar</AddLink>}
+        searchPlaceholder="Cari pengajar..."
+        action={<AddLink href="/admin/pengajar/baru">Tambah Pengajar</AddLink>}
       />
       <Notice message={pesan ? noticeMessages[pesan] : undefined} />
+      <StatCards items={stats} />
       {items.length === 0 ? (
-        <EmptyState action={<AddLink href="/admin/pengajar/baru">Tambah pengajar</AddLink>}>Belum ada pengajar.</EmptyState>
+        <EmptyState action={<AddLink href="/admin/pengajar/baru">Tambah Pengajar</AddLink>}>Belum ada pengajar.</EmptyState>
       ) : (
-        <ListCard title="Semua pengajar" count={items.length}>
+        <ListCard count={items.length} head={["No", "Pengajar", "Program", "Status", "Aksi"]} cols={GRID}>
           {items.map((item, index) => (
-            <ListRow key={item.id} muted={!item.published}>
-              <Link href={`/admin/pengajar/${item.id}`} className="row-main group flex min-w-0 flex-1 items-center gap-3.5">
-                <span className="size-11 shrink-0 overflow-clip rounded-full bg-[var(--adm-hover)] ring-1 ring-line">
+            <ListRow
+              key={item.id}
+              muted={!item.published}
+              cols={GRID}
+              search={`${item.name} ${item.title} ${item.education} ${item.programIds.map((id) => programName.get(id) ?? id).join(" ")}`}
+            >
+              <RowNumber n={index + 1} />
+              <Link href={`/admin/pengajar/${item.id}`} className="row-main group flex min-w-0 items-center gap-3.5">
+                <span className="size-12 shrink-0 overflow-clip rounded-full bg-[var(--adm-hover)] shadow-soft ring-2 ring-white dark:ring-line">
                   {item.photo ? (
                     // eslint-disable-next-line @next/next/no-img-element -- foto dari Blob / lokal
                     <img src={item.photo} alt="" className="size-full object-cover" />
@@ -49,13 +85,16 @@ export default async function AdminTeachersPage({ searchParams }: PageProps) {
                   </span>
                 </span>
               </Link>
-              <div className="flex flex-wrap items-center gap-1.5 md:w-72 md:justify-end">
+              <div className="flex flex-wrap items-center gap-1.5">
+                {item.programIds.length === 0 && <span className="text-xs text-ink-soft">—</span>}
                 {item.programIds.map((id) => (
                   <Badge key={id} tone="info">
                     {programName.get(id) ?? id}
                   </Badge>
                 ))}
-                <StatusBadge published={item.published} />
+              </div>
+              <div>
+                <StatusBadge published={item.published} labels={["Aktif", "Disembunyikan"]} />
               </div>
               <RowActions
                 id={item.id}

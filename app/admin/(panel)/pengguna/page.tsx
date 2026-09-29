@@ -52,7 +52,7 @@ export default async function ManageAdminsPage({ searchParams }: { searchParams:
             <h2 className="text-[15px] font-semibold text-ink">Daftar admin</h2>
             <p className="mt-1 text-[13px] leading-relaxed text-ink-soft">Pemilik punya akses penuh. Editor hanya membuka menu yang diizinkan.</p>
           </div>
-          <ul className="divide-y divide-line overflow-clip rounded-xl border border-line bg-surface shadow-soft">
+          <ul className="divide-y divide-line overflow-clip rounded-2xl border border-line bg-surface shadow-soft">
             {admins.map((a) => (
               <li key={a.id} className="flex items-center justify-between gap-3 px-4 py-3">
                 <div className="min-w-0">

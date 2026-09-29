@@ -33,7 +33,7 @@ export default async function ProgramAdminLayout({ children, params }: { childre
         Semua program
       </Link>
       <div className="mb-6 flex flex-wrap items-center gap-4">
-        <span className={`theme-${program.theme} program-surface grid size-14 shrink-0 place-items-center overflow-clip rounded-xl ring-1 ring-line`}>
+        <span className={`theme-${program.theme} program-surface grid size-14 shrink-0 place-items-center overflow-clip rounded-2xl ring-1 ring-line`}>
           {/* eslint-disable-next-line @next/next/no-img-element -- thumbnail dari lokal / Blob */}
           <img src={program.image} alt="" className="size-12 object-contain" />
         </span>

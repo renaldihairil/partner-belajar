@@ -140,6 +140,8 @@ export type Article = {
   tags: string[];
   author: { name: string; role: string };
   content: ArticleBlock[];
+  /** Waktu terakhir diubah (ISO) — untuk SEO (dateModified, sitemap). */
+  updatedAt?: string;
   /** Tampilkan sebagai artikel pilihan di atas grid. */
   featured?: boolean;
 };

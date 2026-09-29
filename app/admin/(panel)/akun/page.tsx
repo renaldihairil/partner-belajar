@@ -17,7 +17,7 @@ export default async function MyAccountPage() {
             <h2 className="text-[15px] font-semibold text-ink">Profil</h2>
             <p className="mt-1 text-[13px] leading-relaxed text-ink-soft">Peran dan menu ditentukan oleh Pemilik.</p>
           </div>
-          <div className="rounded-xl border border-line bg-surface p-5 shadow-soft">
+          <div className="rounded-2xl border border-line bg-surface p-5 shadow-soft">
             <p className="text-sm font-semibold text-ink">{me.name}</p>
             <p className="text-sm text-ink-soft">{me.email}</p>
             <p className="mt-3 flex flex-wrap items-center gap-1.5">

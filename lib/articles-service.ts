@@ -24,6 +24,7 @@ export function toArticle(row: ArticleRow): Article {
     tags: row.tags,
     author: { name: row.authorName, role: row.authorRole },
     content: row.content,
+    updatedAt: row.updatedAt.toISOString(),
     featured: row.featured || undefined,
   };
 }

@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { ArrowUpRight, BookOpen, CalendarCheck2, GraduationCap, MessageSquareQuote, Newspaper } from "lucide-react";
+import { BookOpen, CalendarCheck2, GraduationCap, MessageSquareQuote, Newspaper } from "lucide-react";
 import { DashboardActivity, DashboardSystem, DashboardUpcoming } from "@/components/admin/DashboardPanels";
 import { requireDb, schema } from "@/db";
-import { Notice, noticeMessages } from "@/components/admin/ui";
+import { Notice, noticeMessages, StatCards } from "@/components/admin/ui";
 import { hasPermission } from "@/lib/auth/permissions";
 import { requireAdmin } from "@/lib/auth/session";
 import { getClassStatus } from "@/lib/class-status";
@@ -94,29 +93,11 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
         <p className="mt-1 text-sm text-ink-soft">Ringkasan konten situs Partner Belajar. Perubahan yang disimpan langsung tampil di situs.</p>
       </div>
 
-      <ul className="grid grid-cols-2 gap-3 lg:grid-cols-3 xl:grid-cols-5 lg:gap-4">
-        {stats.map(({ href, label, value, note, icon: Icon }) => (
-          <li key={label}>
-            <Link href={href} className="group block h-full rounded-xl border border-line bg-surface p-4 shadow-soft transition-all hover:border-brand-teal/30 hover:shadow-lift md:p-5">
-              <div className="flex items-center justify-between">
-                <p className="text-[13px] font-medium text-ink-soft">{label}</p>
-                <span className="grid size-8 place-items-center rounded-lg bg-brand-teal-soft text-brand-teal-dark">
-                  <Icon aria-hidden className="size-4" />
-                </span>
-              </div>
-              <p className="mt-3 text-3xl font-semibold tracking-tight text-ink tabular-nums">{value}</p>
-              <p className="mt-1 flex items-center gap-1 text-xs text-ink-soft">
-                {note}
-                <ArrowUpRight aria-hidden className="size-3 opacity-0 transition-opacity group-hover:opacity-100" />
-              </p>
-            </Link>
-          </li>
-        ))}
-      </ul>
+      <StatCards items={stats.map((stat, i) => ({ ...stat, value: stat.value, tone: (["teal", "blue", "purple", "yellow", "green"] as const)[i % 5] }))} />
 
-      <div className="grid gap-6 lg:grid-cols-3">
-        {can.program ? <DashboardUpcoming items={upcoming} /> : <div className="lg:col-span-2" />}
-        <div className="grid content-start gap-6">
+      <div className="grid gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
+        {can.program ? <DashboardUpcoming items={upcoming} /> : <div />}
+        <div className="grid min-w-0 content-start gap-6">
           <DashboardSystem storage={isStorageConfigured()} />
           <DashboardActivity items={activity} />
         </div>

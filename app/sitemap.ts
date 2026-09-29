@@ -21,7 +21,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }));
   const articlePages: MetadataRoute.Sitemap = articles.map((article) => ({
     url: absoluteUrl(`/artikel/${article.slug}`),
-    lastModified: new Date(article.date),
+    lastModified: new Date(article.updatedAt ?? article.date),
+    images: [absoluteUrl(article.image)],
     changeFrequency: "monthly",
     priority: 0.7,
   }));

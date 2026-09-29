@@ -8,7 +8,7 @@ type PageMetaInput = {
   /** Gambar Open Graph khusus (default: og-image situs). */
   image?: { url: string; width: number; height: number; alt: string };
   /** Data tambahan untuk halaman artikel. */
-  article?: { publishedTime: string; authors: string[]; tags: string[] };
+  article?: { publishedTime: string; modifiedTime?: string; authors: string[]; tags: string[]; section?: string };
 };
 
 /** Metadata per halaman: title unik, description, canonical, dan Open Graph. */
@@ -17,7 +17,10 @@ export function pageMetadata({ title, description, path, image, article }: PageM
   return {
     title: { absolute: title },
     description,
-    alternates: { canonical: path },
+    alternates: {
+      canonical: path,
+      types: { "application/rss+xml": [{ url: "/artikel/feed.xml", title: `Artikel ${siteConfig.name}` }] },
+    },
     openGraph: {
       title,
       description,
@@ -26,7 +29,7 @@ export function pageMetadata({ title, description, path, image, article }: PageM
       locale: siteConfig.locale,
       images: [ogImage],
       ...(article
-        ? { type: "article", publishedTime: article.publishedTime, authors: article.authors, tags: article.tags }
+        ? { type: "article", publishedTime: article.publishedTime, modifiedTime: article.modifiedTime, authors: article.authors, tags: article.tags, section: article.section }
         : { type: "website" }),
     },
     twitter: {

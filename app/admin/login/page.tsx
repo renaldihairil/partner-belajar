@@ -34,7 +34,7 @@ export default async function AdminLoginPage({ searchParams }: PageProps) {
       <section className="stats-band relative isolate hidden flex-col justify-between overflow-clip p-10 text-white lg:flex">
         <div aria-hidden className="stats-dots absolute inset-0 -z-10" />
         <div className="flex items-center gap-3">
-          <Image src="/icons/icon-192.png" alt="" width={40} height={40} className="size-10 rounded-xl bg-white/95 p-1" />
+          <Image src="/icons/icon-192.png" alt="" width={40} height={40} className="size-10 rounded-2xl bg-white/95 p-1" />
           <span className="text-lg font-semibold">Partner Belajar</span>
         </div>
         <div className="relative mx-auto w-full max-w-md">

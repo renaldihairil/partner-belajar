@@ -73,7 +73,7 @@ export function ImageUpload({ name, label, defaultValue = "", folder, hint, erro
       </p>
       <input type="hidden" name={name} value={url} />
       <div className="flex flex-wrap items-end gap-4">
-        <div className={`relative grid place-items-center overflow-clip rounded-xl border border-dashed border-line bg-[var(--adm-hover)]/50 ${box}`}>
+        <div className={`relative grid place-items-center overflow-clip rounded-2xl border border-dashed border-line bg-[var(--adm-hover)]/50 ${box}`}>
           {url ? (
             // eslint-disable-next-line @next/next/no-img-element -- pratinjau dari domain mana pun (lokal / Blob)
             <img src={url} alt={`Pratinjau ${label}`} className="size-full object-contain" />

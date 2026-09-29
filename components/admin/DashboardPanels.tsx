@@ -15,7 +15,7 @@ const statusTone: Record<RegistrationStatus, "success" | "info" | "warning" | "n
 
 function Panel({ title, action, children }: { title: string; action?: React.ReactNode; children: React.ReactNode }) {
   return (
-    <section className="overflow-clip rounded-xl border border-line bg-surface shadow-soft">
+    <section className="overflow-clip rounded-2xl border border-line bg-surface shadow-soft">
       <div className="flex items-center justify-between gap-3 border-b border-line px-5 py-3.5">
         <h2 className="text-sm font-semibold text-ink">{title}</h2>
         {action}
@@ -29,7 +29,7 @@ type Upcoming = { row: ProgramClassRow; status: RegistrationStatus; programTitle
 
 export function DashboardUpcoming({ items }: { items: Upcoming[] }) {
   return (
-    <div className="lg:col-span-2">
+    <div className="min-w-0">
       <Panel
         title="Jadwal kelas terdekat"
         action={
@@ -83,7 +83,7 @@ export function DashboardUpcoming({ items }: { items: Upcoming[] }) {
           <Link
             key={l.href}
             href={l.href}
-            className="flex items-center gap-2.5 rounded-xl border border-dashed border-line bg-surface px-4 py-3 text-sm font-medium text-ink transition-colors hover:border-brand-teal/50 hover:bg-brand-teal-soft/40"
+            className="flex items-center gap-2.5 rounded-2xl border border-dashed border-line bg-surface px-4 py-3 text-sm font-medium text-ink transition-colors hover:border-brand-teal/50 hover:bg-brand-teal-soft/40"
           >
             <span className="grid size-7 place-items-center rounded-md bg-brand-teal-soft text-brand-teal-dark">
               <Plus aria-hidden className="size-4" />

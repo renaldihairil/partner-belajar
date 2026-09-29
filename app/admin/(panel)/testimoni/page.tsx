@@ -1,16 +1,30 @@
 import type { Metadata } from "next";
 import { asc } from "drizzle-orm";
 import Link from "next/link";
-import { Star } from "lucide-react";
+import { EyeOff, Eye, MessageSquareQuote, Star } from "lucide-react";
 import { deleteTestimonialAction, moveTestimonialAction, toggleTestimonialAction } from "@/app/admin/actions/testimonials";
 import { RowActions } from "@/components/admin/RowActions";
-import { AddLink, AdminPageHeader, Badge, EmptyState, ListCard, ListRow, Notice, noticeMessages, StatusBadge } from "@/components/admin/ui";
+import {
+  AddLink,
+  AdminPageHeader,
+  Badge,
+  EmptyState,
+  ListCard,
+  ListRow,
+  Notice,
+  noticeMessages,
+  RowNumber,
+  StatCards,
+  StatusBadge,
+} from "@/components/admin/ui";
 import { requireDb, schema } from "@/db";
 import { programOptions } from "@/lib/admin/queries";
 
 export const metadata: Metadata = { title: "Testimoni" };
 
 type PageProps = { searchParams: Promise<{ pesan?: string }> };
+
+const GRID = "@3xl:grid-cols-[2.5rem_minmax(0,1fr)_minmax(0,11rem)_7rem_8rem_13rem]";
 
 function initials(name: string) {
   return name
@@ -35,22 +49,36 @@ export default async function AdminTestimonialsPage({ searchParams }: PageProps)
     <div className="adm-fade-in">
       <AdminPageHeader
         title="Testimoni"
-        description={
-          items.length
-            ? `Rata-rata rating ${average.toLocaleString("id-ID", { maximumFractionDigits: 1 })} dari ${items.length} testimoni. Urutan di sini sama dengan urutan tampil di situs.`
-            : "Cerita orang tua yang tampil di Home dan halaman Testimoni."
-        }
-        action={<AddLink href="/admin/testimoni/baru">Tambah testimoni</AddLink>}
+        description="Cerita orang tua yang tampil di Home dan halaman Testimoni. Urutan di sini sama dengan urutan tampil."
+        searchPlaceholder="Cari testimoni..."
+        action={<AddLink href="/admin/testimoni/baru">Tambah Testimoni</AddLink>}
       />
       <Notice message={pesan ? noticeMessages[pesan] : undefined} />
+      <StatCards
+        items={[
+          { label: "Total testimoni", value: items.length, icon: MessageSquareQuote, tone: "teal" },
+          { label: "Tampil di situs", value: items.filter((t) => t.published).length, icon: Eye, tone: "green" },
+          { label: "Rating rata-rata", value: average.toLocaleString("id-ID", { maximumFractionDigits: 1 }), icon: Star, tone: "yellow" },
+          { label: "Disembunyikan", value: items.filter((t) => !t.published).length, icon: EyeOff, tone: "purple" },
+        ]}
+      />
       {items.length === 0 ? (
-        <EmptyState action={<AddLink href="/admin/testimoni/baru">Tambah testimoni</AddLink>}>Belum ada testimoni.</EmptyState>
+        <EmptyState action={<AddLink href="/admin/testimoni/baru">Tambah Testimoni</AddLink>}>Belum ada testimoni.</EmptyState>
       ) : (
-        <ListCard title="Semua testimoni" count={items.length}>
+        <ListCard count={items.length} head={["No", "Nama & pesan", "Program", "Kota", "Status", "Aksi"]} cols={GRID}>
           {items.map((item, index) => (
-            <ListRow key={item.id} muted={!item.published}>
-              <Link href={`/admin/testimoni/${item.id}`} className="row-main group flex min-w-0 flex-1 items-start gap-3.5">
-                <span aria-hidden className="grid size-10 shrink-0 place-items-center rounded-full bg-brand-teal-soft text-xs font-semibold text-brand-teal-dark">
+            <ListRow
+              key={item.id}
+              muted={!item.published}
+              cols={GRID}
+              search={`${item.name} ${item.quote} ${item.city ?? ""} ${programName.get(item.programId ?? "") ?? ""}`}
+            >
+              <RowNumber n={index + 1} />
+              <Link href={`/admin/testimoni/${item.id}`} className="row-main group flex min-w-0 items-start gap-3.5">
+                <span
+                  aria-hidden
+                  className="grid size-11 shrink-0 place-items-center rounded-full bg-brand-teal-soft text-xs font-bold text-brand-teal-dark shadow-soft ring-2 ring-white dark:ring-line"
+                >
                   {initials(item.name)}
                 </span>
                 <span className="min-w-0">
@@ -65,9 +93,11 @@ export default async function AdminTestimonialsPage({ searchParams }: PageProps)
                   <span className="mt-0.5 line-clamp-1 text-[13px] text-ink-soft">{item.quote}</span>
                 </span>
               </Link>
-              <div className="flex flex-wrap items-center gap-1.5 md:w-64 md:justify-end">
-                {item.programId && <Badge tone="info">{programName.get(item.programId) ?? item.programId}</Badge>}
-                {item.city && <Badge>{item.city}</Badge>}
+              <div>
+                {item.programId ? <Badge tone="info">{programName.get(item.programId) ?? item.programId}</Badge> : <span className="text-xs text-ink-soft">—</span>}
+              </div>
+              <div className="text-[13px] text-ink-soft">{item.city ?? "—"}</div>
+              <div>
                 <StatusBadge published={item.published} />
               </div>
               <RowActions

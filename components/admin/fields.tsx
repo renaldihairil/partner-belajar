@@ -156,7 +156,7 @@ export function FormSection({ title, description, children }: { title: string; d
         <h2 className="text-[15px] font-semibold text-ink">{title}</h2>
         {description && <p className="mt-1 text-[13px] leading-relaxed text-ink-soft">{description}</p>}
       </div>
-      <div className="grid gap-5 rounded-xl border border-line bg-surface p-5 shadow-soft">{children}</div>
+      <div className="grid gap-5 rounded-2xl border border-line bg-surface p-5 shadow-soft">{children}</div>
     </section>
   );
 }

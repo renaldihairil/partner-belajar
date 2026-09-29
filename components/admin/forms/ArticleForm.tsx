@@ -6,11 +6,14 @@ import type { ArticleRow } from "@/db/schema";
 import { articleCategories } from "@/lib/articles";
 import { AdminForm, useFieldError } from "../AdminForm";
 import { ArticleBlocksField } from "../ArticleBlocksField";
+import { SeoPreview } from "../SeoPreview";
 import { ImageUpload } from "../ImageUpload";
 import { StringListField } from "../ListFields";
 import { FormSection, SelectField, SwitchField, TextAreaField, TextField } from "../fields";
 
-function Fields({ item, today }: { item?: ArticleRow; today: string }) {
+type SiteInfo = { siteUrl: string; siteName: string };
+
+function Fields({ item, today, siteUrl, siteName }: { item?: ArticleRow; today: string } & SiteInfo) {
   const e = useFieldError;
   return (
     <>
@@ -23,7 +26,7 @@ function Fields({ item, today }: { item?: ArticleRow; today: string }) {
           rows={3}
           maxLength={300}
           defaultValue={item?.excerpt}
-          hint="Tampil di kartu artikel dan hasil pencarian Google. Maksimal 300 karakter."
+          hint="Tampil di kartu artikel dan jadi deskripsi di Google. Ideal 70–160 karakter."
           required
           error={e("excerpt")}
         />
@@ -58,6 +61,10 @@ function Fields({ item, today }: { item?: ArticleRow; today: string }) {
         <StringListField name="tags" label="Tag" hint="Maksimal 8, huruf kecil." defaultValue={item?.tags ?? []} placeholder="mis. belajar di rumah" addLabel="Tambah tag" error={e("tags")} />
       </FormSection>
 
+      <FormSection title="Pratinjau Google (SEO)" description="Begini artikel akan tampil di hasil pencarian Google. Judul dan ringkasan yang jelas membantu artikel ditemukan.">
+        <SeoPreview siteUrl={siteUrl} siteName={siteName} />
+      </FormSection>
+
       <FormSection title="Publikasi">
         <SwitchField name="published" label="Terbitkan di situs" description="Matikan untuk menyimpan sebagai draf." defaultChecked={item?.published ?? true} />
         <SwitchField name="featured" label="Jadikan artikel pilihan" description="Tampil besar di atas halaman Artikel. Hanya satu artikel yang bisa jadi pilihan." defaultChecked={item?.featured ?? false} />
@@ -66,7 +73,7 @@ function Fields({ item, today }: { item?: ArticleRow; today: string }) {
   );
 }
 
-export function ArticleForm({ item, today }: { item?: ArticleRow; today: string }) {
+export function ArticleForm({ item, today, siteUrl, siteName }: { item?: ArticleRow; today: string } & SiteInfo) {
   return (
     <AdminForm
       action={saveArticleAction}
@@ -77,7 +84,7 @@ export function ArticleForm({ item, today }: { item?: ArticleRow; today: string 
         </Link>
       }
     >
-      <Fields item={item} today={today} />
+      <Fields item={item} today={today} siteUrl={siteUrl} siteName={siteName} />
     </AdminForm>
   );
 }

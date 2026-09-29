@@ -6,7 +6,11 @@ import { useFormStatus } from "react-dom";
 import { ArrowDown, ArrowUp, Eye, EyeOff, Loader2, Pencil, Trash2 } from "lucide-react";
 
 const iconBtn =
-  "grid size-8 place-items-center rounded-md text-ink-soft transition-colors hover:bg-[var(--adm-hover)] hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-teal/40 disabled:pointer-events-none disabled:opacity-30";
+  "grid size-9 place-items-center rounded-lg text-ink-soft transition-colors hover:bg-[var(--adm-hover)] hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-teal/40 disabled:pointer-events-none disabled:opacity-30";
+
+/** Tombol edit (abu-abu lembut) & hapus (merah lembut) — sama seperti tabel di desain. */
+const editBtn = "grid size-9 place-items-center rounded-lg bg-[var(--adm-hover)] text-ink transition-colors hover:bg-brand-teal-soft hover:text-brand-teal-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-teal/40";
+const deleteBtn = "grid size-9 place-items-center rounded-lg bg-red-50 text-red-500 transition-colors hover:bg-red-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400/40 dark:bg-red-950/40 dark:hover:bg-red-950/70";
 
 function PendingIcon({ children }: { children: ReactNode }) {
   const { pending } = useFormStatus();
@@ -40,7 +44,7 @@ export function RowActions({
   deleteMessage,
 }: RowActionsProps) {
   return (
-    <div className="flex shrink-0 items-center gap-0.5 rounded-lg border border-line bg-surface p-0.5 shadow-soft">
+    <div className="flex shrink-0 items-center gap-1">
       {moveAction && (
         <>
           <form action={moveAction}>
@@ -77,10 +81,9 @@ export function RowActions({
           </button>
         </form>
       )}
-      <Link href={editHref} className={iconBtn} aria-label={`Edit ${label}`} title="Edit">
+      <Link href={editHref} className={editBtn} aria-label={`Edit ${label}`} title="Edit">
         <Pencil aria-hidden className="size-4" />
       </Link>
-      <span aria-hidden className="mx-0.5 h-4 w-px bg-line" />
       <form
         action={deleteAction}
         onSubmit={(event) => {
@@ -88,7 +91,7 @@ export function RowActions({
         }}
       >
         <input type="hidden" name="id" value={id} />
-        <button type="submit" className={`${iconBtn} hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-950/40`} aria-label={`Hapus ${label}`} title="Hapus">
+        <button type="submit" className={deleteBtn} aria-label={`Hapus ${label}`} title="Hapus">
           <PendingIcon>
             <Trash2 aria-hidden className="size-4" />
           </PendingIcon>

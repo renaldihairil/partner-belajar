@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { ArticleForm } from "@/components/admin/forms/ArticleForm";
 import { AdminPageHeader } from "@/components/admin/ui";
 import { requireDb, schema } from "@/db";
+import { siteConfig } from "@/lib/site-config";
 
 export const metadata: Metadata = { title: "Edit artikel" };
 
@@ -15,7 +16,7 @@ export default async function EditArticlePage({ params }: { params: Promise<{ id
   return (
     <>
       <AdminPageHeader title="Edit artikel" description={item.title} back={{ href: "/admin/artikel", label: "Semua artikel" }} />
-      <ArticleForm item={item} today={item.date} />
+      <ArticleForm item={item} today={item.date} siteUrl={siteConfig.url} siteName={siteConfig.name} />
     </>
   );
 }

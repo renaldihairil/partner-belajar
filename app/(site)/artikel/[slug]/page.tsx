@@ -33,11 +33,17 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const article = await getArticleBySlug(slug);
   if (!article) return {};
   return pageMetadata({
-    title: `${article.title} — Artikel Partner Belajar`,
+    title: `${article.title} — ${siteConfig.name}`,
     description: article.excerpt,
     path: articleHref(article),
     image: { url: article.image, width: 1200, height: 750, alt: article.imageAlt },
-    article: { publishedTime: article.date, authors: [article.author.name], tags: article.tags },
+    article: {
+      publishedTime: article.date,
+      modifiedTime: article.updatedAt ?? article.date,
+      authors: [article.author.name],
+      tags: article.tags,
+      section: article.category,
+    },
   });
 }
 
@@ -56,19 +62,32 @@ export default async function ArticleDetailPage({ params }: PageProps) {
 
   const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "BlogPosting",
-    headline: article.title,
-    description: article.excerpt,
-    image: absoluteUrl(article.image),
-    datePublished: article.date,
-    author: { "@type": "Person", name: article.author.name },
-    publisher: {
-      "@type": "Organization",
-      name: siteConfig.name,
-      logo: { "@type": "ImageObject", url: absoluteUrl(siteConfig.logo.src) },
-    },
-    mainEntityOfPage: absoluteUrl(href),
-    keywords: article.tags.join(", "),
+    "@graph": [
+      {
+        "@type": "BlogPosting",
+        "@id": `${absoluteUrl(href)}#artikel`,
+        headline: article.title,
+        description: article.excerpt,
+        image: [absoluteUrl(article.image)],
+        datePublished: article.date,
+        dateModified: article.updatedAt ?? article.date,
+        inLanguage: "id-ID",
+        articleSection: article.category,
+        keywords: article.tags.join(", "),
+        wordCount: article.content.flatMap((b) => (b.type === "list" ? b.items : [b.text])).join(" ").split(/s+/).length,
+        author: { "@type": "Person", name: article.author.name, jobTitle: article.author.role },
+        publisher: { "@id": `${absoluteUrl("/")}#organisasi` },
+        mainEntityOfPage: { "@type": "WebPage", "@id": absoluteUrl(href) },
+      },
+      {
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: "Beranda", item: absoluteUrl("/") },
+          { "@type": "ListItem", position: 2, name: "Artikel", item: absoluteUrl("/artikel") },
+          { "@type": "ListItem", position: 3, name: article.title, item: absoluteUrl(href) },
+        ],
+      },
+    ],
   };
 
   return (
