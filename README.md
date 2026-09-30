@@ -74,7 +74,7 @@ sebagai placeholder, sehingga resolusinya rendah. Ganti dengan file asli beresol
 | `public/characters/english.webp`, `arabic.webp`, `quran.webp`, `diniyyah.webp` | Ilustrasi program (sudah final, transparan) |
 | `public/characters/contact-admin.webp`      | Hero Contact (headset + laptop)       |
 | `public/images/articles/cover-*.webp`         | Sampul artikel (ilustrasi **sementara** 1200×750, rasio 16:10) |
-| `app/favicon.ico`, `app/icon.png`, `app/apple-icon.png`, `public/icons/*` | Favicon & ikon PWA (sudah final, dari logo mark) |
+| `app/favicon.ico`, `app/icon.png`, `app/apple-icon.png`, `public/icons/*` | Favicon & ikon situs (sudah final, dari logo mark). Situs ini website biasa, bukan aplikasi web (tanpa manifest/PWA) |
 | `public/og-image.jpg`                         | Gambar Open Graph 1200×630            |
 
 Jika rasio gambar baru berbeda, sesuaikan `width`/`height` di komponen terkait
