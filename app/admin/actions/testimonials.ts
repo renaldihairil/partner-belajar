@@ -21,6 +21,7 @@ const testimonialSchema = z.object({
   tone: z.enum(TONES),
   programId: optionalText(60),
   city: optionalText(80),
+  childName: optionalText(60),
   date: z
     .string()
     .optional()

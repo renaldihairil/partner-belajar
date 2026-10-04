@@ -88,6 +88,20 @@ export const teachers = pgTable("teachers", {
   ...timestamps,
 });
 
+/**
+ * Link publik untuk mengumpulkan testimoni (dibagikan admin ke orang tua).
+ * Orang tua membuka /kirim-testimoni/<token>; kalau link terkait sebuah program,
+ * testimoni yang masuk otomatis dikaitkan ke program itu.
+ */
+export const testimonialLinks = pgTable("testimonial_links", {
+  id: text("id").primaryKey(),
+  token: text("token").notNull().unique(),
+  label: text("label").notNull(),
+  programId: text("program_id").references(() => programs.id, { onDelete: "set null" }),
+  active: boolean("active").notNull().default(true),
+  ...timestamps,
+});
+
 export const testimonials = pgTable("testimonials", {
   id: text("id").primaryKey(),
   name: text("name").notNull(),
@@ -98,6 +112,10 @@ export const testimonials = pgTable("testimonials", {
   programId: text("program_id").references(() => programs.id, { onDelete: "set null" }),
   city: text("city"),
   date: text("date"),
+  /** Nama anak (diisi orang tua lewat link testimoni; ikut tampil di keterangan). */
+  childName: text("child_name"),
+  /** Terisi bila testimoni masuk lewat link publik; kosong bila diinput admin. */
+  linkId: text("link_id").references(() => testimonialLinks.id, { onDelete: "set null" }),
   sortOrder: integer("sort_order").notNull().default(0),
   published: boolean("published").notNull().default(true),
   ...timestamps,
@@ -168,4 +186,5 @@ export type TeacherRow = typeof teachers.$inferSelect;
 export type ArticleRow = typeof articles.$inferSelect;
 export type DocumentationRow = typeof documentation.$inferSelect;
 export type TestimonialRow = typeof testimonials.$inferSelect;
+export type TestimonialLinkRow = typeof testimonialLinks.$inferSelect;
 export type AdminUserRow = typeof adminUsers.$inferSelect;

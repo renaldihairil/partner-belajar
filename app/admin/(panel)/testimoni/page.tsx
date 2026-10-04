@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
 import { asc } from "drizzle-orm";
 import Link from "next/link";
-import { EyeOff, Eye, MessageSquareQuote, Star } from "lucide-react";
+import { EyeOff, Eye, Link2, MessageSquareQuote, Star } from "lucide-react";
 import { deleteTestimonialAction, moveTestimonialAction, toggleTestimonialAction } from "@/app/admin/actions/testimonials";
 import { RowActions } from "@/components/admin/RowActions";
 import {
   AddLink,
   AdminPageHeader,
+  buttonSecondary,
   Badge,
   EmptyState,
   ListCard,
@@ -51,7 +52,15 @@ export default async function AdminTestimonialsPage({ searchParams }: PageProps)
         title="Testimoni"
         description="Cerita orang tua yang tampil di Home dan halaman Testimoni. Urutan di sini sama dengan urutan tampil."
         searchPlaceholder="Cari testimoni..."
-        action={<AddLink href="/admin/testimoni/baru">Tambah Testimoni</AddLink>}
+        action={
+          <div className="flex flex-wrap items-center gap-3">
+            <Link href="/admin/link-testimoni" className={buttonSecondary}>
+              <Link2 aria-hidden className="size-4" />
+              Link testimoni
+            </Link>
+            <AddLink href="/admin/testimoni/baru">Tambah Testimoni</AddLink>
+          </div>
+        }
       />
       <Notice message={pesan ? noticeMessages[pesan] : undefined} />
       <StatCards
@@ -84,6 +93,7 @@ export default async function AdminTestimonialsPage({ searchParams }: PageProps)
                 <span className="min-w-0">
                   <span className="flex flex-wrap items-center gap-x-2 gap-y-0.5">
                     <span className="text-sm font-semibold text-ink group-hover:text-brand-teal-dark">{item.name}</span>
+                    {item.linkId && <Badge tone="teal">Via link</Badge>}
                     <span className="flex items-center gap-0.5 text-brand-yellow" role="img" aria-label={`${item.rating} bintang`}>
                       {Array.from({ length: 5 }, (_, i) => (
                         <Star key={i} aria-hidden className={`size-3 ${i < item.rating ? "" : "text-line"}`} fill="currentColor" strokeWidth={0} />

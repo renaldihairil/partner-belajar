@@ -28,7 +28,17 @@ function Fields({ item, programs }: { item?: TestimonialRow; programs: Option[] 
           <TextField label="Nama" name="name" defaultValue={item?.name} placeholder="mis. Ibu Aisyah" required error={e("name")} />
           <TextField label="Kota" name="city" defaultValue={item?.city ?? ""} placeholder="mis. Bandung" error={e("city")} />
         </div>
-        <TextField label="Keterangan" name="role" defaultValue={item?.role} placeholder="mis. Orang tua siswa English Partner" required error={e("role")} />
+        <div className="grid gap-4 md:grid-cols-2">
+          <TextField label="Keterangan" name="role" defaultValue={item?.role} placeholder="mis. Orang tua siswa English Partner" required error={e("role")} />
+          <TextField
+            label="Nama anak"
+            name="childName"
+            defaultValue={item?.childName ?? ""}
+            placeholder="Opsional"
+            hint="Catatan saja. Yang tampil di situs adalah kolom Keterangan."
+            error={e("childName")}
+          />
+        </div>
       </FormSection>
 
       <FormSection title="Isi testimoni">

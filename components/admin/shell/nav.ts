@@ -1,4 +1,4 @@
-import { BookOpen, Newspaper, Video, GraduationCap, LayoutDashboard, MessageSquareQuote, UserCog, Users, type LucideIcon } from "lucide-react";
+import { BookOpen, GraduationCap, LayoutDashboard, Link2, MessageSquareQuote, Newspaper, UserCog, Users, Video, type LucideIcon } from "lucide-react";
 
 import type { PermissionKey } from "@/lib/auth/permissions";
 
@@ -13,6 +13,7 @@ export const adminNavGroups: { label: string; items: AdminNavItem[] }[] = [
       { href: "/admin/program", label: "Program & Jadwal", icon: BookOpen, permission: "program" },
       { href: "/admin/pengajar", label: "Pengajar", icon: GraduationCap, permission: "pengajar" },
       { href: "/admin/testimoni", label: "Testimoni", icon: MessageSquareQuote, permission: "testimoni" },
+      { href: "/admin/link-testimoni", label: "Link Testimoni", icon: Link2, permission: "testimoni" },
       { href: "/admin/artikel", label: "Artikel", icon: Newspaper, permission: "artikel" },
       { href: "/admin/dokumentasi", label: "Dokumentasi", icon: Video, permission: "dokumentasi" },
     ],
@@ -49,6 +50,7 @@ const segmentLabels: Record<string, string> = {
   program: "Program & Jadwal",
   pengajar: "Pengajar",
   testimoni: "Testimoni",
+  "link-testimoni": "Link Testimoni",
   artikel: "Artikel",
   dokumentasi: "Dokumentasi",
   akun: "Akun Saya",

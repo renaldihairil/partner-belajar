@@ -12,6 +12,7 @@ Dibangun dengan Next.js (App Router), React, TypeScript, Tailwind CSS v4, dan Lu
 
 **Admin panel** di `/admin` untuk mengelola Program & Jadwal, Pengajar, dan Testimoni (database Neon + foto di Vercel Blob).
 Panduan setup & cara kerja: **[docs/admin-panel.md](docs/admin-panel.md)**.
+Orang tua bisa mengirim testimoni sendiri lewat link yang dibuat di admin (menu **Link Testimoni**, halaman `/kirim-testimoni/<kode>`).
 
 Menu diatur di satu tempat: `components/navigation/navigation-config.ts`
 (`mobile: "primary" | "more"` menentukan posisi di mobile; sitemap ikut otomatis).

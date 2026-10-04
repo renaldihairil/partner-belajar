@@ -8,6 +8,7 @@ Yang bisa dikelola:
 | Program & Jadwal | Info program, gambar, kurikulum, hasil belajar, "cocok untuk", paket harga, jadwal kelas (tanggal, hari, jam, mode, kuota, jumlah terdaftar, tutup manual) |
 | Pengajar | Profil, foto, program yang diajar, keunggulan, tampil/sembunyi, urutan |
 | Testimoni | Isi, rating, program, kota, tanggal, tampil/sembunyi, urutan |
+| Link Testimoni | Buat, salin, dan bagikan link agar orang tua mengirim testimoni sendiri (lihat bagian di bawah) |
 | Artikel | Judul, ringkasan, isi (blok paragraf/subjudul/daftar/tips), gambar sampul, kategori, tag, penulis, tanggal terbit, draf/terbit, artikel pilihan |
 | Dokumentasi | Video dokumentasi dari YouTube (tempel tautan): judul, keterangan, kategori, tanggal, program terkait, tampil/sembunyi. Ditampilkan sebagai grid 3 kolom; klik untuk memutar |
 | Akun Saya | Profil sendiri dan ganti password (semua admin) |
@@ -52,6 +53,24 @@ Setiap perubahan yang disimpan **langsung tampil di situs** (halaman publik dipe
 5. Buka `/admin`, login dengan `ADMIN_EMAIL` & `ADMIN_PASSWORD`. Akun admin pertama dibuat
    otomatis saat login pertama. Setelah itu, **ganti password** di menu Akun Saya.
    `ADMIN_PASSWORD` di Vercel hanya dipakai jika belum ada admin sama sekali.
+
+## Link Testimoni (orang tua mengirim sendiri)
+
+Menu **Link Testimoni** (butuh akses "Testimoni") membuat link publik berbentuk
+`/kirim-testimoni/<kode>` yang bisa dibagikan ke orang tua, misalnya lewat WhatsApp.
+
+1. Buka **Link Testimoni**, isi nama link (catatan untuk Anda) dan, bila perlu, pilih program, lalu **Buat link**.
+2. Klik **Salin** (atau tombol WhatsApp untuk membuka WhatsApp dengan pesan siap kirim) lalu bagikan.
+3. Orang tua mengisi 4 kolom: **nama wali**, **nama anak**, **jumlah bintang**, dan **testimoni**.
+4. Begitu dikirim, testimoni **langsung tampil** di Home dan halaman Testimoni, tanpa persetujuan admin.
+   Di daftar Testimoni admin, kiriman ini diberi label **Via link**; bila tidak sesuai, sembunyikan atau hapus.
+
+Detail penting:
+- Link yang dibuat untuk satu program otomatis mengaitkan testimoni ke program itu (muncul di filter program). Link "umum" tidak terkait program.
+- **Nonaktifkan** link kapan saja (tombol power): halaman langsung menampilkan "Link ini sudah tidak aktif" dan kiriman baru ditolak. **Hapus** link tidak menghapus testimoni yang sudah masuk.
+- Nama anak ikut tampil di keterangan ("Orang tua dari Zahra"), dan formulir memberi tahu hal ini ke orang tua.
+- Perlindungan spam: kolom jebakan untuk robot, tautan/URL di teks ditolak, maksimal 6 kiriman per 30 menit per perangkat (alamat IP hanya disimpan dalam bentuk hash), dan kiriman ganda yang identik tidak disimpan dua kali.
+- Halaman ini tidak diindeks mesin pencari (noindex + robots.txt).
 
 ## Cara kerja singkat
 

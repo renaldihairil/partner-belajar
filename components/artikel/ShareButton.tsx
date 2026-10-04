@@ -2,6 +2,7 @@
 
 import { useEffect, useId, useRef, useState, type ReactNode } from "react";
 import { Check, Link2, Mail, MessageCircle, Send, Share2 } from "lucide-react";
+import { copyText } from "@/lib/clipboard";
 
 function FacebookIcon({ className = "" }: { className?: string }) {
   return (
@@ -61,25 +62,6 @@ function shareTargets(url: string, title: string): Target[] {
       tone: "bg-brand-yellow text-on-accent",
     },
   ];
-}
-
-async function copyText(text: string): Promise<boolean> {
-  try {
-    await navigator.clipboard.writeText(text);
-    return true;
-  } catch {
-    // Cadangan untuk browser lama / konteks non-HTTPS.
-    const area = document.createElement("textarea");
-    area.value = text;
-    area.setAttribute("readonly", "");
-    area.style.position = "fixed";
-    area.style.opacity = "0";
-    document.body.appendChild(area);
-    area.select();
-    const ok = document.execCommand("copy");
-    area.remove();
-    return ok;
-  }
 }
 
 /**

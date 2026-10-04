@@ -358,4 +358,7 @@ export const noticeMessages: Record<string, string> = {
   dibuat: "Data baru berhasil dibuat.",
   dihapus: "Data berhasil dihapus.",
   "tanpa-akses": "Akun Anda tidak punya akses ke menu tersebut.",
+  "link-dibuat": "Link testimoni berhasil dibuat. Salin lalu bagikan ke orang tua.",
+  "link-dihapus": "Link dihapus. Testimoni yang sudah masuk tetap tampil di situs.",
+  "program-tidak-ada": "Program tidak ditemukan.",
 };
