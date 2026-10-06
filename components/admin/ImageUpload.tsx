@@ -3,26 +3,7 @@
 import { useRef, useState } from "react";
 import { ImagePlus, Loader2, Trash2, Upload } from "lucide-react";
 import { uploadImageAction } from "@/app/admin/actions/upload";
-
-const MAX_BYTES = 4 * 1024 * 1024;
-
-/** Kecilkan foto di browser dulu (maks. 1600px, WebP) agar upload cepat & di bawah batas ukuran. */
-async function shrink(file: File): Promise<Blob> {
-  try {
-    const bitmap = await createImageBitmap(file);
-    const scale = Math.min(1, 1600 / Math.max(bitmap.width, bitmap.height));
-    const canvas = document.createElement("canvas");
-    canvas.width = Math.round(bitmap.width * scale);
-    canvas.height = Math.round(bitmap.height * scale);
-    canvas.getContext("2d")?.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
-    bitmap.close();
-    const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, "image/webp", 0.85));
-    return blob && blob.size < file.size ? blob : file;
-  } catch {
-    // Format yang tidak bisa dibaca browser (mis. HEIC) dikirim apa adanya dan diproses di server.
-    return file;
-  }
-}
+import { MAX_IMAGE_BYTES, shrinkImage } from "@/lib/client-image";
 
 type ImageUploadProps = {
   name: string;
@@ -47,8 +28,8 @@ export function ImageUpload({ name, label, defaultValue = "", folder, hint, erro
     setBusy(true);
     setMessage(null);
     try {
-      const blob = await shrink(file);
-      if (blob.size > MAX_BYTES) throw new Error("Ukuran foto terlalu besar (maks. 4 MB).");
+      const blob = await shrinkImage(file);
+      if (blob.size > MAX_IMAGE_BYTES) throw new Error("Ukuran foto terlalu besar (maks. 4 MB).");
       const data = new FormData();
       data.set("file", blob instanceof File ? blob : new File([blob], "foto.webp", { type: blob.type }));
       data.set("folder", folder);

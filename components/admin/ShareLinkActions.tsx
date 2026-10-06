@@ -72,8 +72,8 @@ function Pending({ children }: { children: ReactNode }) {
 
 type ServerAction = (formData: FormData) => void | Promise<void>;
 
-/** Aksi per link: kirim via WhatsApp, buka halaman, aktif/nonaktif, hapus. */
-export function TestimonialLinkActions({
+/** Aksi per link: kirim via WhatsApp, buka halaman, aktif/nonaktif, hapus (+ tombol tambahan lewat children). */
+export function ShareLinkActions({
   id,
   label,
   path,
@@ -81,6 +81,9 @@ export function TestimonialLinkActions({
   active,
   toggleAction,
   deleteAction,
+  shareText,
+  deleteMessage,
+  children,
 }: {
   id: string;
   label: string;
@@ -89,14 +92,18 @@ export function TestimonialLinkActions({
   active: boolean;
   toggleAction: ServerAction;
   deleteAction: ServerAction;
+  /** Isi pesan WhatsApp. Tulis {url} di tempat link harus disisipkan. */
+  shareText: string;
+  deleteMessage: string;
+  /** Tombol tambahan, tampil paling kiri (mis. atur PIN). */
+  children?: ReactNode;
 }) {
   const url = useLinkUrl(path, siteUrl);
-  const message =
-    "Assalamu'alaikum Bapak/Ibu, kami dari Partner Belajar. Mohon kesediaannya berbagi pengalaman belajar putra-putri Anda lewat link berikut (hanya 1 menit):\n\n" +
-    `${url}\n\nJazakumullahu khairan.`;
+  const message = shareText.split("{url}").join(url);
 
   return (
     <div className="flex items-center gap-1.5">
+      {children}
       <a
         href={`https://wa.me/?text=${encodeURIComponent(message)}`}
         target="_blank"
@@ -125,10 +132,7 @@ export function TestimonialLinkActions({
       <form
         action={deleteAction}
         onSubmit={(event) => {
-          const ok = window.confirm(
-            `Hapus link "${label}"? Orang yang membuka link ini tidak bisa mengirim testimoni lagi. Testimoni yang sudah masuk tetap tampil di situs.`,
-          );
-          if (!ok) event.preventDefault();
+          if (!window.confirm(deleteMessage)) event.preventDefault();
         }}
       >
         <input type="hidden" name="id" value={id} />

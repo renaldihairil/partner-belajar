@@ -6,7 +6,7 @@ import {
   toggleTestimonialLinkAction,
 } from "@/app/admin/actions/testimonial-links";
 import { NewLinkForm } from "@/components/admin/forms/NewLinkForm";
-import { LinkCopyCell, TestimonialLinkActions } from "@/components/admin/TestimonialLinkActions";
+import { LinkCopyCell, ShareLinkActions } from "@/components/admin/ShareLinkActions";
 import {
   AdminPageHeader,
   Badge,
@@ -27,6 +27,9 @@ import { siteConfig } from "@/lib/site-config";
 export const metadata: Metadata = { title: "Link Testimoni" };
 
 type PageProps = { searchParams: Promise<{ pesan?: string }> };
+
+const TESTIMONIAL_SHARE_TEXT =
+  "Assalamu'alaikum Bapak/Ibu, kami dari Partner Belajar. Mohon kesediaannya berbagi pengalaman belajar putra-putri Anda lewat link berikut (hanya 1 menit):\n\n{url}\n\nJazakumullahu khairan.";
 
 const GRID = "@3xl:grid-cols-[2rem_minmax(9rem,1fr)_minmax(0,15rem)_5.5rem_5.75rem_10.5rem]";
 
@@ -119,7 +122,7 @@ export default async function TestimonialLinksPage({ searchParams }: PageProps) 
                     </Badge>
                   )}
                 </div>
-                <TestimonialLinkActions
+                <ShareLinkActions
                   id={link.id}
                   label={link.label}
                   path={path}
@@ -127,6 +130,8 @@ export default async function TestimonialLinksPage({ searchParams }: PageProps) 
                   active={link.active}
                   toggleAction={toggleTestimonialLinkAction}
                   deleteAction={deleteTestimonialLinkAction}
+                  shareText={TESTIMONIAL_SHARE_TEXT}
+                  deleteMessage={`Hapus link "${link.label}"? Orang yang membuka link ini tidak bisa mengirim testimoni lagi. Testimoni yang sudah masuk tetap tampil di situs.`}
                 />
               </ListRow>
             );

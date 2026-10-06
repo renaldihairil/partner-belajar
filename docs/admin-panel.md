@@ -9,6 +9,7 @@ Yang bisa dikelola:
 | Pengajar | Profil, foto, program yang diajar, keunggulan, tampil/sembunyi, urutan |
 | Testimoni | Isi, rating, program, kota, tanggal, tampil/sembunyi, urutan |
 | Link Testimoni | Buat, salin, dan bagikan link agar orang tua mengirim testimoni sendiri (lihat bagian di bawah) |
+| Link Form Guru | Buat, salin, dan bagikan link (PIN opsional) agar guru mengisi data profilnya sendiri; data masuk sebagai draf untuk ditinjau |
 | Artikel | Judul, ringkasan, isi (blok paragraf/subjudul/daftar/tips), gambar sampul, kategori, tag, penulis, tanggal terbit, draf/terbit, artikel pilihan |
 | Dokumentasi | Video dokumentasi dari YouTube (tempel tautan): judul, keterangan, kategori, tanggal, program terkait, tampil/sembunyi. Ditampilkan sebagai grid 3 kolom; klik untuk memutar |
 | Akun Saya | Profil sendiri dan ganti password (semua admin) |
@@ -70,6 +71,34 @@ Detail penting:
 - **Nonaktifkan** link kapan saja (tombol power): halaman langsung menampilkan "Link ini sudah tidak aktif" dan kiriman baru ditolak. **Hapus** link tidak menghapus testimoni yang sudah masuk.
 - Nama anak ikut tampil di keterangan ("Orang tua dari Zahra"), dan formulir memberi tahu hal ini ke orang tua.
 - Perlindungan spam: kolom jebakan untuk robot, tautan/URL di teks ditolak, maksimal 6 kiriman per 30 menit per perangkat (alamat IP hanya disimpan dalam bentuk hash), dan kiriman ganda yang identik tidak disimpan dua kali.
+- Halaman ini tidak diindeks mesin pencari (noindex + robots.txt).
+
+## Link Form Guru (guru mengisi data sendiri)
+
+Menu **Link Form Guru** (butuh akses "Pengajar") membuat link publik berbentuk
+`/form-guru/<kode>` yang dibagikan ke para guru, misalnya lewat WhatsApp.
+
+1. Buka **Link Form Guru**, isi nama link (catatan untuk Anda), lalu **Buat link**.
+   **PIN bersifat opsional**: kosongkan agar link terbuka seperti link testimoni, atau isi 4–8 angka
+   (tombol **Acak** membuat PIN 6 angka) agar guru harus memasukkan PIN sebelum bisa mengisi.
+2. Klik **Salin** (atau tombol WhatsApp untuk pesan siap kirim). Bila memakai PIN, kirim PIN **terpisah** dari link.
+3. Guru mengisi: nama lengkap, jenis kelamin, kontak (opsional), foto (opsional), program yang diajar,
+   jabatan/keahlian, pendidikan, lama mengajar, bio singkat, dan keunggulan (maks. 6).
+4. Data yang masuk berstatus **tersembunyi (Perlu ditinjau)**, belum tampil di situs. Buka **Pengajar**, periksa/edit,
+   lalu tampilkan lewat tombol mata atau saklar "Tampilkan". Di daftar, kiriman ini diberi label **Via form**.
+
+Detail penting:
+- **Kontak guru hanya dilihat admin** (di halaman edit pengajar), tidak pernah tampil di situs.
+- **Atur PIN** (tombol kunci di baris link): isi PIN baru untuk mengganti, atau kosongkan untuk menghapus PIN.
+  PIN disimpan sebagai hash sehingga **tidak bisa dilihat lagi**, hanya bisa diganti. Begitu PIN diganti,
+  guru yang sedang mengisi dengan PIN lama harus memasukkan PIN baru.
+- **Perlindungan PIN:** maksimal 5 PIN salah per perangkat dan 20 per link dalam 15 menit; setelah itu terkunci
+  15 menit (PIN yang benar pun ditolak selama terkunci).
+- **Nonaktifkan** link kapan saja (tombol power): halaman langsung menampilkan "Link ini sudah tidak aktif" dan
+  kiriman baru ditolak. **Hapus** link tidak menghapus data guru yang sudah masuk.
+- Perlindungan spam: kolom jebakan untuk robot, maksimal 8 kiriman dan 12 unggahan foto per 30 menit per perangkat
+  (alamat IP hanya disimpan dalam bentuk hash), serta kiriman ganda yang identik tidak disimpan dua kali.
+  Foto otomatis dikecilkan menjadi WebP dan datanya (termasuk lokasi GPS) dibersihkan.
 - Halaman ini tidak diindeks mesin pencari (noindex + robots.txt).
 
 ## Cara kerja singkat

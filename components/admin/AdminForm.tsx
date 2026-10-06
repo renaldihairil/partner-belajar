@@ -3,6 +3,7 @@
 import { createContext, startTransition, useActionState, useContext, useEffect, useRef, useState, type ReactNode } from "react";
 import { Loader2 } from "lucide-react";
 import type { ActionState } from "@/lib/admin/form";
+import { useHydrated } from "@/lib/use-hydrated";
 import { FormMessage } from "./fields";
 import { toast } from "./Toaster";
 import { buttonPrimary } from "./ui";
@@ -36,6 +37,7 @@ type AdminFormProps = {
 export function AdminForm({ action, children, submitLabel = "Simpan", footer }: AdminFormProps) {
   const [state, formAction, pending] = useActionState(action, {});
   const [dirty, setDirty] = useState(false);
+  const hydrated = useHydrated();
   const lastState = useRef(state);
 
   useEffect(() => {
@@ -60,6 +62,7 @@ export function AdminForm({ action, children, submitLabel = "Simpan", footer }: 
   return (
     <FormContext value={{ state, pending }}>
       <form
+        method="post"
         className="grid gap-8"
         onInput={() => setDirty(true)}
         onChange={() => setDirty(true)}
@@ -77,7 +80,7 @@ export function AdminForm({ action, children, submitLabel = "Simpan", footer }: 
         {children}
         <div className="sticky bottom-0 z-10 -mx-4 border-t border-line bg-surface/90 px-4 py-3 backdrop-blur-md md:-mx-8 md:px-8">
           <div className="flex flex-wrap items-center gap-3">
-            <button type="submit" disabled={pending} className={buttonPrimary}>
+            <button type="submit" disabled={pending || !hydrated} className={buttonPrimary}>
               {pending && <Loader2 aria-hidden className="size-4 animate-spin" />}
               {pending ? "Menyimpan…" : submitLabel}
             </button>

@@ -3,13 +3,16 @@
 import { startTransition, useActionState } from "react";
 import { Loader2, LogIn } from "lucide-react";
 import { loginAction } from "@/app/admin/actions/auth";
+import { useHydrated } from "@/lib/use-hydrated";
 import { FormMessage, TextField } from "./fields";
 import { buttonPrimary } from "./ui";
 
 export function LoginForm({ next }: { next?: string }) {
   const [state, action, pending] = useActionState(loginAction, {});
+  const hydrated = useHydrated();
   return (
     <form
+      method="post"
       className="grid gap-4"
       onSubmit={(event) => {
         // Kirim manual agar email tidak terhapus saat password salah.
@@ -24,7 +27,7 @@ export function LoginForm({ next }: { next?: string }) {
       <FormMessage state={state} />
       <button
         type="submit"
-        disabled={pending}
+        disabled={pending || !hydrated}
         className={`${buttonPrimary} h-10 w-full`}
       >
         {pending ? <Loader2 aria-hidden className="size-4 animate-spin" /> : <LogIn aria-hidden className="size-4" />}

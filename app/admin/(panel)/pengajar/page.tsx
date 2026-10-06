@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
 import { asc } from "drizzle-orm";
 import Link from "next/link";
-import { Eye, GraduationCap, Users } from "lucide-react";
+import { ClipboardCheck, ClipboardList, Eye, GraduationCap, Users } from "lucide-react";
 import { deleteTeacherAction, moveTeacherAction, toggleTeacherAction } from "@/app/admin/actions/teachers";
 import { RowActions } from "@/components/admin/RowActions";
 import {
   AddLink,
   AdminPageHeader,
   Badge,
+  buttonSecondary,
   EmptyState,
   ListCard,
   ListRow,
@@ -35,10 +36,15 @@ export default async function AdminTeachersPage({ searchParams }: PageProps) {
   const db = await requireDb();
   const [items, programs] = await Promise.all([db.select().from(schema.teachers).orderBy(asc(schema.teachers.sortOrder)), programOptions()]);
   const programName = new Map(programs.map((p) => [p.value, p.label]));
+  // Data kiriman guru lewat link form berstatus tersembunyi sampai admin meninjau dan menampilkannya.
+  const pending = items.filter((t) => t.linkId && !t.published);
   const stats: StatItem[] = [
     { label: "Total pengajar", value: items.length, icon: Users, tone: "teal" },
     { label: "Tampil di situs", value: items.filter((t) => t.published).length, icon: Eye, tone: "green" },
-    ...programs.slice(0, 2).map((p, i) => ({
+    ...(pending.length > 0
+      ? [{ label: "Perlu ditinjau", value: pending.length, icon: ClipboardCheck, tone: "yellow" as const, note: "kiriman dari form guru" }]
+      : []),
+    ...programs.slice(0, pending.length > 0 ? 1 : 2).map((p, i) => ({
       label: p.label,
       note: "pengajar",
       value: items.filter((t) => t.programIds.includes(p.value)).length,
@@ -53,7 +59,15 @@ export default async function AdminTeachersPage({ searchParams }: PageProps) {
         title="Pengajar"
         description="Profil pengajar yang tampil di halaman Pengajar. Urutan di sini sama dengan urutan tampil."
         searchPlaceholder="Cari pengajar..."
-        action={<AddLink href="/admin/pengajar/baru">Tambah Pengajar</AddLink>}
+        action={
+          <div className="flex flex-wrap items-center gap-3">
+            <Link href="/admin/link-guru" className={buttonSecondary}>
+              <ClipboardList aria-hidden className="size-4" />
+              Link form guru
+            </Link>
+            <AddLink href="/admin/pengajar/baru">Tambah Pengajar</AddLink>
+          </div>
+        }
       />
       <Notice message={pesan ? noticeMessages[pesan] : undefined} />
       <StatCards items={stats} />
@@ -79,7 +93,10 @@ export default async function AdminTeachersPage({ searchParams }: PageProps) {
                   )}
                 </span>
                 <span className="min-w-0">
-                  <span className="block truncate text-sm font-semibold text-ink group-hover:text-brand-teal-dark">{item.name}</span>
+                  <span className="flex items-center gap-2">
+                    <span className="truncate text-sm font-semibold text-ink group-hover:text-brand-teal-dark">{item.name}</span>
+                    {item.linkId && <Badge tone="teal">Via form</Badge>}
+                  </span>
                   <span className="block truncate text-[13px] text-ink-soft">
                     {item.title} · {item.experienceYears} th mengajar
                   </span>
@@ -94,7 +111,13 @@ export default async function AdminTeachersPage({ searchParams }: PageProps) {
                 ))}
               </div>
               <div>
-                <StatusBadge published={item.published} labels={["Aktif", "Disembunyikan"]} />
+                {item.linkId && !item.published ? (
+                  <Badge tone="warning" dot>
+                    Perlu ditinjau
+                  </Badge>
+                ) : (
+                  <StatusBadge published={item.published} labels={["Aktif", "Disembunyikan"]} />
+                )}
               </div>
               <RowActions
                 id={item.id}

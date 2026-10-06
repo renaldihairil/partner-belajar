@@ -77,6 +77,17 @@ function Fields({ item, programs }: { item?: TeacherRow; programs: Option[] }) {
         />
       </FormSection>
 
+      <FormSection title="Kontak" description="Untuk keperluan admin saja. Tidak pernah ditampilkan di situs.">
+        <TextField
+          label="WhatsApp atau email"
+          name="contact"
+          defaultValue={item?.contact ?? ""}
+          placeholder="Opsional"
+          maxLength={100}
+          error={e("contact")}
+        />
+      </FormSection>
+
       <FormSection title="Visibilitas" description="Pengajar yang disembunyikan tetap tersimpan dan bisa ditampilkan lagi kapan saja.">
         <SwitchField name="published" label="Tampilkan di halaman Pengajar" defaultChecked={item?.published ?? true} />
       </FormSection>

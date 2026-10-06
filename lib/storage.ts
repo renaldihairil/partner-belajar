@@ -57,6 +57,16 @@ export async function saveImage(file: File, folder: string): Promise<StoredImage
   return { url: `/uploads/${name}`, width: info.width, height: info.height };
 }
 
+/**
+ * Apakah URL ini foto hasil upload sistem kita di folder tertentu? Dipakai untuk menolak URL
+ * sembarang dari formulir publik (mis. link ke situs lain atau gambar pelacak).
+ */
+export function isOwnUploadUrl(url: string, folder: string): boolean {
+  if (url.startsWith(`/uploads/${folder}/`)) return !url.includes("..");
+  const blobUrl = new RegExp(`^https://[a-z0-9-]+\.public\.blob\.vercel-storage\.com/uploads/${folder}/[A-Za-z0-9._-]+\.webp$`);
+  return blobUrl.test(url);
+}
+
 /** Menghapus foto lama yang sudah tidak dipakai (hanya foto hasil upload; gambar bawaan dibiarkan). */
 export async function deleteImage(url: string | null | undefined): Promise<void> {
   if (!url) return;

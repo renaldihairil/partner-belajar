@@ -361,4 +361,10 @@ export const noticeMessages: Record<string, string> = {
   "link-dibuat": "Link testimoni berhasil dibuat. Salin lalu bagikan ke orang tua.",
   "link-dihapus": "Link dihapus. Testimoni yang sudah masuk tetap tampil di situs.",
   "program-tidak-ada": "Program tidak ditemukan.",
+  "link-guru-dibuat": "Link form guru berhasil dibuat. Salin lalu bagikan ke para guru.",
+  "link-guru-dibuat-pin": "Link form guru berhasil dibuat. Kirim link dan PIN-nya ke para guru (terpisah).",
+  "pin-dihapus": "PIN dihapus. Link kini bisa dibuka tanpa PIN.",
+  "link-guru-dihapus": "Link dihapus. Data guru yang sudah masuk tetap tersimpan.",
+  "pin-diganti": "PIN berhasil diganti. PIN lama tidak berlaku lagi.",
+  "pin-tidak-valid": "PIN harus terdiri dari 4 sampai 8 angka.",
 };

@@ -1,0 +1,1 @@
+ALTER TABLE "teacher_links" ALTER COLUMN "pin_hash" DROP NOT NULL;

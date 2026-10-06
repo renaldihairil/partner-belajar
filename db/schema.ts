@@ -72,6 +72,21 @@ export const programClasses = pgTable(
   (t) => [index("program_classes_program_idx").on(t.programId)],
 );
 
+/**
+ * Link publik agar guru mengisi data sendiri (dibagikan admin ke para guru).
+ * PIN opsional: tanpa PIN cukup punya link; dengan PIN harus punya link DAN tahu PIN-nya.
+ * PIN disimpan sebagai hash (scrypt), jadi tidak bisa dilihat lagi — hanya bisa diganti.
+ */
+export const teacherLinks = pgTable("teacher_links", {
+  id: text("id").primaryKey(),
+  token: text("token").notNull().unique(),
+  label: text("label").notNull(),
+  /** Kosong = link terbuka (cukup punya link). Terisi = wajib PIN. */
+  pinHash: text("pin_hash"),
+  active: boolean("active").notNull().default(true),
+  ...timestamps,
+});
+
 export const teachers = pgTable("teachers", {
   id: text("id").primaryKey(),
   name: text("name").notNull(),
@@ -83,6 +98,10 @@ export const teachers = pgTable("teachers", {
   bio: text("bio").notNull(),
   gender: text("gender").$type<Teacher["gender"]>().notNull(),
   photo: text("photo"),
+  /** Kontak pribadi guru (WhatsApp/email) — hanya untuk admin, tidak pernah tampil di situs. */
+  contact: text("contact"),
+  /** Terisi bila data masuk lewat link form guru; kosong bila diinput admin. */
+  linkId: text("link_id").references(() => teacherLinks.id, { onDelete: "set null" }),
   sortOrder: integer("sort_order").notNull().default(0),
   published: boolean("published").notNull().default(true),
   ...timestamps,
@@ -187,4 +206,5 @@ export type ArticleRow = typeof articles.$inferSelect;
 export type DocumentationRow = typeof documentation.$inferSelect;
 export type TestimonialRow = typeof testimonials.$inferSelect;
 export type TestimonialLinkRow = typeof testimonialLinks.$inferSelect;
+export type TeacherLinkRow = typeof teacherLinks.$inferSelect;
 export type AdminUserRow = typeof adminUsers.$inferSelect;

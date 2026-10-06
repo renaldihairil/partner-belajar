@@ -3,7 +3,7 @@ import { absoluteUrl, siteConfig } from "@/lib/site-config";
 
 export default function robots(): MetadataRoute.Robots {
   return {
-    rules: { userAgent: "*", allow: "/", disallow: ["/admin", "/api", "/kirim-testimoni"] },
+    rules: { userAgent: "*", allow: "/", disallow: ["/admin", "/api", "/kirim-testimoni", "/form-guru"] },
     sitemap: absoluteUrl("/sitemap.xml"),
     host: siteConfig.url,
   };

@@ -5,6 +5,7 @@ import { startTransition, useActionState, useId, useState } from "react";
 import { AlertCircle, CheckCircle2, Loader2, Send, ShieldCheck } from "lucide-react";
 import { submitTestimonialAction } from "@/app/kirim-testimoni/actions";
 import type { ActionState } from "@/lib/admin/form";
+import { useHydrated } from "@/lib/use-hydrated";
 import { StarRatingInput } from "./StarRatingInput";
 
 const MAX_QUOTE = 600;
@@ -52,6 +53,7 @@ export function SubmitTestimonialForm({ token }: { token: string }) {
   const [rating, setRating] = useState(0);
   const [length, setLength] = useState(0);
   const [done, setDone] = useState(false);
+  const hydrated = useHydrated();
   const [lastState, setLastState] = useState(state);
   const uid = useId();
   const ratingLabelId = `${uid}-rating`;
@@ -78,6 +80,7 @@ export function SubmitTestimonialForm({ token }: { token: string }) {
 
   return (
     <form
+      method="post"
       noValidate
       onSubmit={(event) => {
         event.preventDefault();
@@ -176,7 +179,7 @@ export function SubmitTestimonialForm({ token }: { token: string }) {
 
       <button
         type="submit"
-        disabled={pending}
+        disabled={pending || !hydrated}
         className="inline-flex min-h-13 w-full items-center justify-center gap-2 rounded-full bg-brand-yellow px-6 text-[16px] font-bold text-on-accent shadow-[0_10px_24px_-10px_rgb(233_169_0/0.7)] transition-all hover:-translate-y-0.5 hover:bg-[#fac93f] disabled:cursor-wait disabled:opacity-70"
       >
         {pending ? <Loader2 aria-hidden className="size-5 animate-spin" /> : <Send aria-hidden className="size-5" />}

@@ -29,6 +29,20 @@
       "when": 1791121352010,
       "tag": "0003_testimonial_links",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1791264191886,
+      "tag": "0004_teacher_links",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1791266658430,
+      "tag": "0005_teacher_link_pin_optional",
+      "breakpoints": true
     }
   ]
 }

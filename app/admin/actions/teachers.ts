@@ -22,6 +22,7 @@ const teacherSchema = z.object({
   bio: requiredText("Bio singkat", 400),
   gender: z.enum(["ikhwan", "akhwat"], { error: "Pilih ikhwan atau akhwat." }),
   photo: optionalText(500),
+  contact: optionalText(100),
   published: checkbox,
 });
 
