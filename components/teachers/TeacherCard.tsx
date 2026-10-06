@@ -46,10 +46,12 @@ export function TeacherCard({ teacher, programs }: TeacherCardProps) {
 
         <h2 className="mt-3 text-lg leading-snug font-bold text-ink">{teacher.name}</h2>
         <p className="text-sm font-medium text-brand-teal-dark">{teacher.title}</p>
-        <p className="mt-2 inline-flex items-center gap-1.5 text-[12.5px] text-ink-soft">
-          <GraduationCap aria-hidden className="size-4 text-brand-teal" />
-          {teacher.education}
-        </p>
+        {teacher.education && (
+          <p className="mt-2 inline-flex items-center gap-1.5 text-[12.5px] text-ink-soft">
+            <GraduationCap aria-hidden className="size-4 text-brand-teal" />
+            {teacher.education}
+          </p>
+        )}
 
         <p className="mt-3 text-sm leading-relaxed text-ink-soft">{teacher.bio}</p>
 

@@ -208,7 +208,7 @@ export function TeacherSubmitForm({ token, programs }: { token: string; programs
         <div className="grid gap-5 sm:grid-cols-[minmax(0,1fr)_9rem]">
           <div>
             <label htmlFor={`${uid}-education`} className="text-sm font-semibold text-ink">
-              Pendidikan terakhir <span className="text-red-500">*</span>
+              Pendidikan terakhir <span className="font-normal text-ink-soft">(opsional)</span>
             </label>
             <input
               id={`${uid}-education`}

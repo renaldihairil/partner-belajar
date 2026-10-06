@@ -17,7 +17,12 @@ const teacherSchema = z.object({
   title: requiredText("Jabatan / keahlian", 100),
   programIds: z.array(z.string()).default([]),
   experienceYears: intField("Lama mengajar", 0, 60),
-  education: requiredText("Pendidikan", 150),
+  education: z
+    .string()
+    .trim()
+    .max(150, "Pendidikan terlalu panjang (maks. 150 karakter).")
+    .optional()
+    .transform((v) => v ?? ""),
   highlights: z.array(z.string().max(60, "Keunggulan maksimal 60 karakter.")).max(6, "Maksimal 6 keunggulan.").default([]),
   bio: requiredText("Bio singkat", 400),
   gender: z.enum(["ikhwan", "akhwat"], { error: "Pilih ikhwan atau akhwat." }),

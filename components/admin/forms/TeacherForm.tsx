@@ -38,7 +38,7 @@ function Fields({ item, programs }: { item?: TeacherRow; programs: Option[] }) {
         <div className="grid gap-4 md:grid-cols-2">
           <TextField label="Nama lengkap" name="name" defaultValue={item?.name} placeholder="mis. Ustadzah Hana Salsabila" required error={e("name")} />
           <TextField label="Jabatan / keahlian" name="title" defaultValue={item?.title} placeholder="mis. Pengajar Tahsin & Tahfizh" required error={e("title")} />
-          <TextField label="Pendidikan" name="education" defaultValue={item?.education} placeholder="mis. S1 Pendidikan Bahasa Arab" required error={e("education")} />
+          <TextField label="Pendidikan (opsional)" name="education" defaultValue={item?.education} placeholder="mis. S1 Pendidikan Bahasa Arab" error={e("education")} />
           <TextField
             label="Lama mengajar (tahun)"
             name="experienceYears"

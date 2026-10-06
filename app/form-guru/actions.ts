@@ -129,7 +129,13 @@ const teacherSchema = z.object({
     .transform((v) => v ?? [])
     .pipe(z.array(z.string()).min(1, "Pilih minimal satu program.").max(10, "Terlalu banyak program dipilih.")),
   title: line("Jabatan / keahlian", 3, 100),
-  education: line("Pendidikan", 3, 150),
+  // Opsional: bila kosong disimpan sebagai teks kosong.
+  education: z
+    .string()
+    .transform(clean)
+    .pipe(z.string().max(150, "Pendidikan terlalu panjang (maks. 150 karakter)."))
+    .optional()
+    .transform((v) => v ?? ""),
   experienceYears: z.coerce
     .number({ error: "Lama mengajar harus berupa angka." })
     .int("Lama mengajar harus bilangan bulat.")
