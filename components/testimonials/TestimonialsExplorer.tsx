@@ -5,6 +5,7 @@ import { FilterChips } from "@/components/ui/FilterChips";
 import { Reveal } from "@/components/ui/Reveal";
 import type { Program, Testimonial } from "@/types";
 import { TestimonialCard } from "./TestimonialCard";
+import { TestimonialDetailProvider } from "./TestimonialDetail";
 
 export function TestimonialsExplorer({ items, programs }: { items: Testimonial[]; programs: Program[] }) {
   const [filter, setFilter] = useState("all");
@@ -17,18 +18,18 @@ export function TestimonialsExplorer({ items, programs }: { items: Testimonial[]
   const visible = filter === "all" ? items : items.filter((t) => t.programId === filter);
 
   return (
-    <>
+    <TestimonialDetailProvider>
       <FilterChips label="Saring testimoni berdasarkan program" options={options} value={filter} onChange={setFilter} />
       <p aria-live="polite" className="sr-only">
         Menampilkan {visible.length} testimoni
       </p>
-      <ul className="columns-1 gap-4 md:columns-2 xl:columns-3 [&>li]:mb-4">
+      <ul className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
         {visible.map((item, index) => (
-          <Reveal as="li" key={item.id} delay={(index % 3) * 70} className="break-inside-avoid">
+          <Reveal as="li" key={item.id} delay={(index % 3) * 70} className="h-full">
             <TestimonialCard {...item} className="w-full" />
           </Reveal>
         ))}
       </ul>
-    </>
+    </TestimonialDetailProvider>
   );
 }

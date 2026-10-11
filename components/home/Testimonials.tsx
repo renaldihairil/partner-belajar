@@ -2,6 +2,7 @@ import type { CSSProperties } from "react";
 import Link from "next/link";
 import { ArrowRight, Pause, Play } from "lucide-react";
 import { TestimonialCard } from "@/components/testimonials/TestimonialCard";
+import { TestimonialDetailProvider } from "@/components/testimonials/TestimonialDetail";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import type { Testimonial } from "@/types";
 
@@ -23,6 +24,7 @@ function MarqueeRow({ items, reverse = false, decorative = false, className = ""
           <ul
             key={String(clone)}
             aria-hidden={clone || undefined}
+            inert={clone || decorative || undefined}
             className={`flex shrink-0 gap-4 pr-4 md:gap-5 md:pr-5 ${clone ? "marquee-clone" : ""}`}
           >
             {items.map((item) => (
@@ -42,6 +44,7 @@ export function Testimonials({ items }: { items: Testimonial[] }) {
   const secondRow = [...items.slice(Math.ceil(items.length / 2)), ...items.slice(0, Math.ceil(items.length / 2))];
 
   return (
+    <TestimonialDetailProvider>
     <section aria-labelledby="testimoni-title" className="testimonials relative mt-14 md:mt-16">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <SectionHeading
@@ -76,5 +79,6 @@ export function Testimonials({ items }: { items: Testimonial[] }) {
         </Link>
       </div>
     </section>
+    </TestimonialDetailProvider>
   );
 }

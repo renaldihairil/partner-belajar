@@ -1273,3 +1273,12 @@ html:has(.lightbox[open]) {
     transform: translateY(10px) scale(0.98);
   }
 }
+
+/* ---------- Jendela detail (Pengajar & Testimoni) ---------- */
+.detail-dialog[open] {
+  animation: pop-in 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+html:has(.detail-dialog[open]) {
+  overflow: hidden;
+}

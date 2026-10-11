@@ -1,13 +1,16 @@
 "use client";
 
 import { useState } from "react";
+import { DetailDialog } from "@/components/ui/DetailDialog";
 import { Reveal } from "@/components/ui/Reveal";
 import { FilterChips } from "@/components/ui/FilterChips";
 import type { Program, Teacher } from "@/types";
 import { TeacherCard } from "./TeacherCard";
+import { TeacherDetail } from "./TeacherDetail";
 
 export function TeacherExplorer({ teachers, programs }: { teachers: Teacher[]; programs: Program[] }) {
   const [filter, setFilter] = useState("all");
+  const [selectedId, setSelectedId] = useState<string | null>(null);
 
   const options = [
     { id: "all", label: "Semua", count: teachers.length },
@@ -18,6 +21,8 @@ export function TeacherExplorer({ teachers, programs }: { teachers: Teacher[]; p
     })),
   ];
   const visible = filter === "all" ? teachers : teachers.filter((t) => t.programIds.includes(filter));
+  const selected = teachers.find((t) => t.id === selectedId) ?? null;
+  const close = () => setSelectedId(null);
 
   return (
     <>
@@ -27,11 +32,15 @@ export function TeacherExplorer({ teachers, programs }: { teachers: Teacher[]; p
       </p>
       <ul className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
         {visible.map((teacher, index) => (
-          <Reveal as="li" key={teacher.id} delay={(index % 3) * 80}>
-            <TeacherCard teacher={teacher} programs={programs} />
+          <Reveal as="li" key={teacher.id} delay={(index % 3) * 80} className="h-full">
+            <TeacherCard teacher={teacher} programs={programs} onOpen={() => setSelectedId(teacher.id)} />
           </Reveal>
         ))}
       </ul>
+
+      <DetailDialog open={selected !== null} onClose={close} label={selected ? `Profil ${selected.name}` : "Profil pengajar"}>
+        {selected && <TeacherDetail teacher={selected} programs={programs} onNavigate={close} />}
+      </DetailDialog>
     </>
   );
 }
