@@ -1,12 +1,10 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import { ChevronRight, MapPin, Quote, Star } from "lucide-react";
 import type { Testimonial } from "@/types";
 import { useOpenTestimonial } from "./TestimonialDetail";
 import { avatarTone, initials } from "./testimonial-ui";
-
-/** Kutipan lebih panjang dari ini dipotong di kartu (5 baris) dan lengkapnya ada di jendela detail. */
-const LONG_QUOTE = 150;
 
 /**
  * Kartu testimoni — dipakai di marquee Home (lebar tetap) dan grid halaman Testimoni (lebar penuh).
@@ -18,7 +16,18 @@ export function TestimonialCard({
 }: Testimonial & { className?: string }) {
   const { name, role, quote, rating, tone, city } = item;
   const open = useOpenTestimonial();
-  const isLong = quote.length > LONG_QUOTE;
+  // Kutipan dipotong 5 baris; "Baca selengkapnya" hanya muncul bila memang terpotong (diukur, mengikuti lebar kartu).
+  const quoteRef = useRef<HTMLSpanElement>(null);
+  const [clamped, setClamped] = useState(false);
+  useEffect(() => {
+    const el = quoteRef.current;
+    if (!el) return;
+    const measure = () => setClamped(el.scrollHeight > el.clientHeight + 1);
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [quote]);
 
   const body = (
     <>
@@ -28,16 +37,17 @@ export function TestimonialCard({
           <Star key={i} aria-hidden className={`size-4 ${i < rating ? "text-brand-yellow" : "text-line"}`} fill="currentColor" strokeWidth={0} />
         ))}
       </span>
-      <span className="mt-3 line-clamp-5 block min-h-[7.5rem] text-[14.5px] leading-6 text-ink">“{quote}”</span>
-      <span className="mt-1 flex h-6 items-center gap-0.5 text-[13px] font-semibold text-brand-teal-dark">
-        {isLong && (
-          <>
-            Baca selengkapnya
-            <ChevronRight aria-hidden className="size-4" />
-          </>
-        )}
+      <span ref={quoteRef} className="mt-3 line-clamp-5 text-[14.5px] leading-6 text-ink">
+        “{quote}”
       </span>
-      <span className="mt-auto flex items-center gap-3 border-t border-line pt-4">
+      {clamped && (
+        <span className="mt-1 flex items-center gap-0.5 text-[13px] font-semibold text-brand-teal-dark">
+          Baca selengkapnya
+          <ChevronRight aria-hidden className="size-4" />
+        </span>
+      )}
+      <span aria-hidden className="min-h-4 flex-1" />
+      <span className="flex items-center gap-3 border-t border-line pt-4">
         <span aria-hidden className={`grid size-10 shrink-0 place-items-center rounded-full text-sm font-bold ${avatarTone[tone]}`}>
           {initials(name)}
         </span>

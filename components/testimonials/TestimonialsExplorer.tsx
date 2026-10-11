@@ -23,9 +23,9 @@ export function TestimonialsExplorer({ items, programs }: { items: Testimonial[]
       <p aria-live="polite" className="sr-only">
         Menampilkan {visible.length} testimoni
       </p>
-      <ul className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+      <ul className="grid gap-4 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
         {visible.map((item, index) => (
-          <Reveal as="li" key={item.id} delay={(index % 3) * 70} className="h-full">
+          <Reveal as="li" key={item.id} delay={(index % 4) * 60} className="h-full">
             <TestimonialCard {...item} className="w-full" />
           </Reveal>
         ))}

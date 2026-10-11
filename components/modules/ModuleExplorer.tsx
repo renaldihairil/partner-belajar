@@ -53,9 +53,9 @@ export function ModuleExplorer({ modules, programs }: { modules: LearningModule[
           Tidak ada modul yang cocok. Coba kata kunci atau program lain.
         </p>
       ) : (
-        <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
           {visible.map((item, index) => (
-            <Reveal as="li" key={item.id} delay={(index % 3) * 80}>
+            <Reveal as="li" key={item.id} delay={(index % 4) * 70} className="h-full">
               <ModuleCard module={item} program={programs.find((p) => p.id === item.programId)} priority={index < 3} />
             </Reveal>
           ))}

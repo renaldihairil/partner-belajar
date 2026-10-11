@@ -19,7 +19,7 @@ export function ModuleCard({ module, program, priority }: ModuleCardProps) {
             src={module.cover}
             alt={`Sampul ${module.title}`}
             fill
-            sizes="(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 92vw"
+            sizes="(min-width: 1536px) 22vw, (min-width: 1024px) 30vw, (min-width: 640px) 45vw, 92vw"
             priority={priority}
             className="object-cover transition-transform duration-700 group-hover:scale-[1.04]"
           />
