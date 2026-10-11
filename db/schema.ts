@@ -176,6 +176,21 @@ export const documentation = pgTable("documentation", {
   ...timestamps,
 });
 
+/** Modul belajar: buku / kitab yang dipakai belajar, dengan tautan unduh ke halaman web lain. */
+export const learningModules = pgTable("learning_modules", {
+  id: text("id").primaryKey(),
+  title: text("title").notNull(),
+  description: text("description").notNull(),
+  /** Foto sampul (rasio 1:1); kosong → kartu memakai sampul ilustrasi. */
+  cover: text("cover"),
+  /** Tautan unduh ke halaman web lain (diinput admin). */
+  downloadUrl: text("download_url").notNull(),
+  programId: text("program_id").references(() => programs.id, { onDelete: "set null" }),
+  sortOrder: integer("sort_order").notNull().default(0),
+  published: boolean("published").notNull().default(true),
+  ...timestamps,
+});
+
 export const adminUsers = pgTable("admin_users", {
   id: text("id").primaryKey(),
   email: text("email").notNull().unique(),
@@ -204,6 +219,7 @@ export type ProgramClassRow = typeof programClasses.$inferSelect;
 export type TeacherRow = typeof teachers.$inferSelect;
 export type ArticleRow = typeof articles.$inferSelect;
 export type DocumentationRow = typeof documentation.$inferSelect;
+export type LearningModuleRow = typeof learningModules.$inferSelect;
 export type TestimonialRow = typeof testimonials.$inferSelect;
 export type TestimonialLinkRow = typeof testimonialLinks.$inferSelect;
 export type TeacherLinkRow = typeof teacherLinks.$inferSelect;

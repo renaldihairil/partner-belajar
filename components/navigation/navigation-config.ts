@@ -4,6 +4,7 @@ import {
   FileText,
   GraduationCap,
   Home,
+  Library,
   Mail,
   MessageSquareQuote,
   type LucideIcon,
@@ -30,6 +31,13 @@ export const navigation: NavLink[] = [
     icon: GraduationCap,
     mobile: "more",
     description: "Kenali tim pengajar",
+  },
+  {
+    href: "/modul-belajar",
+    label: "Modul Belajar",
+    icon: Library,
+    mobile: "more",
+    description: "Kitab & buku untuk diunduh",
   },
   {
     href: "/dokumentasi",

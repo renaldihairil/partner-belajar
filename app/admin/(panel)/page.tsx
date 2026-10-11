@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { BookOpen, CalendarCheck2, GraduationCap, MessageSquareQuote, Newspaper } from "lucide-react";
+import { BookOpen, CalendarCheck2, GraduationCap, Library, MessageSquareQuote, Newspaper } from "lucide-react";
 import { DashboardActivity, DashboardSystem, DashboardUpcoming } from "@/components/admin/DashboardPanels";
 import { requireDb, schema } from "@/db";
 import { Notice, noticeMessages, StatCards } from "@/components/admin/ui";
@@ -14,8 +14,8 @@ export const metadata: Metadata = { title: "Dashboard" };
 export default async function AdminDashboard({ searchParams }: { searchParams: Promise<{ pesan?: string }> }) {
   const { pesan } = await searchParams;
   const [admin, db] = await Promise.all([requireAdmin(), requireDb()]);
-  const can = { program: hasPermission(admin, "program"), pengajar: hasPermission(admin, "pengajar"), testimoni: hasPermission(admin, "testimoni"), artikel: hasPermission(admin, "artikel") };
-  const [programs, classes, teachers, testimonials, articles] = await Promise.all([
+  const can = { program: hasPermission(admin, "program"), pengajar: hasPermission(admin, "pengajar"), testimoni: hasPermission(admin, "testimoni"), artikel: hasPermission(admin, "artikel"), modul: hasPermission(admin, "modul") };
+  const [programs, classes, teachers, testimonials, articles, modules] = await Promise.all([
     !can.program ? [] : db
       .select({ id: schema.programs.id, title: schema.programs.title, published: schema.programs.published, updatedAt: schema.programs.updatedAt })
       .from(schema.programs),
@@ -35,6 +35,9 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
     !can.artikel ? [] : db
       .select({ id: schema.articles.id, title: schema.articles.title, published: schema.articles.published, updatedAt: schema.articles.updatedAt })
       .from(schema.articles),
+    !can.modul ? [] : db
+      .select({ id: schema.learningModules.id, title: schema.learningModules.title, published: schema.learningModules.published, updatedAt: schema.learningModules.updatedAt })
+      .from(schema.learningModules),
   ]);
 
   const now = Date.now();
@@ -63,6 +66,14 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
       note: `${articles.length - articles.filter((a) => a.published).length} draf`,
       icon: Newspaper,
     },
+    {
+      show: can.modul,
+      href: "/admin/modul",
+      label: "Modul Belajar",
+      value: modules.filter((m) => m.published).length,
+      note: `${modules.length} total modul`,
+      icon: Library,
+    },
   ];
   const stats = allStats.filter((stat) => stat.show);
 
@@ -77,6 +88,7 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
     ...teachers.map((t) => ({ kind: "Pengajar", name: t.name, href: `/admin/pengajar/${t.id}`, at: t.updatedAt })),
     ...testimonials.map((t) => ({ kind: "Testimoni", name: t.name, href: `/admin/testimoni/${t.id}`, at: t.updatedAt })),
     ...articles.map((a) => ({ kind: "Artikel", name: a.title, href: `/admin/artikel/${a.id}`, at: a.updatedAt })),
+    ...modules.map((m) => ({ kind: "Modul", name: m.title, href: `/admin/modul/${m.id}`, at: m.updatedAt })),
   ]
     .sort((a, b) => b.at.getTime() - a.at.getTime())
     .slice(0, 6)

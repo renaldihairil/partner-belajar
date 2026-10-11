@@ -216,3 +216,15 @@ export type Stat = {
   label: string;
   caption: string;
 };
+
+/** Buku / kitab belajar di halaman Modul Belajar. */
+export type LearningModule = {
+  id: string;
+  title: string;
+  description: string;
+  /** Foto sampul 1:1; kosong → sampul ilustrasi. */
+  cover?: string;
+  /** Tautan unduh (halaman web lain). */
+  downloadUrl: string;
+  programId?: string;
+};

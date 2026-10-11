@@ -10,6 +10,7 @@ export const PERMISSIONS = [
   { key: "testimoni", label: "Testimoni", description: "Cerita orang tua." },
   { key: "artikel", label: "Artikel", description: "Menulis dan menerbitkan artikel." },
   { key: "dokumentasi", label: "Dokumentasi", description: "Video dokumentasi belajar (YouTube)." },
+  { key: "modul", label: "Modul Belajar", description: "Buku / kitab belajar beserta tautan unduhnya." },
 ] as const;
 
 export type PermissionKey = (typeof PERMISSIONS)[number]["key"];

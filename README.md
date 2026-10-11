@@ -1,12 +1,12 @@
 # Partner Belajar
 
-Website edukasi responsif Partner Belajar: Home, Program, Artikel, Pengajar, Dokumentasi, Testimoni, Contact, dan admin panel.
+Website edukasi responsif Partner Belajar: Home, Program, Artikel, Pengajar, Modul Belajar, Dokumentasi, Testimoni, Contact, dan admin panel.
 Dibangun dengan Next.js (App Router), React, TypeScript, Tailwind CSS v4, dan Lucide React.
 
-- **Desktop (≥ 768px):** sidebar kiri berisi 7 menu (Home, Program, Artikel, Pengajar, Dokumentasi, Testimoni, Contact)
+- **Desktop (≥ 768px):** sidebar kiri berisi 8 menu (Home, Program, Artikel, Pengajar, Modul Belajar, Dokumentasi, Testimoni, Contact)
   + bar atas (pencarian & tombol mode terang/gelap).
 - **Mobile (< 768px):** header (logo + tombol mode terang/gelap) + bottom navigation
-  Home · Program · Artikel · **Lainnya** (panel berisi Pengajar, Dokumentasi, Testimoni, Contact).
+  Home · Program · Artikel · **Lainnya** (panel berisi Pengajar, Modul Belajar, Dokumentasi, Testimoni, Contact).
 - **Mode gelap:** tombol tema di header; pilihan disimpan di browser (`localStorage: pb-theme`), default terang.
   Semua warna berasal dari token di `app/globals.css` (`:root` & `:root[data-theme="dark"]`).
 

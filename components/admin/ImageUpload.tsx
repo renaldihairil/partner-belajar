@@ -9,7 +9,7 @@ type ImageUploadProps = {
   name: string;
   label: string;
   defaultValue?: string;
-  folder: "program" | "pengajar" | "testimoni" | "artikel" | "umum";
+  folder: "program" | "pengajar" | "testimoni" | "artikel" | "modul" | "umum";
   hint?: string;
   error?: string;
   shape?: "wide" | "square";
