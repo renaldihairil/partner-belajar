@@ -23,7 +23,7 @@ export function ModuleExplorer({ modules, programs }: { modules: LearningModule[
   const visible = modules.filter(
     (m) =>
       (filter === "all" || m.programId === filter) &&
-      (!needle || `${m.title} ${m.description}`.toLowerCase().includes(needle)),
+      (!needle || m.title.toLowerCase().includes(needle)),
   );
 
   return (

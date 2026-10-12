@@ -1,0 +1,1 @@
+ALTER TABLE "learning_modules" DROP COLUMN "description";

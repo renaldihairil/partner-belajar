@@ -12,7 +12,7 @@ Yang bisa dikelola:
 | Link Form Guru | Buat, salin, dan bagikan link (PIN opsional) agar guru mengisi data profilnya sendiri; data masuk sebagai draf untuk ditinjau |
 | Artikel | Judul, ringkasan, isi (blok paragraf/subjudul/daftar/tips), gambar sampul, kategori, tag, penulis, tanggal terbit, draf/terbit, artikel pilihan |
 | Dokumentasi | Video dokumentasi dari YouTube (tempel tautan): judul, keterangan, kategori, tanggal, program terkait, tampil/sembunyi. Ditampilkan sebagai grid 3 kolom; klik untuk memutar |
-| Modul Belajar | Buku / kitab untuk halaman Modul Belajar: nama kitab, deskripsi singkat, foto sampul (otomatis dipotong persegi 1:1), tautan unduh ke halaman web lain, program terkait, tampil/sembunyi, urutan. Ditampilkan sebagai grid 3 kolom dengan tombol Download |
+| Modul Belajar | Buku / kitab untuk halaman Modul Belajar: nama kitab, foto sampul (otomatis dipotong persegi 1:1), tautan unduh ke halaman web lain, program terkait, tampil/sembunyi, urutan. Ditampilkan sebagai grid 3 kolom dengan tombol Download |
 | Akun Saya | Profil sendiri dan ganti password (semua admin) |
 | Kelola Admin | Khusus Pemilik: tambah/ubah/hapus admin, atur peran & menu yang boleh diakses |
 
@@ -34,7 +34,7 @@ langsung mati); **Nonaktifkan** menutup link sepenuhnya. Halaman ini tidak diind
 
 Menu **Modul Belajar** (butuh akses "Modul Belajar") mengelola halaman publik `/modul-belajar`.
 
-1. **Tambah Modul**, isi nama kitab, deskripsi singkat (maks. 300 karakter), dan tautan unduh.
+1. **Tambah Modul**, isi nama kitab dan tautan unduh.
 2. **Foto sampul** opsional. Foto yang bukan persegi otomatis dipotong di tengah menjadi 1:1, jadi pastikan judul pada sampul tidak terpotong. Tanpa sampul, kartu memakai gambar ilustrasi.
 3. **Tautan unduh** adalah alamat halaman web lain (Google Drive, Dropbox, dll.). Boleh ditulis tanpa `https://`; hanya tautan http/https yang diterima. Tombol Download di situs membuka tautan ini di tab baru. Di daftar admin, ikon panah keluar dipakai untuk mencoba tautannya.
 4. **Program terkait** opsional: bila diisi, kartu menampilkan label program dan pengunjung bisa menyaring modul per program.

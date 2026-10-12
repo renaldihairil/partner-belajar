@@ -5,7 +5,7 @@ import { saveModuleAction } from "@/app/admin/actions/modules";
 import type { LearningModuleRow } from "@/db/schema";
 import { AdminForm, useFieldError } from "../AdminForm";
 import { ImageUpload } from "../ImageUpload";
-import { FormSection, SelectField, SwitchField, TextAreaField, TextField } from "../fields";
+import { FormSection, SelectField, SwitchField, TextField } from "../fields";
 
 type Option = { value: string; label: string };
 
@@ -23,16 +23,6 @@ function Fields({ item, programs }: { item?: LearningModuleRow; programs: Option
           placeholder="mis. Matan Al-Ajurrumiyyah"
           required
           error={e("title")}
-        />
-        <TextAreaField
-          label="Deskripsi singkat"
-          name="description"
-          rows={3}
-          maxLength={300}
-          defaultValue={item?.description}
-          hint="Dua sampai tiga kalimat: isi kitab dan untuk siapa. Tampil di kartu modul."
-          required
-          error={e("description")}
         />
         <SelectField
           label="Program terkait"

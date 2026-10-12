@@ -9,7 +9,6 @@ export function toLearningModule(row: LearningModuleRow): LearningModule {
   return {
     id: row.id,
     title: row.title,
-    description: row.description,
     cover: row.cover || undefined,
     downloadUrl: row.downloadUrl,
     programId: row.programId ?? undefined,

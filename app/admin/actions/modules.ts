@@ -32,7 +32,6 @@ const downloadUrl = z
 const moduleSchema = z.object({
   id: z.string().optional(),
   title: requiredText("Nama kitab", 120),
-  description: requiredText("Deskripsi singkat", 300),
   cover: optionalText(500),
   downloadUrl,
   programId: optionalText(100),

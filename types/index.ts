@@ -221,7 +221,6 @@ export type Stat = {
 export type LearningModule = {
   id: string;
   title: string;
-  description: string;
   /** Foto sampul 1:1; kosong → sampul ilustrasi. */
   cover?: string;
   /** Tautan unduh (halaman web lain). */

@@ -71,7 +71,7 @@ export default async function AdminModulesPage({ searchParams }: PageProps) {
               key={item.id}
               muted={!item.published}
               cols={GRID}
-              search={`${item.title} ${item.description} ${programName.get(item.programId ?? "") ?? ""}`}
+              search={`${item.title} ${programName.get(item.programId ?? "") ?? ""}`}
             >
               <RowNumber n={index + 1} />
               <Link href={`/admin/modul/${item.id}`} className="row-main group flex min-w-0 items-center gap-3.5">
@@ -85,7 +85,6 @@ export default async function AdminModulesPage({ searchParams }: PageProps) {
                 </span>
                 <span className="min-w-0">
                   <span className="line-clamp-1 text-sm font-semibold text-ink group-hover:text-brand-teal-dark">{item.title}</span>
-                  <span className="line-clamp-1 text-[13px] text-ink-soft">{item.description}</span>
                   <span className="block truncate text-xs text-ink-soft/80">{hostOf(item.downloadUrl)}</span>
                 </span>
               </Link>

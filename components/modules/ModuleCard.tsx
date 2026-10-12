@@ -39,8 +39,7 @@ export function ModuleCard({ module, program, priority }: ModuleCardProps) {
       </div>
 
       <div className="flex flex-1 flex-col p-5">
-        <h2 className="text-lg leading-snug font-bold text-ink">{module.title}</h2>
-        <p className="mt-2 flex-1 text-sm leading-relaxed text-ink-soft">{module.description}</p>
+        <h2 className="flex-1 text-lg leading-snug font-bold text-ink">{module.title}</h2>
         <a
           href={module.downloadUrl}
           target="_blank"

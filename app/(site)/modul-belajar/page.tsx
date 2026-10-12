@@ -28,7 +28,6 @@ export default async function ModulBelajarPage() {
       item: {
         "@type": "Book",
         name: item.title,
-        description: item.description,
         inLanguage: "id-ID",
         ...(item.cover ? { image: item.cover.startsWith("http") ? item.cover : absoluteUrl(item.cover) } : {}),
       },

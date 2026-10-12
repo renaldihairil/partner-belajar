@@ -184,7 +184,6 @@ export const documentation = pgTable("documentation", {
 export const learningModules = pgTable("learning_modules", {
   id: text("id").primaryKey(),
   title: text("title").notNull(),
-  description: text("description").notNull(),
   /** Foto sampul (rasio 1:1); kosong → kartu memakai sampul ilustrasi. */
   cover: text("cover"),
   /** Tautan unduh ke halaman web lain (diinput admin). */
