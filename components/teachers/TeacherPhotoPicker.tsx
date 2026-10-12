@@ -5,9 +5,26 @@ import { Camera, Loader2, Trash2 } from "lucide-react";
 import { uploadTeacherPhotoAction } from "@/app/form-guru/actions";
 import { MAX_IMAGE_BYTES, shrinkImage } from "@/lib/client-image";
 
-/** Pemilih foto untuk form publik guru. Nilai (URL foto) terkirim lewat input tersembunyi bernama `name`. */
-export function TeacherPhotoPicker({ name, token, error }: { name: string; token: string; error?: string }) {
-  const [url, setUrl] = useState("");
+type UploadFn = (formData: FormData) => Promise<{ url: string } | { error: string }>;
+
+/**
+ * Pemilih foto untuk form publik guru. Nilai (URL foto) terkirim lewat input tersembunyi bernama `name`.
+ * `upload` bisa diganti (form pembaruan pribadi memakai aksi unggah sendiri); `initialUrl` = foto saat ini.
+ */
+export function TeacherPhotoPicker({
+  name,
+  token,
+  error,
+  upload = uploadTeacherPhotoAction,
+  initialUrl = "",
+}: {
+  name: string;
+  token: string;
+  error?: string;
+  upload?: UploadFn;
+  initialUrl?: string;
+}) {
+  const [url, setUrl] = useState(initialUrl);
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -22,7 +39,7 @@ export function TeacherPhotoPicker({ name, token, error }: { name: string; token
       const data = new FormData();
       data.set("file", blob instanceof File ? blob : new File([blob], "foto.webp", { type: blob.type }));
       data.set("token", token);
-      const result = await uploadTeacherPhotoAction(data);
+      const result = await upload(data);
       if ("error" in result) setMessage(result.error);
       else setUrl(result.url);
     } catch (e) {

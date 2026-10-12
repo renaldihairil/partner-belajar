@@ -50,6 +50,13 @@
       "when": 1791722595220,
       "tag": "0006_modul_belajar",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1791781072648,
+      "tag": "0007_guru_link_pembaruan",
+      "breakpoints": true
     }
   ]
 }

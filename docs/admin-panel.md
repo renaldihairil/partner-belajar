@@ -6,7 +6,7 @@ Yang bisa dikelola:
 | Menu | Isi |
 | --- | --- |
 | Program & Jadwal | Info program, gambar, kurikulum, hasil belajar, "cocok untuk", paket harga, jadwal kelas (tanggal, hari, jam, mode, kuota, jumlah terdaftar, tutup manual) |
-| Pengajar | Profil, foto, program yang diajar, keunggulan, tampil/sembunyi, urutan |
+| Pengajar | Profil, foto, program yang diajar, keunggulan (satu kolom per keunggulan, tanpa batas), bio tanpa batas karakter, tampil/sembunyi, urutan. Tiap baris punya tombol **Link update data diri** (lihat bagian di bawah) |
 | Testimoni | Isi, rating, program, kota, tanggal, tampil/sembunyi, urutan |
 | Link Testimoni | Buat, salin, dan bagikan link agar orang tua mengirim testimoni sendiri (lihat bagian di bawah) |
 | Link Form Guru | Buat, salin, dan bagikan link (PIN opsional) agar guru mengisi data profilnya sendiri; data masuk sebagai draf untuk ditinjau |
@@ -15,6 +15,20 @@ Yang bisa dikelola:
 | Modul Belajar | Buku / kitab untuk halaman Modul Belajar: nama kitab, deskripsi singkat, foto sampul (otomatis dipotong persegi 1:1), tautan unduh ke halaman web lain, program terkait, tampil/sembunyi, urutan. Ditampilkan sebagai grid 3 kolom dengan tombol Download |
 | Akun Saya | Profil sendiri dan ganti password (semua admin) |
 | Kelola Admin | Khusus Pemilik: tambah/ubah/hapus admin, atur peran & menu yang boleh diakses |
+
+## Link update data diri pengajar
+
+Di tabel **Pengajar**, kolom Aksi punya tombol ikon orang+pena. Fungsinya agar tiap guru bisa memperbarui data dirinya
+sendiri sewaktu-waktu lewat link pribadi `/profil-guru/<kode>`.
+
+1. Klik tombolnya pada baris pengajar, lalu **Buat link pribadi**.
+2. **Salin** link atau kirim lewat **WhatsApp** (pesan sudah disiapkan). Bila tombolnya berwarna hijau, link sudah pernah dibuat.
+3. Guru membuka link: formulir sudah terisi data terkini (nama, foto, program, jabatan, pendidikan, bio, keunggulan, kontak).
+   Setelah **Simpan perubahan**, profil di situs **langsung diperbarui**. Status tampil/sembunyi dan urutan tidak berubah.
+4. Di daftar Pengajar, baris yang pernah diperbarui guru diberi label **Diperbarui guru**.
+
+Keamanan: kode link tidak bisa ditebak dan hanya berlaku untuk satu guru. **Buat ulang** membuat kode baru (link lama
+langsung mati); **Nonaktifkan** menutup link sepenuhnya. Halaman ini tidak diindeks mesin pencari.
 
 ## Modul Belajar
 
@@ -96,7 +110,7 @@ Menu **Link Form Guru** (butuh akses "Pengajar") membuat link publik berbentuk
    (tombol **Acak** membuat PIN 6 angka) agar guru harus memasukkan PIN sebelum bisa mengisi.
 2. Klik **Salin** (atau tombol WhatsApp untuk pesan siap kirim). Bila memakai PIN, kirim PIN **terpisah** dari link.
 3. Guru mengisi: nama lengkap, jenis kelamin, kontak (opsional), foto (opsional), program yang diajar,
-   jabatan/keahlian, pendidikan, lama mengajar, bio singkat, dan keunggulan (maks. 6).
+   jabatan/keahlian, pendidikan (opsional), lama mengajar, bio, dan keunggulan (satu kolom per keunggulan, bisa ditambah tanpa batas).
 4. Data yang masuk berstatus **tersembunyi (Perlu ditinjau)**, belum tampil di situs. Buka **Pengajar**, periksa/edit,
    lalu tampilkan lewat tombol mata atau saklar "Tampilkan". Di daftar, kiriman ini diberi label **Via form**.
 

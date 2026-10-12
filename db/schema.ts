@@ -102,6 +102,10 @@ export const teachers = pgTable("teachers", {
   contact: text("contact"),
   /** Terisi bila data masuk lewat link form guru; kosong bila diinput admin. */
   linkId: text("link_id").references(() => teacherLinks.id, { onDelete: "set null" }),
+  /** Kode rahasia link pribadi (/profil-guru/<kode>) agar guru ini bisa memperbarui data dirinya sendiri. Kosong = tidak ada link. */
+  editToken: text("edit_token").unique(),
+  /** Terakhir kali guru memperbarui data lewat link pribadinya. */
+  selfUpdatedAt: timestamp("self_updated_at", { withTimezone: true }),
   sortOrder: integer("sort_order").notNull().default(0),
   published: boolean("published").notNull().default(true),
   ...timestamps,

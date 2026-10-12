@@ -9,13 +9,13 @@ import { toast } from "./Toaster";
 const subscribe = () => () => {};
 
 /** Alamat link lengkap. Render awal memakai `siteUrl` dari server, lalu domain yang sedang dibuka. */
-function useLinkUrl(path: string, siteUrl: string) {
+export function useLinkUrl(path: string, siteUrl: string) {
   const origin = useSyncExternalStore(subscribe, () => window.location.origin, () => siteUrl);
   return `${origin}${path}`;
 }
 
 /** Gambar logo WhatsApp (lucide tidak menyediakan merek). */
-function WhatsAppIcon({ className = "" }: { className?: string }) {
+export function WhatsAppIcon({ className = "" }: { className?: string }) {
   return (
     <svg aria-hidden viewBox="0 0 24 24" className={className} fill="currentColor">
       <path d="M12.04 2a9.9 9.9 0 0 0-8.5 14.95L2 22l5.2-1.5A9.9 9.9 0 1 0 12.04 2Zm0 18.1c-1.5 0-2.9-.4-4.1-1.1l-.3-.2-3.1.9.9-3-.2-.3a8.1 8.1 0 1 1 6.8 3.7Zm4.4-6c-.2-.1-1.4-.7-1.6-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1-1.4-.7-2.4-1.3-3.3-2.9-.2-.3.2-.3.7-1.1.1-.1 0-.3 0-.4l-.7-1.7c-.2-.4-.4-.4-.6-.4h-.5c-.2 0-.4.1-.7.3-.2.3-.9.9-.9 2.2s1 2.5 1.1 2.7c.1.2 1.9 3 4.7 4.1 1.7.7 2.4.8 3.2.7.5-.1 1.4-.6 1.6-1.2.2-.6.2-1.1.1-1.2-.1-.1-.3-.2-.5-.3Z" />

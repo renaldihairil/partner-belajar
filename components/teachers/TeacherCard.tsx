@@ -9,20 +9,18 @@ type TeacherCardProps = {
   onOpen: () => void;
 };
 
-/** Berapa label yang ditampilkan di kartu; sisanya diringkas "+N" dan lengkap di jendela detail. */
-const MAX_HIGHLIGHTS = 2;
+/** Label program di kartu dibatasi satu baris; sisanya diringkas "+N" dan lengkap di jendela detail. */
 const MAX_PROGRAMS = 2;
 
 /**
- * Kartu ringkas pengajar: semua kartu berukuran sama (bio dipotong 3 baris);
- * klik membuka profil lengkap (lihat TeacherDetail).
+ * Kartu ringkas pengajar: semua kartu berukuran sama, bio dipotong 3 baris, label program selalu
+ * di dasar kartu. Keunggulan dan bio lengkap ada di jendela profil (klik kartu).
  */
 export function TeacherCard({ teacher, programs, onOpen }: TeacherCardProps) {
   const teacherPrograms = teacher.programIds
     .map((id) => programs.find((p) => p.id === id))
     .filter((p): p is Program => Boolean(p));
   const primary = teacherPrograms[0];
-  const extraHighlights = teacher.highlights.length - MAX_HIGHLIGHTS;
   const extraPrograms = teacherPrograms.length - MAX_PROGRAMS;
 
   return (
@@ -43,7 +41,7 @@ export function TeacherCard({ teacher, programs, onOpen }: TeacherCardProps) {
       </div>
 
       <div className="relative flex w-full flex-1 flex-col px-5 pb-5">
-        <div className="-mt-12 flex items-end gap-3">
+        <div className="-mt-12 flex items-end justify-between gap-3">
           <div className="relative size-24 shrink-0 overflow-hidden rounded-[26px] bg-surface p-1 shadow-lift ring-1 ring-line transition-transform duration-500 group-hover:-rotate-3">
             <div className={`program-surface theme-${primary?.theme ?? "blue"} size-full overflow-hidden rounded-[22px]`}>
               {teacher.photo ? (
@@ -53,7 +51,7 @@ export function TeacherCard({ teacher, programs, onOpen }: TeacherCardProps) {
               )}
             </div>
           </div>
-          <BadgeCheck aria-hidden className="mb-1 size-6 text-brand-teal" />
+          <BadgeCheck aria-hidden className="mb-1 size-6 shrink-0 text-brand-teal" />
         </div>
 
         <h2 className="mt-3 line-clamp-1 text-lg leading-snug font-bold text-ink">{teacher.name}</h2>
@@ -68,37 +66,31 @@ export function TeacherCard({ teacher, programs, onOpen }: TeacherCardProps) {
           )}
         </p>
 
-        <p className="mt-2 line-clamp-3 min-h-[4.5rem] text-sm leading-6 text-ink-soft">{teacher.bio}</p>
+        <p className="mt-3 line-clamp-3 text-sm leading-6 text-ink-soft">{teacher.bio}</p>
 
-        <ul className="mt-3 flex min-h-7 flex-wrap gap-1.5 overflow-hidden">
-          {teacher.highlights.slice(0, MAX_HIGHLIGHTS).map((highlight) => (
-            <li key={highlight} className="max-w-full truncate rounded-full bg-background px-2.5 py-1 text-[11.5px] font-medium text-ink ring-1 ring-line">
-              {highlight}
-            </li>
-          ))}
-          {extraHighlights > 0 && (
-            <li className="rounded-full bg-background px-2.5 py-1 text-[11.5px] font-medium text-ink-soft ring-1 ring-line">+{extraHighlights}</li>
-          )}
-        </ul>
+        {/* Dasar kartu: label program & ajakan, posisinya sama di semua kartu. */}
+        <div className="mt-auto w-full pt-4">
+          <ul className="flex min-h-7 flex-nowrap gap-1.5 overflow-hidden">
+            {teacherPrograms.slice(0, MAX_PROGRAMS).map((program) => (
+              <li
+                key={program.id}
+                className={`program-surface theme-${program.theme} min-w-0 truncate rounded-full px-3 py-1 text-[12px] font-semibold text-ink ring-1 ring-[var(--pc-border)]`}
+              >
+                {program.title}
+              </li>
+            ))}
+            {extraPrograms > 0 && (
+              <li className="shrink-0 rounded-full bg-background px-2.5 py-1 text-[12px] font-semibold text-ink-soft ring-1 ring-line">
+                +{extraPrograms}
+              </li>
+            )}
+          </ul>
 
-        <ul className="mt-3 flex min-h-7 flex-wrap gap-1.5">
-          {teacherPrograms.slice(0, MAX_PROGRAMS).map((program) => (
-            <li
-              key={program.id}
-              className={`program-surface theme-${program.theme} rounded-full px-3 py-1 text-[12px] font-semibold text-ink ring-1 ring-[var(--pc-border)]`}
-            >
-              {program.title}
-            </li>
-          ))}
-          {extraPrograms > 0 && (
-            <li className="rounded-full bg-background px-2.5 py-1 text-[12px] font-semibold text-ink-soft ring-1 ring-line">+{extraPrograms}</li>
-          )}
-        </ul>
-
-        <span className="mt-auto flex items-center justify-between border-t border-line pt-4 text-sm font-semibold text-brand-teal-dark">
-          Lihat profil lengkap
-          <ChevronRight aria-hidden className="size-4 transition-transform group-hover:translate-x-1" />
-        </span>
+          <span className="mt-4 flex items-center justify-between border-t border-line pt-4 text-sm font-semibold text-brand-teal-dark">
+            Lihat profil lengkap
+            <ChevronRight aria-hidden className="size-4 transition-transform group-hover:translate-x-1" />
+          </span>
+        </div>
       </div>
     </button>
   );

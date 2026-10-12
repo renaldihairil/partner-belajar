@@ -28,6 +28,8 @@ type RowActionsProps = {
   toggleAction?: (formData: FormData) => void | Promise<void>;
   deleteAction: (formData: FormData) => void | Promise<void>;
   deleteMessage?: string;
+  /** Tombol tambahan (mis. link update data diri), tampil sebelum tombol edit. */
+  extra?: ReactNode;
 };
 
 /** Tombol aksi per baris: urutkan, tampil/sembunyi, edit, hapus (dengan konfirmasi). */
@@ -42,6 +44,7 @@ export function RowActions({
   toggleAction,
   deleteAction,
   deleteMessage,
+  extra,
 }: RowActionsProps) {
   return (
     <div className="flex shrink-0 items-center gap-1">
@@ -81,6 +84,7 @@ export function RowActions({
           </button>
         </form>
       )}
+      {extra}
       <Link href={editHref} className={editBtn} aria-label={`Edit ${label}`} title="Edit">
         <Pencil aria-hidden className="size-4" />
       </Link>

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { ClipboardCheck, ClipboardList, Eye, GraduationCap, Users } from "lucide-react";
 import { deleteTeacherAction, moveTeacherAction, toggleTeacherAction } from "@/app/admin/actions/teachers";
 import { RowActions } from "@/components/admin/RowActions";
+import { TeacherUpdateLinkDialog } from "@/components/admin/TeacherUpdateLinkDialog";
 import {
   AddLink,
   AdminPageHeader,
@@ -22,13 +23,15 @@ import {
 import { TeacherAvatar } from "@/components/teachers/TeacherAvatar";
 import { requireDb, schema } from "@/db";
 import { programOptions } from "@/lib/admin/queries";
+import { formatDateId } from "@/lib/format";
 import { toTeacher } from "@/lib/programs-service";
+import { siteConfig } from "@/lib/site-config";
 
 export const metadata: Metadata = { title: "Pengajar" };
 
 type PageProps = { searchParams: Promise<{ pesan?: string }> };
 
-const GRID = "@3xl:grid-cols-[2.5rem_minmax(0,1fr)_minmax(0,14rem)_8rem_13rem]";
+const GRID = "@3xl:grid-cols-[2.5rem_minmax(0,1fr)_minmax(0,14rem)_8.5rem_14.5rem]";
 const programTones = ["blue", "yellow", "purple"] as const;
 
 export default async function AdminTeachersPage({ searchParams }: PageProps) {
@@ -96,6 +99,11 @@ export default async function AdminTeachersPage({ searchParams }: PageProps) {
                   <span className="flex items-center gap-2">
                     <span className="truncate text-sm font-semibold text-ink group-hover:text-brand-teal-dark">{item.name}</span>
                     {item.linkId && <Badge tone="teal">Via form</Badge>}
+                    {item.selfUpdatedAt && (
+                      <span title={`Terakhir diperbarui guru pada ${formatDateId(item.selfUpdatedAt.toLocaleDateString("sv-SE", { timeZone: "Asia/Jakarta" }))}`}>
+                        <Badge tone="info">Diperbarui guru</Badge>
+                      </span>
+                    )}
                   </span>
                   <span className="block truncate text-[13px] text-ink-soft">
                     {item.title} · {item.experienceYears} th mengajar
@@ -129,6 +137,7 @@ export default async function AdminTeachersPage({ searchParams }: PageProps) {
                 moveAction={moveTeacherAction}
                 toggleAction={toggleTeacherAction}
                 deleteAction={deleteTeacherAction}
+                extra={<TeacherUpdateLinkDialog id={item.id} name={item.name} initialToken={item.editToken} siteUrl={siteConfig.url} />}
               />
             </ListRow>
           ))}

@@ -30,9 +30,9 @@ export function TeacherExplorer({ teachers, programs }: { teachers: Teacher[]; p
       <p aria-live="polite" className="sr-only">
         Menampilkan {visible.length} pengajar
       </p>
-      <ul className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+      <ul className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
         {visible.map((teacher, index) => (
-          <Reveal as="li" key={teacher.id} delay={(index % 3) * 80} className="h-full">
+          <Reveal as="li" key={teacher.id} delay={(index % 4) * 70} className="h-full">
             <TeacherCard teacher={teacher} programs={programs} onOpen={() => setSelectedId(teacher.id)} />
           </Reveal>
         ))}

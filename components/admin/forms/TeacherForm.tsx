@@ -50,12 +50,20 @@ function Fields({ item, programs }: { item?: TeacherRow; programs: Option[] }) {
             error={e("experienceYears")}
           />
         </div>
-        <TextAreaField label="Bio singkat" name="bio" rows={3} maxLength={400} defaultValue={item?.bio} required error={e("bio")} />
+        <TextAreaField
+          label="Bio"
+          name="bio"
+          rows={6}
+          defaultValue={item?.bio}
+          hint="Tidak ada batas karakter. Di kartu pengajar hanya beberapa baris pertama yang tampil; bio lengkap muncul saat kartu diklik."
+          required
+          error={e("bio")}
+        />
         <ProgramCheckboxes programs={programs} selected={item?.programIds ?? []} />
         <StringListField
           name="highlights"
           label="Keunggulan"
-          hint="Ditampilkan sebagai label singkat di kartu, maksimal 6."
+          hint="Satu keunggulan per kolom; klik tombol di bawah untuk menambah kolom baru. Tidak ada batas jumlah atau panjang. Tampil di jendela profil lengkap pengajar, bukan di kartu."
           defaultValue={item?.highlights ?? []}
           placeholder="mis. Metode talaqqi"
           addLabel="Tambah keunggulan"

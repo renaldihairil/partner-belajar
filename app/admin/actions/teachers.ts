@@ -23,8 +23,9 @@ const teacherSchema = z.object({
     .max(150, "Pendidikan terlalu panjang (maks. 150 karakter).")
     .optional()
     .transform((v) => v ?? ""),
-  highlights: z.array(z.string().max(60, "Keunggulan maksimal 60 karakter.")).max(6, "Maksimal 6 keunggulan.").default([]),
-  bio: requiredText("Bio singkat", 400),
+  // Tanpa batas panjang di formulir; angka di bawah hanya pagar pengaman server.
+  highlights: z.array(z.string().max(1000, "Keunggulan terlalu panjang.")).max(100, "Terlalu banyak keunggulan.").default([]),
+  bio: requiredText("Bio", 20000),
   gender: z.enum(["ikhwan", "akhwat"], { error: "Pilih ikhwan atau akhwat." }),
   photo: optionalText(500),
   contact: optionalText(100),

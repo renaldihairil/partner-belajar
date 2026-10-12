@@ -5,9 +5,8 @@ import { AlertCircle, CheckCircle2, Loader2, Send, ShieldCheck } from "lucide-re
 import { submitTeacherAction } from "@/app/form-guru/actions";
 import type { ActionState } from "@/lib/admin/form";
 import { useHydrated } from "@/lib/use-hydrated";
+import { HighlightsInput } from "./HighlightsInput";
 import { TeacherPhotoPicker } from "./TeacherPhotoPicker";
-
-const MAX_BIO = 400;
 
 const inputBase =
   "mt-1.5 w-full rounded-2xl border bg-surface px-4 py-3 text-[15px] text-ink placeholder:text-ink-soft/70 transition-colors focus:border-brand-teal focus:outline-none focus:ring-4 focus:ring-brand-teal/10";
@@ -53,9 +52,33 @@ function Thanks({ onAgain }: { onAgain: () => void }) {
 
 type Program = { id: string; title: string };
 
-export function TeacherSubmitForm({ token, programs }: { token: string; programs: Program[] }) {
-  const [state, formAction, pending] = useActionState<ActionState, FormData>(submitTeacherAction, {});
-  const [bioLength, setBioLength] = useState(0);
+/** Data guru yang sudah ada (mode pembaruan) — mengisi formulir di awal. */
+export type TeacherFormInitial = {
+  name: string;
+  gender: "ikhwan" | "akhwat";
+  contact: string;
+  photo: string;
+  programIds: string[];
+  title: string;
+  education: string;
+  experienceYears: number;
+  bio: string;
+  highlights: string[];
+};
+
+type TeacherSubmitFormProps = {
+  token: string;
+  programs: Program[];
+  /** "create": guru baru lewat link form (masuk sebagai draf). "update": memperbarui data sendiri lewat link pribadi. */
+  mode?: "create" | "update";
+  initial?: TeacherFormInitial;
+  action?: (prev: ActionState, formData: FormData) => Promise<ActionState>;
+  uploadPhoto?: (formData: FormData) => Promise<{ url: string } | { error: string }>;
+};
+
+export function TeacherSubmitForm({ token, programs, mode = "create", initial, action = submitTeacherAction, uploadPhoto }: TeacherSubmitFormProps) {
+  const updating = mode === "update";
+  const [state, formAction, pending] = useActionState<ActionState, FormData>(action, {});
   const [done, setDone] = useState(false);
   const hydrated = useHydrated();
   const [round, setRound] = useState(0); // naik setiap "isi lagi" agar seluruh isian dikosongkan
@@ -65,7 +88,8 @@ export function TeacherSubmitForm({ token, programs }: { token: string; programs
   // Tampilkan layar terima kasih begitu server menjawab sukses.
   if (state !== lastState) {
     setLastState(state);
-    if (state.ok) setDone(true);
+    // Mode pembaruan tetap di formulir (isian tidak hilang) dan hanya menampilkan pesan berhasil.
+    if (state.ok && !updating) setDone(true);
   }
 
   const errors = state.errors ?? {};
@@ -76,7 +100,6 @@ export function TeacherSubmitForm({ token, programs }: { token: string; programs
       <Thanks
         onAgain={() => {
           setDone(false);
-          setBioLength(0);
           setRound((n) => n + 1);
         }}
       />
@@ -115,6 +138,7 @@ export function TeacherSubmitForm({ token, programs }: { token: string; programs
             id={`${uid}-name`}
             name="name"
             autoComplete="name"
+            defaultValue={initial?.name}
             maxLength={100}
             placeholder="mis. Ustadzah Hana Salsabila"
             aria-invalid={Boolean(errors.name)}
@@ -140,7 +164,7 @@ export function TeacherSubmitForm({ token, programs }: { token: string; programs
                 key={g.value}
                 className="flex cursor-pointer items-center gap-3 rounded-2xl border border-line bg-surface px-4 py-3 transition-colors has-[:checked]:border-brand-teal has-[:checked]:bg-brand-teal-soft has-[:focus-visible]:ring-4 has-[:focus-visible]:ring-brand-teal/20"
               >
-                <input type="radio" name="gender" value={g.value} className="size-4 accent-[var(--brand-teal)]" />
+                <input type="radio" name="gender" value={g.value} defaultChecked={initial?.gender === g.value} className="size-4 accent-[var(--brand-teal)]" />
                 <span className="leading-tight">
                   <span className="block text-[15px] font-semibold text-ink">{g.label}</span>
                   <span className="block text-xs text-ink-soft">{g.note}</span>
@@ -159,6 +183,7 @@ export function TeacherSubmitForm({ token, programs }: { token: string; programs
             id={`${uid}-contact`}
             name="contact"
             autoComplete="off"
+            defaultValue={initial?.contact}
             maxLength={100}
             placeholder="Opsional"
             aria-describedby={`${uid}-contact-hint`}
@@ -173,7 +198,7 @@ export function TeacherSubmitForm({ token, programs }: { token: string; programs
         <div>
           <p className="text-sm font-semibold text-ink">Foto</p>
           <div className="mt-2">
-            <TeacherPhotoPicker name="photo" token={token} error={errors.photo} />
+            <TeacherPhotoPicker name="photo" token={token} error={errors.photo} upload={uploadPhoto} initialUrl={initial?.photo} />
           </div>
         </div>
       </Section>
@@ -189,7 +214,7 @@ export function TeacherSubmitForm({ token, programs }: { token: string; programs
                 key={p.id}
                 className="inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-full border border-line bg-surface px-4 text-sm font-medium text-ink transition-colors has-[:checked]:border-brand-teal has-[:checked]:bg-brand-teal-soft has-[:checked]:text-brand-teal-dark has-[:focus-visible]:ring-4 has-[:focus-visible]:ring-brand-teal/20"
               >
-                <input type="checkbox" name="programIds[]" value={p.id} className="size-4 accent-[var(--brand-teal)]" />
+                <input type="checkbox" name="programIds[]" value={p.id} defaultChecked={initial?.programIds.includes(p.id)} className="size-4 accent-[var(--brand-teal)]" />
                 {p.title}
               </label>
             ))}
@@ -201,7 +226,7 @@ export function TeacherSubmitForm({ token, programs }: { token: string; programs
           <label htmlFor={`${uid}-title`} className="text-sm font-semibold text-ink">
             Jabatan / keahlian <span className="text-red-500">*</span>
           </label>
-          <input id={`${uid}-title`} name="title" maxLength={100} placeholder="mis. Pengajar Tahsin & Tahfizh" aria-invalid={Boolean(errors.title)} className={cls("title")} />
+          <input id={`${uid}-title`} name="title" defaultValue={initial?.title} maxLength={100} placeholder="mis. Pengajar Tahsin & Tahfizh" aria-invalid={Boolean(errors.title)} className={cls("title")} />
           <FieldError id={`${uid}-title-err`} message={errors.title} />
         </div>
 
@@ -213,6 +238,7 @@ export function TeacherSubmitForm({ token, programs }: { token: string; programs
             <input
               id={`${uid}-education`}
               name="education"
+              defaultValue={initial?.education}
               maxLength={150}
               placeholder="mis. S1 Pendidikan Bahasa Arab"
               aria-invalid={Boolean(errors.education)}
@@ -232,7 +258,7 @@ export function TeacherSubmitForm({ token, programs }: { token: string; programs
                 inputMode="numeric"
                 min={0}
                 max={60}
-                defaultValue={1}
+                defaultValue={initial?.experienceYears ?? 1}
                 aria-invalid={Boolean(errors.experienceYears)}
                 className={`${cls("experienceYears")} pr-14`}
               />
@@ -245,48 +271,39 @@ export function TeacherSubmitForm({ token, programs }: { token: string; programs
         </div>
       </Section>
 
-      <Section title="Tentang Anda" description="Ditampilkan di kartu profil pengajar pada website.">
+      <Section title="Tentang Anda" description="Ditampilkan pada profil pengajar di website.">
         <div>
-          <div className="flex items-end justify-between gap-3">
-            <label htmlFor={`${uid}-bio`} className="text-sm font-semibold text-ink">
-              Bio singkat <span className="text-red-500">*</span>
-            </label>
-            <span aria-hidden className={`text-xs tabular-nums ${bioLength > MAX_BIO - 30 ? "text-warn" : "text-ink-soft"}`}>
-              {bioLength}/{MAX_BIO}
-            </span>
-          </div>
+          <label htmlFor={`${uid}-bio`} className="text-sm font-semibold text-ink">
+            Bio <span className="text-red-500">*</span>
+          </label>
           <textarea
             id={`${uid}-bio`}
             name="bio"
-            rows={4}
-            maxLength={MAX_BIO}
-            onChange={(event) => setBioLength(event.target.value.length)}
+            rows={5}
+            defaultValue={initial?.bio}
             placeholder="mis. Sabar membimbing anak dari mengenal huruf hingga lancar tilawah."
             aria-invalid={Boolean(errors.bio)}
             className={`${cls("bio")} resize-y leading-relaxed`}
           />
+          <p className="mt-1.5 text-xs text-ink-soft">Tulis sepanjang yang Anda perlukan. Di kartu hanya beberapa baris pertama yang tampil.</p>
           <FieldError id={`${uid}-bio-err`} message={errors.bio} />
         </div>
         <div>
-          <label htmlFor={`${uid}-hl`} className="text-sm font-semibold text-ink">
-            Keunggulan
-          </label>
-          <textarea
-            id={`${uid}-hl`}
-            name="highlights"
-            rows={3}
-            placeholder={"Metode talaqqi\nMurajaah menyenangkan"}
-            aria-describedby={`${uid}-hl-hint`}
-            aria-invalid={Boolean(errors.highlights)}
-            className={`${cls("highlights")} resize-y leading-relaxed`}
-          />
-          <p id={`${uid}-hl-hint`} className="mt-1.5 text-xs text-ink-soft">
-            Opsional. Tulis satu per baris, maksimal 6 (masing-masing singkat).
+          <p className="text-sm font-semibold text-ink">
+            Keunggulan <span className="font-normal text-ink-soft">(opsional)</span>
           </p>
+          <p className="mt-0.5 mb-2 text-xs text-ink-soft">Tulis satu keunggulan per kolom, lalu tekan &ldquo;Tambah keunggulan&rdquo; untuk kolom baru.</p>
+          <HighlightsInput name="highlights" defaultValue={initial?.highlights} className={cls("highlights")} />
           <FieldError id={`${uid}-hl-err`} message={errors.highlights} />
         </div>
       </Section>
 
+      {updating && state.ok && (
+        <p role="status" className="flex items-start gap-2 rounded-2xl bg-brand-teal-soft px-4 py-3 text-sm font-semibold text-brand-teal-dark">
+          <CheckCircle2 aria-hidden className="mt-0.5 size-4 shrink-0" />
+          Data Anda sudah diperbarui dan langsung tampil di website. Jazakumullahu khairan.
+        </p>
+      )}
       {state.message && !state.ok && (
         <p role="alert" className="flex items-start gap-2 rounded-2xl bg-red-50 px-4 py-3 text-sm font-medium text-red-700 dark:bg-red-950/40 dark:text-red-300">
           <AlertCircle aria-hidden className="mt-0.5 size-4 shrink-0" />
@@ -301,11 +318,13 @@ export function TeacherSubmitForm({ token, programs }: { token: string; programs
           className="inline-flex min-h-13 w-full items-center justify-center gap-2 rounded-full bg-brand-yellow px-6 text-[16px] font-bold text-on-accent shadow-[0_10px_24px_-10px_rgb(233_169_0/0.7)] transition-all hover:-translate-y-0.5 hover:bg-[#fac93f] disabled:cursor-wait disabled:opacity-70"
         >
           {pending ? <Loader2 aria-hidden className="size-5 animate-spin" /> : <Send aria-hidden className="size-5" />}
-          {pending ? "Mengirim…" : "Kirim data"}
+          {pending ? (updating ? "Menyimpan…" : "Mengirim…") : updating ? "Simpan perubahan" : "Kirim data"}
         </button>
         <p className="flex items-start justify-center gap-1.5 text-center text-xs leading-relaxed text-ink-soft">
           <ShieldCheck aria-hidden className="mt-0.5 size-3.5 shrink-0" />
-          Data dan foto Anda akan ditinjau admin sebelum ditampilkan di website Partner Belajar.
+          {updating
+            ? "Perubahan langsung tampil di website Partner Belajar. Link ini khusus untuk Anda, mohon tidak dibagikan."
+            : "Data dan foto Anda akan ditinjau admin sebelum ditampilkan di website Partner Belajar."}
         </p>
       </div>
     </form>
