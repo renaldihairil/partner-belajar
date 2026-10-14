@@ -42,8 +42,9 @@ export function ProgramCard({ program, priority }: ProgramCardProps) {
       className={`program-card theme-${program.theme} group flex h-full flex-col lg:row-span-2 lg:grid lg:grid-rows-subgrid lg:gap-0`}
     >
       {/* Baris 1: visual + judul (tinggi disamakan antar kartu sebaris lewat subgrid) */}
-      <div className="grid grid-cols-[40%_1fr] sm:grid-cols-[42%_1fr]">
-        <div className="relative flex min-h-[200px] items-end justify-center pt-8 sm:min-h-[236px]">
+      {/* Layar lebar (3 kolom): visual di atas, teks di bawah. Layar lebih kecil: visual di kiri, teks di kanan. */}
+      <div className="grid grid-cols-[40%_1fr] sm:grid-cols-[42%_1fr] xl:grid-cols-1">
+        <div className="relative flex min-h-[200px] items-end justify-center pt-8 sm:min-h-[236px] xl:min-h-[250px]">
           <div aria-hidden className="program-blob top-[16%] left-[8%] h-[72%] w-[86%]" />
           <div aria-hidden className="program-ring top-[8%] left-[3%] aspect-square w-[94%]" />
           <div className="program-character-wrap relative flex h-[170px] w-[92%] items-end justify-center sm:h-[210px]">
@@ -59,7 +60,7 @@ export function ProgramCard({ program, priority }: ProgramCardProps) {
           </div>
         </div>
 
-        <div className="flex flex-col py-5 pr-4 pl-1 sm:py-6 sm:pr-6">
+        <div className="flex flex-col py-5 pr-4 pl-1 sm:py-6 sm:pr-6 xl:px-6 xl:pt-3 xl:pb-9">
           <p className="text-[11.5px] font-semibold tracking-wide text-ink-soft uppercase">
             {program.category} · {program.ageRange}
           </p>

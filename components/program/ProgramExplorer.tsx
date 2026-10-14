@@ -13,7 +13,7 @@ export function ProgramExplorer({ programs }: { programs: ProgramWithClasses[] }
 
   return (
     // Subgrid (lg): kartu sebaris berbagi tinggi baris "visual" & "panel tombol" → sejajar.
-    <div className="grid gap-5 lg:grid-cols-2">
+    <div className="grid gap-5 lg:grid-cols-2 xl:grid-cols-3">
       {programs.map((program, index) => (
         <div
           key={program.id}
