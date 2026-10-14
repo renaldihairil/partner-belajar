@@ -40,8 +40,7 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
       .from(schema.learningModules),
   ]);
 
-  const now = Date.now();
-  const withStatus = classes.map((c) => ({ row: c, status: getClassStatus(toProgramClass(c), now) }));
+  const withStatus = classes.map((c) => ({ row: c, status: getClassStatus(toProgramClass(c)) }));
   const openClasses = withStatus.filter((c) => c.status === "open");
   const programTitle = new Map(programs.map((p) => [p.id, p.title]));
   const avgRating = testimonials.length ? testimonials.reduce((s, t) => s + t.rating, 0) / testimonials.length : 0;
@@ -77,9 +76,10 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
   ];
   const stats = allStats.filter((stat) => stat.show);
 
-  const upcoming = withStatus
-    .filter((c) => c.status !== "closed")
-    .sort((a, b) => a.row.classStarts.localeCompare(b.row.classStarts))
+  // Kelas yang perlu perhatian lebih dulu: penuh, lalu dibuka, lalu ditutup.
+  const statusOrder = { full: 0, open: 1, closed: 2 } as const;
+  const upcoming = [...withStatus]
+    .sort((a, b) => statusOrder[a.status] - statusOrder[b.status] || a.row.name.localeCompare(b.row.name))
     .slice(0, 5)
     .map((c) => ({ ...c, programTitle: programTitle.get(c.row.programId) ?? "" }));
 

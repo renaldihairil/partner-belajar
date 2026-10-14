@@ -35,8 +35,7 @@ export default async function AdminProgramsPage({ searchParams }: PageProps) {
     db.select().from(schema.programs).orderBy(asc(schema.programs.sortOrder)),
     db.select().from(schema.programClasses),
   ]);
-  const now = Date.now();
-  const openCount = classes.filter((c) => getClassStatus(toProgramClass(c), now) === "open").length;
+  const openCount = classes.filter((c) => getClassStatus(toProgramClass(c)) === "open").length;
 
   return (
     <div className="adm-fade-in">
@@ -61,7 +60,7 @@ export default async function AdminProgramsPage({ searchParams }: PageProps) {
         <ListCard count={items.length} head={["No", "Program", "Kategori", "Jadwal", "Status", "Aksi"]} cols={GRID}>
           {items.map((item, index) => {
             const own = classes.filter((c) => c.programId === item.id);
-            const open = own.filter((c) => getClassStatus(toProgramClass(c), now) === "open").length;
+            const open = own.filter((c) => getClassStatus(toProgramClass(c)) === "open").length;
             return (
               <ListRow key={item.id} muted={!item.published} cols={GRID} search={`${item.title} ${item.category} ${item.code} ${item.ageRange}`}>
                 <RowNumber n={index + 1} />

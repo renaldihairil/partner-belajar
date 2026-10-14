@@ -12,12 +12,8 @@ export const metadata = pageMetadata({
   path: "/program",
 });
 
-// Halaman statis yang diperbarui berkala (ISR) agar status pendaftaran di HTML tetap segar.
-export const revalidate = 3600;
-
 export default async function ProgramPage() {
   const programs = await getProgramsWithClasses();
-  const generatedAt = Date.now();
 
   // Data terstruktur (schema.org) untuk mesin pencari.
   const jsonLd = {
@@ -36,7 +32,7 @@ export default async function ProgramPage() {
           "@type": "CourseInstance",
           name: item.name,
           courseMode: item.mode === "offline" ? "onsite" : item.mode === "hybrid" ? "blended" : "online",
-          startDate: item.classStarts,
+          description: `Dibuka setiap hari. Jadwal: ${item.days.join(", ")}, ${item.time}`,
           ...(item.location ? { location: item.location } : {}),
         })),
       },
@@ -46,7 +42,7 @@ export default async function ProgramPage() {
   return (
     <>
       <PageHeader title="Program" description={description} />
-      <ProgramExplorer programs={programs} generatedAt={generatedAt} />
+      <ProgramExplorer programs={programs} />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\u003c") }}

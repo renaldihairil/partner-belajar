@@ -38,7 +38,7 @@ export function FinalCta({ program, others }: FinalCtaProps) {
                 Daftar via WhatsApp
               </RegisterButton>
               <a
-                href={whatsappUrl(`Assalamu'alaikum Admin Partner Belajar, saya ingin bertanya tentang ${program.title}.`)}
+                href={whatsappUrl(`Assalamu'alaikum Admin Partner Belajar, saya ingin bertanya tentang ${program.title}.`, program.whatsapp)}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex min-h-12 items-center gap-2 rounded-full px-5 text-[15px] font-semibold text-white ring-1 ring-white/50 transition-colors hover:bg-white/10"

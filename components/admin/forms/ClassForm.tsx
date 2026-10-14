@@ -35,16 +35,8 @@ function Fields({ item }: { item?: ProgramClassRow }) {
   return (
     <>
       <FormSection title="Kelas">
-        <TextField label="Nama kelas" name="name" defaultValue={item?.name} placeholder="mis. Kelas Reguler Oktober" required error={e("name")} />
+        <TextField label="Nama kelas" name="name" defaultValue={item?.name} placeholder="mis. Kelas Reguler Sore" required error={e("name")} />
         <TextField label="Catatan" name="note" defaultValue={item?.note ?? ""} placeholder="mis. Level pemula, usia 6 sampai 9 tahun" error={e("note")} />
-      </FormSection>
-
-      <FormSection title="Tanggal" description="Status (Dibuka / Segera dibuka / Penuh / Ditutup) dihitung otomatis dari tanggal dan kuota.">
-        <div className="grid gap-4 md:grid-cols-3">
-          <TextField label="Pendaftaran dibuka" name="registrationOpens" type="date" defaultValue={item?.registrationOpens} required error={e("registrationOpens")} />
-          <TextField label="Pendaftaran ditutup" name="registrationCloses" type="date" defaultValue={item?.registrationCloses} required error={e("registrationCloses")} />
-          <TextField label="Kelas dimulai" name="classStarts" type="date" defaultValue={item?.classStarts} required error={e("classStarts")} />
-        </div>
       </FormSection>
 
       <FormSection title="Jadwal & tempat">
@@ -66,24 +58,36 @@ function Fields({ item }: { item?: ProgramClassRow }) {
         <TextField label="Lokasi" name="location" defaultValue={item?.location ?? ""} placeholder="Wajib untuk tatap muka / hybrid" error={e("location")} />
       </FormSection>
 
-      <FormSection title="Kuota">
+      <FormSection
+        title="Pendaftaran & kuota"
+        description="Pendaftaran kelas dibuka setiap hari. Status dihitung otomatis: Dibuka, Penuh (bila kuota terisi), atau Ditutup (bila Anda menutupnya)."
+      >
         <div className="grid gap-4 md:grid-cols-2">
-          <TextField label="Kuota kursi" name="quota" type="number" min={1} defaultValue={item?.quota ?? 12} required error={e("quota")} />
+          <TextField
+            label="Kuota kursi"
+            name="quota"
+            type="number"
+            min={0}
+            defaultValue={item?.quota ?? 0}
+            hint="Isi 0 bila jumlah peserta tidak dibatasi."
+            required
+            error={e("quota")}
+          />
           <TextField
             label="Sudah terdaftar"
             name="enrolled"
             type="number"
             min={0}
             defaultValue={item?.enrolled ?? 0}
-            hint="Perbarui setiap ada siswa yang mendaftar."
+            hint="Perbarui setiap ada siswa yang mendaftar. Diabaikan bila kuota 0."
             required
             error={e("enrolled")}
           />
         </div>
         <SwitchField
           name="manuallyClosed"
-          label="Tutup pendaftaran sekarang"
-          description="Paksa status menjadi Ditutup walaupun tanggal & kuota masih tersedia."
+          label="Tutup pendaftaran kelas ini sementara"
+          description="Status menjadi Ditutup walaupun kuota masih tersedia. Matikan untuk membuka lagi."
           defaultChecked={item?.manuallyClosed ?? false}
         />
       </FormSection>

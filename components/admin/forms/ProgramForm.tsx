@@ -82,6 +82,23 @@ function BasicFields({ item }: { item?: ProgramRow }) {
         <SwitchField name="published" label="Tampilkan program di situs" defaultChecked={item?.published ?? true} />
       </FormSection>
 
+      <FormSection
+        title="WhatsApp program"
+        description="Pendaftar program ini diarahkan ke nomor di bawah, jadi tiap program bisa ditangani admin yang berbeda."
+      >
+        <TextField
+          label="Nomor WhatsApp admin program"
+          name="whatsapp"
+          type="tel"
+          inputMode="tel"
+          defaultValue={item?.whatsapp ? item.whatsapp.replace(/^62/, "0") : ""}
+          placeholder="mis. 0812 3456 7890"
+          maxLength={30}
+          hint="Boleh ditulis 0812..., +62 812..., atau 62812.... Kosongkan untuk memakai nomor WhatsApp utama situs."
+          error={e("whatsapp")}
+        />
+      </FormSection>
+
       <FormSection title="Gambar" description="Sebaiknya ilustrasi karakter berlatar transparan (PNG/WebP).">
         <ImageUpload name="image" label="Gambar program" folder="program" required defaultValue={item?.image ?? ""} error={e("image")} />
         <TextField

@@ -36,6 +36,8 @@ export const programs = pgTable("programs", {
   category: text("category").notNull(),
   ageRange: text("age_range").notNull(),
   code: text("code").notNull(),
+  /** Nomor WhatsApp admin khusus program ini (62812...). Kosong = nomor utama situs. */
+  whatsapp: text("whatsapp"),
   tagline: text("tagline").notNull(),
   longDescription: text("long_description").notNull(),
   facts: jsonb("facts").$type<{ label: string; value: string }[]>().notNull().default([]),
@@ -56,13 +58,11 @@ export const programClasses = pgTable(
       .notNull()
       .references(() => programs.id, { onDelete: "cascade" }),
     name: text("name").notNull(),
-    registrationOpens: text("registration_opens").notNull(),
-    registrationCloses: text("registration_closes").notNull(),
-    classStarts: text("class_starts").notNull(),
     days: jsonb("days").$type<string[]>().notNull().default([]),
     time: text("time").notNull(),
     mode: text("mode").$type<ClassMode>().notNull(),
     location: text("location"),
+    /** Kuota kursi; 0 = tanpa batas. */
     quota: integer("quota").notNull(),
     enrolled: integer("enrolled").notNull().default(0),
     manuallyClosed: boolean("manually_closed").notNull().default(false),

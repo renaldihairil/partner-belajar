@@ -5,7 +5,7 @@ Yang bisa dikelola:
 
 | Menu | Isi |
 | --- | --- |
-| Program & Jadwal | Info program, gambar, kurikulum, hasil belajar, "cocok untuk", paket harga, jadwal kelas (tanggal, hari, jam, mode, kuota, jumlah terdaftar, tutup manual) |
+| Program & Jadwal | Info program, gambar, kurikulum, hasil belajar, "cocok untuk", paket harga, jadwal kelas (hari, jam, mode, kuota, jumlah terdaftar, tutup sementara), nomor WhatsApp khusus program |
 | Pengajar | Profil, foto, program yang diajar, keunggulan (satu kolom per keunggulan, tanpa batas), bio tanpa batas karakter, tampil/sembunyi, urutan. Tiap baris punya tombol **Link update data diri** (lihat bagian di bawah) |
 | Testimoni | Isi, rating, program, kota, tanggal, tampil/sembunyi, urutan |
 | Link Testimoni | Buat, salin, dan bagikan link agar orang tua mengirim testimoni sendiri (lihat bagian di bawah) |
@@ -15,6 +15,18 @@ Yang bisa dikelola:
 | Modul Belajar | Buku / kitab untuk halaman Modul Belajar: nama kitab, foto sampul (otomatis dipotong persegi 1:1), tautan unduh ke halaman web lain, program terkait, tampil/sembunyi, urutan. Ditampilkan sebagai grid 3 kolom dengan tombol Download |
 | Akun Saya | Profil sendiri dan ganti password (semua admin) |
 | Kelola Admin | Khusus Pemilik: tambah/ubah/hapus admin, atur peran & menu yang boleh diakses |
+
+## Jadwal kelas & WhatsApp per program
+
+**Kelas dibuka setiap hari**, jadi jadwal kelas tidak memakai tanggal buka/tutup atau tanggal mulai. Di Program & Jadwal
+→ tab Jadwal kelas, tiap kelas hanya berisi nama, hari, jam, mode (online/tatap muka/hybrid), lokasi, catatan, dan kuota.
+
+- **Status dihitung otomatis:** *Pendaftaran dibuka* (default), *Kuota penuh* (jumlah terdaftar sudah sama dengan kuota,
+  pendaftar masuk daftar tunggu), atau *Sementara ditutup* (bila Anda menyalakan "Tutup pendaftaran kelas ini sementara").
+- **Kuota 0 = tanpa batas.** Isi kuota hanya bila kelas memang dibatasi, lalu perbarui "Sudah terdaftar" saat ada siswa baru.
+- **Nomor WhatsApp per program:** di form Program → bagian **WhatsApp program**, isi nomor admin yang menangani program itu
+  (boleh ditulis 0812..., +62 812..., atau 62812...). Semua pendaftar yang memilih program tersebut, dan tombol "Tanya dulu"
+  di halaman detailnya, diarahkan ke nomor itu. Kosong = nomor WhatsApp utama situs.
 
 ## Link update data diri pengajar
 

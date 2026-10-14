@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRight, CalendarDays, CalendarRange, Clock, MapPin, MonitorSmartphone, type LucideIcon } from "lucide-react";
+import { ArrowRight, CalendarCheck, Clock, MapPin, MonitorSmartphone, type LucideIcon } from "lucide-react";
 import { statusMessage } from "@/components/program/ProgramCard";
 import { QuotaBar } from "@/components/program/QuotaBar";
 import { StatusBadge } from "@/components/program/StatusBadge";
@@ -8,13 +8,11 @@ import { ctaLabel, ctaStyles, intentByStatus } from "@/components/program/regist
 import { RegisterButton } from "@/components/registration/RegisterButton";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { modeLabel, sortClasses } from "@/lib/class-status";
-import { formatDateId, formatDateLongId, formatDays } from "@/lib/format";
-import { useNow } from "@/lib/use-now";
+import { formatDays } from "@/lib/format";
 import type { ProgramWithClasses } from "@/types";
 
-export function ScheduleSection({ program, generatedAt }: { program: ProgramWithClasses; generatedAt: number }) {
-  const now = useNow(generatedAt);
-  const classes = sortClasses(program.classes, now);
+export function ScheduleSection({ program }: { program: ProgramWithClasses }) {
+  const classes = sortClasses(program.classes);
 
   return (
     <section id="jadwal" aria-labelledby="jadwal-title" className="scroll-mt-24">
@@ -22,7 +20,7 @@ export function ScheduleSection({ program, generatedAt }: { program: ProgramWith
         id="jadwal-title"
         eyebrow="Jadwal kelas"
         title="Pilih jadwal yang pas"
-        description="Status pendaftaran diperbarui otomatis. Belum ada jadwal yang cocok? Pilih “Belum menentukan” saat mendaftar, admin akan merekomendasikan."
+        description="Pendaftaran dibuka setiap hari, tinggal pilih jadwal yang cocok. Belum ada yang pas? Pilih “Belum menentukan” saat mendaftar, admin akan merekomendasikan."
       />
 
       {classes.length === 0 ? (
@@ -32,7 +30,7 @@ export function ScheduleSection({ program, generatedAt }: { program: ProgramWith
       ) : (
         <ul className="mt-6 grid gap-4 lg:grid-cols-2">
           {classes.map(({ item, status }) => {
-            const message = statusMessage(item, status, now);
+            const message = statusMessage(item, status);
             const intent = intentByStatus[status];
             return (
               <li key={item.id} className="flex flex-col rounded-[var(--radius-card)] border border-line bg-surface p-5 shadow-soft">
@@ -43,7 +41,6 @@ export function ScheduleSection({ program, generatedAt }: { program: ProgramWith
                 {item.note && <p className="mt-1 text-[13.5px] text-ink-soft">{item.note}</p>}
 
                 <dl className="mt-4 grid gap-x-4 gap-y-3 text-[13px] sm:grid-cols-2">
-                  <Row icon={CalendarDays} label="Kelas mulai" value={formatDateLongId(item.classStarts)} />
                   <Row icon={Clock} label="Jadwal" value={`${formatDays(item.days, false)}, ${item.time}`} />
                   <Row
                     icon={item.mode === "online" ? MonitorSmartphone : MapPin}
@@ -51,9 +48,9 @@ export function ScheduleSection({ program, generatedAt }: { program: ProgramWith
                     value={item.location ? `${modeLabel[item.mode]} · ${item.location}` : modeLabel[item.mode]}
                   />
                   <Row
-                    icon={CalendarRange}
-                    label="Periode pendaftaran"
-                    value={`${formatDateId(item.registrationOpens)} – ${formatDateId(item.registrationCloses)}`}
+                    icon={CalendarCheck}
+                    label="Pendaftaran"
+                    value={status === "open" ? "Dibuka setiap hari" : status === "full" ? "Kuota penuh (daftar tunggu)" : "Sementara ditutup"}
                   />
                 </dl>
 

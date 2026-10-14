@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import { CheckCircle2, Copy, MessageCircle, ShieldCheck, X } from "lucide-react";
 import { getClassStatus, statusLabel } from "@/lib/class-status";
-import { formatDateId, formatDays } from "@/lib/format";
+import { formatDays } from "@/lib/format";
 import { createRef, deviceType, getAttribution, guessSource, sendLead } from "@/lib/tracking";
 import { buildWhatsappMessage, formatRupiah, whatsappUrl } from "@/lib/whatsapp";
 import type { Lead, LeadIntent, ProgramWithClasses, RegistrationStatus } from "@/types";
@@ -14,7 +14,6 @@ const AGES = Array.from({ length: 12 }, (_, i) => String(i + 4)); // 4–15 tahu
 
 const intentByStatus: Record<RegistrationStatus, LeadIntent> = {
   open: "daftar",
-  upcoming: "ingatkan",
   full: "tunggu",
   closed: "info",
 };
@@ -23,7 +22,7 @@ const titles: Record<LeadIntent, string> = {
   daftar: "Daftar Kelas",
   ingatkan: "Ingatkan Saya",
   tunggu: "Masuk Daftar Tunggu",
-  info: "Tanya Batch Berikutnya",
+  info: "Tanya Jadwal Kelas",
   tanya: "Daftar / Konsultasi",
 };
 
@@ -50,7 +49,6 @@ type RegistrationDialogProps = {
 
 export function RegistrationDialog({ programs, request, onClose }: RegistrationDialogProps) {
   const ref = useRef<HTMLDialogElement>(null);
-  const [now] = useState(() => Date.now());
   const initialProgram = programs.find((p) => p.slug === request?.programSlug);
 
   const [fields, setFields] = useState<Fields>(() => ({
@@ -85,8 +83,8 @@ export function RegistrationDialog({ programs, request, onClose }: RegistrationD
 
   const program = programs.find((p) => p.slug === fields.programSlug);
   const classes = useMemo(
-    () => (program?.classes ?? []).map((item) => ({ item, status: getClassStatus(item, now) })),
-    [program, now],
+    () => (program?.classes ?? []).map((item) => ({ item, status: getClassStatus(item) })),
+    [program],
   );
   const selectedClass = classes.find((c) => c.item.id === fields.classId);
   const plan = program?.pricing.find((p) => p.id === fields.planId);
@@ -137,7 +135,7 @@ export function RegistrationDialog({ programs, request, onClose }: RegistrationD
       intent,
       programTitle: program?.title,
       className: classItem
-        ? `${classItem.name} (mulai ${formatDateId(classItem.classStarts)}, ${formatDays(classItem.days)} ${classItem.time})`
+        ? `${classItem.name} (${formatDays(classItem.days)} ${classItem.time})`
         : program
           ? "Belum menentukan — mohon rekomendasi jadwal"
           : undefined,
@@ -154,7 +152,8 @@ export function RegistrationDialog({ programs, request, onClose }: RegistrationD
     };
 
     sendLead({ ...lead, website: fields.website });
-    const url = whatsappUrl(buildWhatsappMessage(lead));
+    // Pesan dikirim ke WhatsApp khusus program yang dipilih (bila diatur admin), selain itu ke nomor utama.
+    const url = whatsappUrl(buildWhatsappMessage(lead), program?.whatsapp);
     const opened = window.open(url, "_blank");
     if (opened) opened.opener = null;
     else window.location.href = url;
@@ -262,17 +261,15 @@ export function RegistrationDialog({ programs, request, onClose }: RegistrationD
                       <option value="">Belum menentukan — minta rekomendasi jadwal</option>
                       {classes.map(({ item, status }) => (
                         <option key={item.id} value={item.id}>
-                          {item.name} · mulai {formatDateId(item.classStarts)} ({statusLabel[status]})
+                          {item.name} · {formatDays(item.days)} {item.time} ({statusLabel[status]})
                         </option>
                       ))}
                     </select>
                     {selectedClass && selectedClass.status !== "open" && (
                       <p className="mt-1.5 text-[13px] text-warn">
-                        {selectedClass.status === "upcoming"
-                          ? "Pendaftaran kelas ini belum dibuka — kami akan mengabari Anda."
-                          : selectedClass.status === "full"
-                            ? "Kuota penuh — Anda akan masuk daftar tunggu."
-                            : "Pendaftaran ditutup — kami akan info batch berikutnya."}
+                        {selectedClass.status === "full"
+                          ? "Kuota penuh — Anda akan masuk daftar tunggu."
+                          : "Kelas ini sementara tidak menerima pendaftaran — kami akan info jadwal lain yang tersedia."}
                       </p>
                     )}
                   </div>

@@ -14,6 +14,11 @@ export type Program = {
   ageRange: string;
   /** Kode singkat untuk kode pendaftaran, mis. "EN" → PB-EN-7K3F. */
   code: string;
+  /**
+   * Nomor WhatsApp admin khusus program ini (format internasional tanpa +, mis. 62812...).
+   * Kosong = memakai nomor utama situs.
+   */
+  whatsapp?: string;
 } & ProgramDetail;
 
 /** Konten halaman detail program (/program/[slug]). */
@@ -94,10 +99,6 @@ export type ProgramClass = {
   id: string;
   programId: string;
   name: string;
-  /** Tanggal ISO "YYYY-MM-DD" (zona waktu WIB). */
-  registrationOpens: string;
-  registrationCloses: string;
-  classStarts: string;
   /** Mis. ["Senin", "Rabu"]. */
   days: string[];
   /** Mis. "16.00 – 17.00 WIB". */
@@ -105,16 +106,20 @@ export type ProgramClass = {
   mode: ClassMode;
   /** Lokasi untuk offline/hybrid. */
   location?: string;
+  /** Kuota kursi; 0 = tanpa batas. */
   quota: number;
   enrolled: number;
-  /** Admin dapat menutup pendaftaran secara manual sebelum tanggal tutup. */
+  /** Admin dapat menutup pendaftaran kelas ini sementara. */
   manuallyClosed?: boolean;
   /** Catatan tambahan, mis. "Level pemula". */
   note?: string;
 };
 
-/** Status pendaftaran yang dihitung dari tanggal + kuota (lihat lib/class-status.ts). */
-export type RegistrationStatus = "open" | "upcoming" | "full" | "closed";
+/**
+ * Status pendaftaran kelas (lihat lib/class-status.ts). Kelas dibuka setiap hari:
+ * dibuka selama tidak penuh dan tidak ditutup admin.
+ */
+export type RegistrationStatus = "open" | "full" | "closed";
 
 export type ProgramWithClasses = Program & { classes: ProgramClass[] };
 

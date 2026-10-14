@@ -10,6 +10,7 @@ import { moveRow, nextSortOrder } from "@/lib/admin/reorder";
 import { revalidateSite } from "@/lib/admin/revalidate";
 import { requirePermission } from "@/lib/auth/session";
 import { deleteImage } from "@/lib/storage";
+import { normalizeWhatsapp } from "@/lib/whatsapp";
 
 const text = (label: string, max = 200) => z.string({ error: `${label} wajib diisi.` }).trim().min(1, `${label} wajib diisi.`).max(max);
 const lines = z.array(z.string().trim().min(1)).default([]);
@@ -27,6 +28,21 @@ const programSchema = z.object({
     .toUpperCase()
     .regex(/^[A-Z]{2,3}$/, "Kode 2 sampai 3 huruf, mis. EN."),
   theme: z.enum(["blue", "yellow", "green", "purple"]),
+  // Nomor WhatsApp khusus program; kosong = nomor utama situs. Ditulis bebas (0812-..., +62 812...), disimpan 62812...
+  whatsapp: z
+    .string()
+    .trim()
+    .max(30, "Nomor terlalu panjang.")
+    .optional()
+    .transform((value, ctx) => {
+      if (!value) return null;
+      const normalized = normalizeWhatsapp(value);
+      if (!normalized) {
+        ctx.addIssue({ code: "custom", message: "Nomor WhatsApp tidak valid. Contoh: 0812 3456 7890." });
+        return null;
+      }
+      return normalized;
+    }),
   image: z.string({ error: "Gambar program wajib diunggah." }).trim().min(1, "Gambar program wajib diunggah."),
   imageAlt: requiredText("Deskripsi gambar", 160),
   description: requiredText("Deskripsi singkat", 220),
@@ -141,7 +157,6 @@ export async function moveProgramAction(formData: FormData) {
 // ---------- Jadwal kelas ----------
 
 const DAYS = ["Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu", "Ahad"] as const;
-const isoDate = (label: string) => z.string({ error: `${label} wajib diisi.` }).regex(/^\d{4}-\d{2}-\d{2}$/, `${label} wajib diisi.`);
 const optionalTrimmed = (max: number) =>
   z
     .string()
@@ -155,24 +170,18 @@ const classSchema = z
     id: z.string().optional(),
     programId: z.string().min(1),
     name: requiredText("Nama kelas", 80),
-    registrationOpens: isoDate("Tanggal buka pendaftaran"),
-    registrationCloses: isoDate("Tanggal tutup pendaftaran"),
-    classStarts: isoDate("Tanggal mulai kelas"),
     days: z.array(z.enum(DAYS)).min(1, "Pilih minimal satu hari.").default([]),
     time: requiredText("Jam kelas", 40),
     mode: z.enum(["online", "offline", "hybrid"]),
     location: optionalTrimmed(160),
-    quota: intField("Kuota", 1, 1000),
+    // 0 = tanpa batas kuota (kelas dibuka setiap hari)
+    quota: intField("Kuota", 0, 1000),
     enrolled: intField("Jumlah pendaftar", 0, 1000),
     manuallyClosed: checkbox,
     note: optionalTrimmed(200),
   })
   .superRefine((v, ctx) => {
-    if (v.registrationCloses < v.registrationOpens)
-      ctx.addIssue({ code: "custom", path: ["registrationCloses"], message: "Tanggal tutup harus setelah tanggal buka." });
-    if (v.classStarts < v.registrationOpens)
-      ctx.addIssue({ code: "custom", path: ["classStarts"], message: "Kelas mulai harus setelah pendaftaran dibuka." });
-    if (v.enrolled > v.quota) ctx.addIssue({ code: "custom", path: ["enrolled"], message: "Jumlah pendaftar melebihi kuota." });
+    if (v.quota > 0 && v.enrolled > v.quota) ctx.addIssue({ code: "custom", path: ["enrolled"], message: "Jumlah pendaftar melebihi kuota." });
     if (v.mode !== "online" && !v.location) ctx.addIssue({ code: "custom", path: ["location"], message: "Isi lokasi untuk kelas tatap muka." });
   });
 

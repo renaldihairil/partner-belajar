@@ -2,13 +2,12 @@ import Link from "next/link";
 import { ArrowRight, CheckCircle2, CircleAlert, Database, ImageIcon } from "lucide-react";
 import type { ProgramClassRow } from "@/db/schema";
 import { statusLabel } from "@/lib/class-status";
-import { formatDateId } from "@/lib/format";
+import { formatDays } from "@/lib/format";
 import type { RegistrationStatus } from "@/types";
 import { Badge } from "./ui";
 
-const statusTone: Record<RegistrationStatus, "success" | "info" | "warning" | "neutral"> = {
+const statusTone: Record<RegistrationStatus, "success" | "warning" | "neutral"> = {
   open: "success",
-  upcoming: "info",
   full: "warning",
   closed: "neutral",
 };
@@ -31,7 +30,7 @@ export function DashboardUpcoming({ items }: { items: Upcoming[] }) {
   return (
     <div className="min-w-0">
       <Panel
-        title="Jadwal kelas terdekat"
+        title="Ketersediaan kelas"
         action={
           <Link href="/admin/program" className="inline-flex items-center gap-1 text-[13px] font-medium text-brand-teal-dark hover:underline">
             Kelola <ArrowRight aria-hidden className="size-3.5" />
@@ -39,11 +38,11 @@ export function DashboardUpcoming({ items }: { items: Upcoming[] }) {
         }
       >
         {items.length === 0 ? (
-          <p className="px-5 py-10 text-center text-sm text-ink-soft">Belum ada jadwal kelas yang akan datang.</p>
+          <p className="px-5 py-10 text-center text-sm text-ink-soft">Belum ada jadwal kelas.</p>
         ) : (
           <ul className="divide-y divide-line">
             {items.map(({ row, status, programTitle }) => {
-              const fill = Math.min(100, Math.round((row.enrolled / row.quota) * 100));
+              const fill = row.quota > 0 ? Math.min(100, Math.round((row.enrolled / row.quota) * 100)) : 0;
               return (
                 <li key={row.id}>
                   <Link
@@ -53,7 +52,7 @@ export function DashboardUpcoming({ items }: { items: Upcoming[] }) {
                     <span className="min-w-0 flex-1">
                       <span className="block truncate text-sm font-medium text-ink">{row.name}</span>
                       <span className="block truncate text-xs text-ink-soft">
-                        {programTitle} · mulai {formatDateId(row.classStarts)}
+                        {programTitle} · {formatDays(row.days)} {row.time}
                       </span>
                     </span>
                     <Badge tone={statusTone[status]} dot>
@@ -61,7 +60,7 @@ export function DashboardUpcoming({ items }: { items: Upcoming[] }) {
                     </Badge>
                     <span className="w-28 shrink-0">
                       <span className="block text-right text-xs text-ink-soft tabular-nums">
-                        {row.enrolled}/{row.quota} kursi
+                        {row.quota > 0 ? `${row.enrolled}/${row.quota} kursi` : "Tanpa batas"}
                       </span>
                       <span className="mt-1 block h-1.5 overflow-clip rounded-full bg-[var(--adm-hover)]">
                         <span className={`block h-full rounded-full ${fill >= 100 ? "bg-amber-500" : "bg-brand-teal"}`} style={{ width: `${fill}%` }} />

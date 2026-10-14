@@ -2,24 +2,20 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowDown, BookOpenCheck, CalendarDays, ChevronRight, MessageCircle, Tag } from "lucide-react";
+import { ArrowDown, BookOpenCheck, CalendarCheck, ChevronRight, MessageCircle, Tag } from "lucide-react";
 import { StatusBadge } from "@/components/program/StatusBadge";
 import { intentByStatus } from "@/components/program/registration";
 import { RegisterButton } from "@/components/registration/RegisterButton";
 import { pickFeaturedClass } from "@/lib/class-status";
-import { formatDateId } from "@/lib/format";
-import { useNow } from "@/lib/use-now";
 import { formatRupiah } from "@/lib/whatsapp";
 import type { ProgramWithClasses } from "@/types";
 
 type DetailHeroProps = {
   program: ProgramWithClasses;
-  generatedAt: number;
 };
 
-export function DetailHero({ program, generatedAt }: DetailHeroProps) {
-  const now = useNow(generatedAt);
-  const featured = pickFeaturedClass(program.classes, now);
+export function DetailHero({ program }: DetailHeroProps) {
+  const featured = pickFeaturedClass(program.classes);
   const intent = featured ? intentByStatus[featured.status] : "tanya";
   const lowestPrice = Math.min(...program.pricing.map((p) => p.price));
 
@@ -114,10 +110,10 @@ export function DetailHero({ program, generatedAt }: DetailHeroProps) {
             <BookOpenCheck aria-hidden className="size-4 text-brand-teal-dark" />
             {program.curriculum.length} tahap kurikulum
           </HeroChip>
-          {featured && (
+          {featured?.status === "open" && (
             <HeroChip className="right-0 bottom-[16%] lg:-right-2" delay="1.3s">
-              <CalendarDays aria-hidden className="size-4 text-brand-teal-dark" />
-              Mulai {formatDateId(featured.item.classStarts)}
+              <CalendarCheck aria-hidden className="size-4 text-brand-teal-dark" />
+              Daftar kapan saja
             </HeroChip>
           )}
         </div>

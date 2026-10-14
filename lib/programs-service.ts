@@ -34,9 +34,6 @@ export function toProgramClass(row: ProgramClassRow): ProgramClass {
     id: row.id,
     programId: row.programId,
     name: row.name,
-    registrationOpens: row.registrationOpens,
-    registrationCloses: row.registrationCloses,
-    classStarts: row.classStarts,
     days: row.days,
     time: row.time,
     mode: row.mode,
@@ -60,6 +57,7 @@ export function toProgram(row: ProgramRow, classes: ProgramClassRow[]): ProgramW
     category: row.category,
     ageRange: row.ageRange,
     code: row.code,
+    whatsapp: row.whatsapp ?? undefined,
     tagline: row.tagline,
     longDescription: row.longDescription,
     facts: row.facts,
@@ -69,7 +67,7 @@ export function toProgram(row: ProgramRow, classes: ProgramClassRow[]): ProgramW
     pricing: row.pricing,
     classes: classes
       .filter((c) => c.programId === row.id)
-      .sort((a, b) => a.classStarts.localeCompare(b.classStarts))
+      .sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime())
       .map(toProgramClass),
   };
 }

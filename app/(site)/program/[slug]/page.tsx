@@ -13,8 +13,6 @@ import { absoluteUrl, siteConfig } from "@/lib/site-config";
 
 type PageProps = { params: Promise<{ slug: string }> };
 
-// Statis + diperbarui berkala (ISR) agar status jadwal di HTML tetap segar.
-export const revalidate = 3600;
 // Program baru dari admin langsung bisa dibuka tanpa build ulang.
 export const dynamicParams = true;
 
@@ -47,7 +45,6 @@ export default async function ProgramDetailPage({ params }: PageProps) {
   const program = programs.find((p) => p.slug === slug);
   if (!program) notFound();
 
-  const generatedAt = Date.now();
   const others = programs.filter((p) => p.slug !== program.slug);
 
   const jsonLd = {
@@ -68,14 +65,14 @@ export default async function ProgramDetailPage({ params }: PageProps) {
       "@type": "CourseInstance",
       name: item.name,
       courseMode: item.mode === "offline" ? "onsite" : item.mode === "hybrid" ? "blended" : "online",
-      startDate: item.classStarts,
+      description: `Dibuka setiap hari. Jadwal: ${item.days.join(", ")}, ${item.time}`,
       ...(item.location ? { location: item.location } : {}),
     })),
   };
 
   return (
     <>
-      <DetailHero program={program} generatedAt={generatedAt} />
+      <DetailHero program={program} />
 
       <nav
         aria-label="Bagian halaman"
@@ -98,7 +95,7 @@ export default async function ProgramDetailPage({ params }: PageProps) {
       <div className="mt-12 flex flex-col gap-16 md:mt-14 md:gap-20">
         <CurriculumSection program={program} />
         <AudienceSection program={program} />
-        <ScheduleSection program={program} generatedAt={generatedAt} />
+        <ScheduleSection program={program} />
         <PricingSection program={program} />
         <FinalCta program={program} others={others} />
       </div>

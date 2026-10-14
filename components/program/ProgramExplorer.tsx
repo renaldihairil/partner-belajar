@@ -4,33 +4,27 @@ import { useMemo, useState } from "react";
 import { SearchX } from "lucide-react";
 import { FilterChips } from "@/components/ui/FilterChips";
 import { pickFeaturedClass } from "@/lib/class-status";
-import { useNow } from "@/lib/use-now";
 import type { ProgramWithClasses, RegistrationStatus } from "@/types";
 import { ProgramCard } from "./ProgramCard";
 
-type Filter = "all" | "open" | "upcoming" | "closed";
+type Filter = "all" | "open" | "closed";
 
 const filters: { id: Filter; label: string; match: (s: RegistrationStatus | null) => boolean }[] = [
   { id: "all", label: "Semua", match: () => true },
   { id: "open", label: "Pendaftaran dibuka", match: (s) => s === "open" },
-  { id: "upcoming", label: "Segera dibuka", match: (s) => s === "upcoming" },
   { id: "closed", label: "Penuh / ditutup", match: (s) => s === "full" || s === "closed" || s === null },
 ];
 
 type ProgramExplorerProps = {
   programs: ProgramWithClasses[];
-  /** Waktu render di server; dipakai untuk render awal agar hasil hydration identik. */
-  generatedAt: number;
 };
 
-export function ProgramExplorer({ programs, generatedAt }: ProgramExplorerProps) {
-  // Status dihitung ulang dengan jam pengunjung (halaman statis bisa saja dibuat berhari-hari sebelumnya).
-  const now = useNow(generatedAt);
+export function ProgramExplorer({ programs }: ProgramExplorerProps) {
   const [filter, setFilter] = useState<Filter>("all");
 
   const entries = useMemo(
-    () => programs.map((program) => ({ program, status: pickFeaturedClass(program.classes, now)?.status ?? null })),
-    [programs, now],
+    () => programs.map((program) => ({ program, status: pickFeaturedClass(program.classes)?.status ?? null })),
+    [programs],
   );
 
   const active = filters.find((f) => f.id === filter)!;
@@ -70,7 +64,7 @@ export function ProgramExplorer({ programs, generatedAt }: ProgramExplorerProps)
               className="animate-rise h-full lg:row-span-2 lg:grid lg:grid-rows-subgrid lg:gap-0"
               style={{ animationDelay: `${index * 60}ms` }}
             >
-              <ProgramCard program={program} now={now} priority={index < 2} />
+              <ProgramCard program={program} priority={index < 2} />
             </div>
           ))}
         </div>

@@ -64,6 +64,13 @@
       "when": 1791795023564,
       "tag": "0008_hapus_deskripsi_modul",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1791951982667,
+      "tag": "0009_kelas_buka_setiap_hari",
+      "breakpoints": true
     }
   ]
 }

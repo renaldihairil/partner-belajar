@@ -8,10 +8,14 @@ type QuotaBarProps = {
   compact?: boolean;
 };
 
-/** Bar kuota selalu ditampilkan agar tinggi panel info setiap kartu seragam. */
+/**
+ * Bar kuota selalu ditampilkan agar tinggi panel info setiap kartu seragam.
+ * Kelas tanpa batas kuota (quota 0) menampilkan keterangan "Daftar kapan saja".
+ */
 export function QuotaBar({ item, status, compact = false }: QuotaBarProps) {
   const left = seatsLeft(item);
-  const ratio = item.quota > 0 ? Math.min(1, item.enrolled / item.quota) : 1;
+  const unlimited = left === null;
+  const ratio = unlimited ? 0 : item.quota > 0 ? Math.min(1, item.enrolled / item.quota) : 1;
 
   const tone =
     status === "closed"
@@ -22,14 +26,15 @@ export function QuotaBar({ item, status, compact = false }: QuotaBarProps) {
           ? "quota-bar--warn"
           : "";
 
-  const [leftText, rightText, rightClass] =
-    status === "upcoming"
-      ? [`Kuota ${item.quota} kursi`, "Belum dibuka", "text-warn"]
-      : status === "closed"
-        ? [`${item.enrolled}/${item.quota} kursi terisi`, "Ditutup", "text-ink-soft"]
-        : left === 0
-          ? [`${item.enrolled}/${item.quota} kursi terisi`, "Penuh", "text-status-full"]
-          : [`${item.enrolled}/${item.quota} kursi terisi`, `Sisa ${left} kursi`, left <= 3 ? "text-warn" : "text-brand-teal-dark"];
+  const [leftText, rightText, rightClass] = unlimited
+    ? status === "closed"
+      ? ["Kuota tidak dibatasi", "Sementara ditutup", "text-ink-soft"]
+      : ["Kuota tidak dibatasi", "Daftar kapan saja", "text-brand-teal-dark"]
+    : status === "closed"
+      ? [`${item.enrolled}/${item.quota} kursi terisi`, "Sementara ditutup", "text-ink-soft"]
+      : left === 0
+        ? [`${item.enrolled}/${item.quota} kursi terisi`, "Penuh", "text-status-full"]
+        : [`${item.enrolled}/${item.quota} kursi terisi`, `Sisa ${left} kursi`, left! <= 3 ? "text-warn" : "text-brand-teal-dark"];
 
   return (
     <div>
@@ -41,8 +46,8 @@ export function QuotaBar({ item, status, compact = false }: QuotaBarProps) {
         role="progressbar"
         aria-label="Kuota kelas terisi"
         aria-valuemin={0}
-        aria-valuemax={item.quota}
-        aria-valuenow={item.enrolled}
+        aria-valuemax={unlimited ? 0 : item.quota}
+        aria-valuenow={unlimited ? 0 : item.enrolled}
         className={`quota-bar mt-1.5 h-2 overflow-hidden rounded-full bg-panel ring-1 ring-line ${tone}`}
         style={{ "--fill": `${Math.round(ratio * 100)}%` } as CSSProperties}
       >

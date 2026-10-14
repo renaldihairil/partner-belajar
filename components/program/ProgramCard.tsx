@@ -3,9 +3,7 @@ import Link from "next/link";
 import {
   ArrowRight,
   ArrowUpRight,
-  BellRing,
-  CalendarClock,
-  CalendarDays,
+  CalendarCheck,
   Clock,
   Info,
   ListChecks,
@@ -15,53 +13,41 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { RegisterButton } from "@/components/registration/RegisterButton";
-import { daysUntil, endOfDayWib, modeLabel, pickFeaturedClass, startOfDayWib } from "@/lib/class-status";
-import { formatDateId, formatDayMonthId, formatDays } from "@/lib/format";
+import { modeLabel, pickFeaturedClass, seatsLeft } from "@/lib/class-status";
+import { formatDays } from "@/lib/format";
 import type { ProgramClass, ProgramWithClasses, RegistrationStatus } from "@/types";
 import { QuotaBar } from "./QuotaBar";
 import { ctaLabel, ctaStyles, intentByStatus } from "./registration";
 import { StatusBadge } from "./StatusBadge";
 
-/** Kalimat ringkas yang menjelaskan status pendaftaran sebuah kelas. */
-export function statusMessage(item: ProgramClass, status: RegistrationStatus, now: number) {
+/** Kalimat ringkas yang menjelaskan status pendaftaran sebuah kelas (kelas dibuka setiap hari). */
+export function statusMessage(item: ProgramClass, status: RegistrationStatus) {
   switch (status) {
     case "open": {
-      const left = daysUntil(endOfDayWib(item.registrationCloses), now);
-      const suffix = left <= 1 ? "hari terakhir" : left <= 7 ? `${left} hari lagi` : null;
-      return { icon: CalendarClock, text: `Pendaftaran s.d. ${formatDayMonthId(item.registrationCloses)}`, suffix };
-    }
-    case "upcoming": {
-      const left = daysUntil(startOfDayWib(item.registrationOpens), now);
+      const left = seatsLeft(item);
       return {
-        icon: BellRing,
-        text: `Pendaftaran dibuka ${formatDayMonthId(item.registrationOpens)}`,
-        suffix: left <= 1 ? "besok" : `${left} hari lagi`,
+        icon: CalendarCheck,
+        text: "Pendaftaran dibuka setiap hari",
+        suffix: left !== null && left <= 3 ? `Sisa ${left} kursi` : null,
       };
     }
     case "full":
       return { icon: ListChecks, text: "Kuota penuh, daftar tunggu tersedia", suffix: null };
-    case "closed": {
-      const running = now >= startOfDayWib(item.classStarts);
-      return {
-        icon: Info,
-        text: running ? "Kelas sedang berjalan" : `Ditutup ${formatDateId(item.registrationCloses)}`,
-        suffix: null,
-      };
-    }
+    case "closed":
+      return { icon: Info, text: "Sementara tidak menerima pendaftaran baru", suffix: null };
   }
 }
 
 type ProgramCardProps = {
   program: ProgramWithClasses;
-  now: number;
   priority?: boolean;
 };
 
-export function ProgramCard({ program, now, priority }: ProgramCardProps) {
-  const featured = pickFeaturedClass(program.classes, now);
+export function ProgramCard({ program, priority }: ProgramCardProps) {
+  const featured = pickFeaturedClass(program.classes);
   const item = featured?.item ?? null;
   const status = featured?.status ?? null;
-  const message = item && status ? statusMessage(item, status, now) : null;
+  const message = item && status ? statusMessage(item, status) : null;
   const intent = status ? intentByStatus[status] : "tanya";
   const href = `/program/${program.slug}`;
   const titleId = `program-${program.slug}`;
@@ -124,7 +110,7 @@ export function ProgramCard({ program, now, priority }: ProgramCardProps) {
             </p>
 
             <dl className="mt-3 grid grid-cols-2 gap-x-3 gap-y-2.5 text-[12.5px]">
-              <InfoItem icon={CalendarDays} label="Kelas mulai" value={formatDateId(item.classStarts)} />
+              <InfoItem icon={CalendarCheck} label="Pendaftaran" value={status === "open" ? "Setiap hari" : status === "full" ? "Kuota penuh" : "Sementara ditutup"} />
               <InfoItem icon={Clock} label="Jadwal" value={`${formatDays(item.days)} · ${item.time.replace(" WIB", "")}`} />
               <InfoItem icon={item.mode === "online" ? MonitorSmartphone : MapPin} label="Mode" value={modeLabel[item.mode]} />
               <InfoItem icon={UsersRound} label="Kelas" value={item.name} />
@@ -135,7 +121,7 @@ export function ProgramCard({ program, now, priority }: ProgramCardProps) {
             </div>
           </>
         ) : (
-          <p className="text-[13px] text-ink-soft">Jadwal kelas berikutnya sedang disiapkan.</p>
+          <p className="text-[13px] text-ink-soft">Jadwal kelas sedang disiapkan. Hubungi kami untuk info jadwal.</p>
         )}
 
         <div className="mt-auto grid grid-cols-[1fr_auto] gap-2 pt-4">

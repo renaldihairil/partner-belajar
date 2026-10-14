@@ -3,7 +3,6 @@ import type { RegistrationStatus } from "@/types";
 
 const styles: Record<RegistrationStatus, string> = {
   open: "text-status-open",
-  upcoming: "text-status-upcoming",
   full: "text-status-full",
   closed: "text-status-closed",
 };

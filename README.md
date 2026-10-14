@@ -97,22 +97,23 @@ Jika rasio gambar baru berbeda, sesuaikan `width`/`height` di komponen terkait
 
 ## Jadwal kelas & pendaftaran
 
-Halaman **Program** menampilkan status pendaftaran tiap program: **Pendaftaran dibuka**, **Segera dibuka**,
-**Kuota penuh**, atau **Pendaftaran ditutup**, lengkap dengan tanggal mulai, jadwal, mode, sisa kursi,
-filter status, dan panel jadwal (dialog) per program.
+Kelas Partner Belajar **dibuka setiap hari** (tanpa periode pendaftaran). Halaman **Program** menampilkan status tiap
+program: **Pendaftaran dibuka**, **Kuota penuh**, atau **Sementara ditutup**, lengkap dengan jadwal, mode, sisa kursi
+(bila kuota diisi), filter status, dan panel jadwal per program.
 
 | Bagian | File |
 | --- | --- |
 | Tipe data (`ProgramClass`, `ProgramWithClasses`, `RegistrationStatus`) | `types/index.ts` |
 | Jadwal kelas | Admin → Program & Jadwal → tab Jadwal kelas |
-| Hitung status dari tanggal (WIB) + kuota | `lib/class-status.ts` |
+| Hitung status dari kuota + tombol tutup | `lib/class-status.ts` |
 | Sumber data (database ↔ data bawaan) | `lib/programs-service.ts` |
 | Tujuan tombol daftar/ingatkan/daftar tunggu | `components/program/registration.ts` |
 | UI | `components/program/*` |
 
-- **Status tidak disimpan**, melainkan dihitung otomatis: sebelum `registrationOpens` → segera dibuka;
-  setelah `registrationCloses` → ditutup; `enrolled >= quota` → penuh; `manuallyClosed: true` → ditutup paksa (untuk admin).
-- Status dihitung ulang di browser pengunjung setiap menit, dan HTML diperbarui berkala (`revalidate = 3600`).
+- **Status tidak disimpan**, melainkan dihitung otomatis: `manuallyClosed: true` → ditutup; `quota > 0` dan
+  `enrolled >= quota` → penuh; selain itu → dibuka. `quota: 0` berarti tanpa batas kuota.
+- **WhatsApp per program:** kolom `programs.whatsapp` (diatur di admin, Program → Info dasar). Pendaftar program itu
+  diarahkan ke nomornya; bila kosong, memakai nomor utama di `lib/site-config.ts`.
 - Tautan langsung ke jadwal: `/program#jadwal-<slug>`, mis. `/program#jadwal-quran-partner`.
 - Klik kartu → halaman detail `/program/<slug>` (Hero, Kurikulum, Cocok untuk siapa, Jadwal, Harga, CTA).
 
