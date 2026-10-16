@@ -6,7 +6,7 @@ import { AdminPageHeader } from "@/components/admin/ui";
 import { requireDb, schema } from "@/db";
 import { programOptions } from "@/lib/admin/queries";
 
-export const metadata: Metadata = { title: "Edit video" };
+export const metadata: Metadata = { title: "Edit dokumentasi" };
 
 export default async function EditDocumentationPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -15,7 +15,7 @@ export default async function EditDocumentationPage({ params }: { params: Promis
   if (!item) notFound();
   return (
     <>
-      <AdminPageHeader title="Edit video" description={item.title} back={{ href: "/admin/dokumentasi", label: "Semua video" }} />
+      <AdminPageHeader title="Edit dokumentasi" description={item.title} back={{ href: "/admin/dokumentasi", label: "Semua dokumentasi" }} />
       <DocumentationForm item={item} programs={await programOptions()} today={item.date} />
     </>
   );

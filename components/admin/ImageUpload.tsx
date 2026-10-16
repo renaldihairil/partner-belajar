@@ -9,10 +9,10 @@ type ImageUploadProps = {
   name: string;
   label: string;
   defaultValue?: string;
-  folder: "program" | "pengajar" | "testimoni" | "artikel" | "modul" | "umum";
+  folder: "program" | "pengajar" | "testimoni" | "artikel" | "modul" | "dokumentasi" | "umum";
   hint?: string;
   error?: string;
-  shape?: "wide" | "square";
+  shape?: "wide" | "square" | "video";
   required?: boolean;
 };
 
@@ -44,7 +44,7 @@ export function ImageUpload({ name, label, defaultValue = "", folder, hint, erro
     }
   }
 
-  const box = shape === "square" ? "aspect-square w-36" : "aspect-[4/3] w-full max-w-xs";
+  const box = shape === "square" ? "aspect-square w-36" : shape === "video" ? "aspect-video w-full max-w-sm" : "aspect-[4/3] w-full max-w-xs";
 
   return (
     <div>

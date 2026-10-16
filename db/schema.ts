@@ -6,6 +6,7 @@ import type {
   ClassMode,
   CurriculumModule,
   DocumentationCategory,
+  DocumentationMediaType,
   PricePlan,
   ProgramTheme,
   Teacher,
@@ -175,7 +176,12 @@ export const documentation = pgTable("documentation", {
   date: text("date").notNull(),
   category: text("category").$type<DocumentationCategory>().notNull(),
   programId: text("program_id").references(() => programs.id, { onDelete: "set null" }),
-  youtubeId: text("youtube_id").notNull(),
+  /** "video" (YouTube) atau "foto" (rasio 16:9). */
+  mediaType: text("media_type").$type<DocumentationMediaType>().notNull().default("video"),
+  /** Terisi untuk video. */
+  youtubeId: text("youtube_id"),
+  /** Terisi untuk foto (sudah dipotong 16:9 saat diunggah). */
+  image: text("image"),
   published: boolean("published").notNull().default(true),
   ...timestamps,
 });

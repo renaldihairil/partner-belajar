@@ -8,7 +8,7 @@ import { pageMetadata } from "@/lib/metadata";
 import { getProgramsWithClasses } from "@/lib/programs-service";
 import { whatsappUrl } from "@/lib/whatsapp";
 
-const description = "Video momen belajar para siswa Partner Belajar — di kelas online, tatap muka, dan kegiatan spesial.";
+const description = "Video dan foto momen belajar para siswa Partner Belajar — di kelas online, tatap muka, dan kegiatan spesial.";
 
 export const metadata = pageMetadata({
   title: "Dokumentasi Belajar — Partner Belajar",
@@ -20,17 +20,29 @@ export default async function DokumentasiPage() {
   const [programs, sorted] = await Promise.all([getProgramsWithClasses(), getDocumentation()]);
   const jsonLd = {
     "@context": "https://schema.org",
-    "@graph": sorted.map((item) => ({
-      "@type": "VideoObject",
-      name: item.title,
-      description: item.caption,
-      thumbnailUrl: youtubeThumbnail(item.youtubeId),
-      uploadDate: item.date,
-      embedUrl: youtubeEmbedUrl(item.youtubeId),
-      contentUrl: `https://youtu.be/${item.youtubeId}`,
-      inLanguage: "id-ID",
-      isPartOf: { "@type": "WebPage", "@id": absoluteUrl("/dokumentasi") },
-    })),
+    "@graph": sorted.map((item) =>
+      item.type === "foto"
+        ? {
+            "@type": "ImageObject",
+            name: item.title,
+            description: item.caption,
+            contentUrl: item.image?.startsWith("http") ? item.image : absoluteUrl(item.image ?? ""),
+            uploadDate: item.date,
+            inLanguage: "id-ID",
+            isPartOf: { "@type": "WebPage", "@id": absoluteUrl("/dokumentasi") },
+          }
+        : {
+            "@type": "VideoObject",
+            name: item.title,
+            description: item.caption,
+            thumbnailUrl: youtubeThumbnail(item.youtubeId ?? ""),
+            uploadDate: item.date,
+            embedUrl: youtubeEmbedUrl(item.youtubeId ?? ""),
+            contentUrl: `https://youtu.be/${item.youtubeId}`,
+            inLanguage: "id-ID",
+            isPartOf: { "@type": "WebPage", "@id": absoluteUrl("/dokumentasi") },
+          },
+    ),
   };
 
   return (
@@ -47,18 +59,18 @@ export default async function DokumentasiPage() {
           <div>
             <p className="font-bold text-ink">Punya momen belajar anak bersama kami?</p>
             <p className="text-sm text-ink-soft">
-              Kirimkan videonya via WhatsApp. Kami hanya menampilkan video dengan izin orang tua.
+              Kirimkan video atau fotonya via WhatsApp. Kami hanya menampilkan dokumentasi dengan izin orang tua.
             </p>
           </div>
         </div>
         <a
-          href={whatsappUrl("Assalamu'alaikum Admin Partner Belajar, saya ingin berbagi video momen belajar anak saya.")}
+          href={whatsappUrl("Assalamu'alaikum Admin Partner Belajar, saya ingin berbagi video/foto momen belajar anak saya.")}
           target="_blank"
           rel="noopener noreferrer"
           className="inline-flex min-h-11 shrink-0 items-center gap-2 rounded-full bg-[#1faf55] px-5 text-sm font-semibold text-white transition-all hover:-translate-y-0.5"
         >
           <MessageCircle aria-hidden className="size-4" />
-          Kirim Video
+          Kirim Dokumentasi
         </a>
       </aside>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }} />

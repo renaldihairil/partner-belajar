@@ -11,7 +11,7 @@ Yang bisa dikelola:
 | Link Testimoni | Buat, salin, dan bagikan link agar orang tua mengirim testimoni sendiri (lihat bagian di bawah) |
 | Link Form Guru | Buat, salin, dan bagikan link (PIN opsional) agar guru mengisi data profilnya sendiri; data masuk sebagai draf untuk ditinjau |
 | Artikel | Judul, ringkasan, isi (blok paragraf/subjudul/daftar/tips), gambar sampul, kategori, tag, penulis, tanggal terbit, draf/terbit, artikel pilihan |
-| Dokumentasi | Video dokumentasi dari YouTube (tempel tautan): judul, keterangan, kategori, tanggal, program terkait, tampil/sembunyi. Ditampilkan sebagai grid 3 kolom; klik untuk memutar |
+| Dokumentasi | Video (tempel tautan YouTube) **atau foto** (unggah; otomatis dipotong 16:9): judul, keterangan, kategori, tanggal, program terkait, tampil/sembunyi. Ditampilkan sebagai grid 3 kolom seragam 16:9; klik untuk memutar video / memperbesar foto. Bila ada video dan foto sekaligus, pengunjung bisa menyaring per jenis |
 | Modul Belajar | Buku / kitab untuk halaman Modul Belajar: nama kitab, foto sampul (otomatis dipotong persegi 1:1), tautan unduh ke halaman web lain, program terkait, tampil/sembunyi, urutan. Ditampilkan sebagai grid 3 kolom dengan tombol Download |
 | Akun Saya | Profil sendiri dan ganti password (semua admin) |
 | Kelola Admin | Khusus Pemilik: tambah/ubah/hapus admin, atur peran & menu yang boleh diakses |

@@ -14,7 +14,9 @@ export function toDocumentation(row: DocumentationRow): DocumentationItem {
     date: row.date,
     category: row.category,
     programId: row.programId ?? undefined,
-    youtubeId: row.youtubeId,
+    type: row.mediaType,
+    youtubeId: row.youtubeId ?? undefined,
+    image: row.image ?? undefined,
   };
 }
 

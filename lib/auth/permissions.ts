@@ -9,7 +9,7 @@ export const PERMISSIONS = [
   { key: "pengajar", label: "Pengajar", description: "Profil dan foto pengajar." },
   { key: "testimoni", label: "Testimoni", description: "Cerita orang tua." },
   { key: "artikel", label: "Artikel", description: "Menulis dan menerbitkan artikel." },
-  { key: "dokumentasi", label: "Dokumentasi", description: "Video dokumentasi belajar (YouTube)." },
+  { key: "dokumentasi", label: "Dokumentasi", description: "Video (YouTube) dan foto dokumentasi belajar." },
   { key: "modul", label: "Modul Belajar", description: "Buku / kitab belajar beserta tautan unduhnya." },
 ] as const;
 

@@ -192,6 +192,9 @@ export type Teacher = {
 
 export type DocumentationCategory = "Kelas Online" | "Tatap Muka" | "Kegiatan Spesial";
 
+/** Jenis media dokumentasi: video dari YouTube atau foto (rasio 16:9). */
+export type DocumentationMediaType = "video" | "foto";
+
 export type DocumentationItem = {
   id: string;
   title: string;
@@ -199,8 +202,11 @@ export type DocumentationItem = {
   date: string;
   category: DocumentationCategory;
   programId?: string;
-  /** ID video YouTube (11 karakter). */
-  youtubeId: string;
+  type: DocumentationMediaType;
+  /** ID video YouTube (11 karakter) — hanya untuk type "video". */
+  youtubeId?: string;
+  /** URL foto 16:9 — hanya untuk type "foto". */
+  image?: string;
 };
 
 export type Reason = {

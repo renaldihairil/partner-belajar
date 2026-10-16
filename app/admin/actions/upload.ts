@@ -6,7 +6,7 @@ import { saveImage } from "@/lib/storage";
 
 export type UploadResult = { url: string; width: number; height: number } | { error: string };
 
-const FOLDERS = ["program", "pengajar", "testimoni", "artikel", "modul", "umum"];
+const FOLDERS = ["program", "pengajar", "testimoni", "artikel", "modul", "dokumentasi", "umum"];
 
 export async function uploadImageAction(formData: FormData): Promise<UploadResult> {
   const admin = await requireAdmin();

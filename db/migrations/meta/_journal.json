@@ -71,6 +71,13 @@
       "when": 1791951982667,
       "tag": "0009_kelas_buka_setiap_hari",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1792157331388,
+      "tag": "0010_dokumentasi_foto",
+      "breakpoints": true
     }
   ]
 }

@@ -38,10 +38,12 @@ export async function saveImage(file: File, folder: string): Promise<StoredImage
   const { data, info } = await sharp(input)
     .rotate()
     .resize(
-      // Sampul modul belajar selalu persegi (1:1): dipotong di tengah, lalu dikecilkan.
+      // Sampul modul belajar selalu persegi (1:1), foto dokumentasi selalu 16:9: dipotong di tengah, lalu dikecilkan.
       folder === "modul"
         ? { width: 1000, height: 1000, fit: "cover", position: "centre" }
-        : { width: 1600, height: 1600, fit: "inside", withoutEnlargement: true },
+        : folder === "dokumentasi"
+          ? { width: 1600, height: 900, fit: "cover", position: "centre" }
+          : { width: 1600, height: 1600, fit: "inside", withoutEnlargement: true },
     )
     .webp({ quality: 80 })
     .toBuffer({ resolveWithObject: true });

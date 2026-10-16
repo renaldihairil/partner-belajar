@@ -106,7 +106,9 @@ export async function seedIfEmpty(db: Db): Promise<string[]> {
         date: d.date,
         category: d.category,
         programId: d.programId ?? null,
-        youtubeId: d.youtubeId,
+        mediaType: d.type,
+        youtubeId: d.youtubeId ?? null,
+        image: d.image ?? null,
       })),
     );
     done.push("documentation");
